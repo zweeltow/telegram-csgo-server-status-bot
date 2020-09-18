@@ -3,15 +3,16 @@
 import logging
 
 import telebot
-import config
-
 from telebot import types
+
+import config
+import strings
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
 
 
 TEST = False
 
-if TEST == True: bot = telebot.TeleBot(config.TESTBOT) # token of the test bot
+if TEST: bot = telebot.TeleBot(config.TESTBOT) # token of the test bot
 else: bot = telebot.TeleBot(config.CSGOBETABOT) # token of the bot
 telebot.logger.setLevel(logging.DEBUG) # setup logger
 me = config.OWNER # short way to diolog with me
@@ -21,11 +22,11 @@ api_dc = ValveServersDataCentersAPI()
 
 """Setup keyboard"""
 # English
-markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 Status = types.KeyboardButton('Status')
 Matchmaking = types.KeyboardButton('Matchmaking')
 DC = types.KeyboardButton('Data Centers')
-markup.add(Status, Matchmaking, DC)
+markup_en.add(Status, Matchmaking, DC)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -60,8 +61,6 @@ markup_DC_USA = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
 USA_Northwest = types.KeyboardButton('USA North')
 USA_Southwest = types.KeyboardButton('USA South')
 markup_DC_USA.add(USA_Northwest, USA_Southwest)
-
-# DC USA
 
 # DC Back
 markup_DC_Back = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -104,17 +103,16 @@ def log(message):
 
 
 def log_inline(inline_query):
-    """Bot send messages to depveloper about who used inline mode"""
-    bot.send_message(config.OWNER, f'[<a href="tg://user?id={inline_query.from_user.id}">{inline_query.from_user.id}</a>] {inline_query.from_user.first_name} "{inline_query.from_user.username}" {inline_query.from_user.last_name} used <b>inline</b>', parse_mode='html', disable_notification=True)
-
+    # bot.send_message(config.OWNER, f'[<a href="tg://user?id={inline_query.from_user.id}">{inline_query.from_user.id}</a>] {inline_query.from_user.first_name} "{inline_query.from_user.username}" {inline_query.from_user.last_name} used <b>inline</b>', parse_mode='html', disable_notification=True)
+    bot.send_message(config.LOGCHANNEL, inline_query)
 
 def send_about_problem_valve_api(message):
     """Answer of bot if Valve's API don't answered"""
     
     if message.from_user.language_code == "ru":
-        text = '💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, подождите несколько минут.'
+        text = strings.wrongAPI_ru
     else:
-        text = "💀 Issues with Valve's API, the bot can't get information, please, try again later."
+        text = strings.wrongAPI_en
 
     bot.send_message(message.chat.id, text)
 
@@ -125,7 +123,7 @@ def send_about_problem_valve_inline(inline_query):
     # else:
     #     bot.send_message(message.chat.id, "💀 Issues with Valve's API, the bot can't get information, please, try again later.")
     try:
-        r = types.InlineQueryResultArticle('1', "Issues with Valve's API, try again later", input_message_content = "💀 Issues with Valve's API, the bot can't get information, please, try again later.\n\n❤️ @csgobetabot", description="The bot can't get information")
+        r = types.InlineQueryResultArticle('1', "💀 Issues with Valve's API, try again later", input_message_content = "💀 Issues with Valve's API, the bot can't get information, please, try again later.\n\n❤️ @csgobetabot", description="The bot can't get information about servers")
         bot.answer_inline_query(inline_query.id, [r])
 
     except Exception as e:
@@ -137,23 +135,22 @@ def status(message):
     """Get information about status of CS:GO server"""
     try:
         SessionsLogon, player_count, time_server = api.status()
-        bot.send_chat_action(message.chat.id, 'typing')
         if SessionsLogon == 'normal':
             if message.from_user.language_code == 'ru':
-                text = f'✅ Сервера в нормальном состоянии:\n\n— Количество игроков: {player_count}.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
-                markup_local = markup_ru
+                text = strings.statusNormal_ru.format(player_count, time_server)
+                markup = markup_ru
             else:    
-                text = f'✅ Server status is normal:\n\n— Player count: {player_count}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
-                markup_local = markup
+                text = strings.statusNormal_en.format(player_count, time_server)
+                markup = markup_en
         else:
             if message.from_user.language_code == 'ru':
-                text = f'❌ Сервера в ненормальном состоянии.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
-                markup_local = markup_ru
+                text = strings.statusWrong_ru.format(time_server)
+                markup = markup_ru
             else:
-                text = f'❌ Server status is not normal.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
-                markup_local = markup
+                text = strings.statusWrong_en.format(time_server)
+                markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup_local) 
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
@@ -163,23 +160,22 @@ def matchmaking(message):
     """Get information about Online servers, Active players and more about matchmaking servers"""
     try:
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-        bot.send_chat_action(message.chat.id, 'typing')
         if scheduler == 'normal':
             if message.from_user.language_code == 'ru':
-                text = f'✅ Планировщик матчмейкинга в нормальном состоянии:\n\n— Онлайн серверов: {online_servers};\n— Активных игроков: {online_players};\n— Игроков в поиске: {searching_players};\n— Среднее время поиска: {search_seconds_avg} сек.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
-                markup_local = markup_ru
+                text = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+                markup = markup_ru
             else:
-                text = f'✅ Matchmaking scheduler status is normal:\n\n— Online servers: {online_servers};\n— Active players: {online_players};\n— Searching players: {searching_players};\n— Average search seconds: {search_seconds_avg} sec.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
-                markup_local = markup
+                text = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+                markup = markup_en
         elif not scheduler == 'normal':
             if message.from_user.language_code == 'ru':
-                text = f'❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
-                markup_local = markup_ru
+                text = strings.mmWrong_ru.format(time_server)
+                markup = markup_ru
             else:
-                text = f'❌ Matchmaking scheduler status is not normal.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
-                markup_local = markup
+                text = strings.mmWrong_en.format(time_server)
+                markup = markup_en
     
-        bot.send_message(message.chat.id, text, reply_markup=markup_local)
+        bot.send_message(message.chat.id, text, reply_markup=markup)
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
@@ -203,16 +199,12 @@ def dc(message):
 
 def dc_africa(message):
     capacity, load, time_server = api_dc.africa_South()
-    # if not capacity == 'full':
-        # bot.send_message(me, f'🎉 Тут capacity не full, а {capacity}.')
     text = f'🌍 South Africa DCʼ status is OK:\n\n— Location: Johannesburg;\n— Load: {load};\n— Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
     bot.send_message(message.chat.id, text)
 
 
 def dc_australia(message):
     capacity, load, time_server = api_dc.australia()
-    # if not capacity == 'full':
-        # bot.send_message(me, f'🎉 Тут capacity не full, а {capacity}.')
     text = f'🇦🇺 Australia DCʼ status is OK:\n\n— Location: Sydney;\n— Load: {load};\n— Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
     bot.send_message(message.chat.id, text)
 
@@ -306,10 +298,10 @@ def dc_hong_kong(message):
 
 def back(message):
     if message.from_user.language_code == 'ru':
-        markup_local = markup_ru
-    else: markup_local = markup
+        markup = markup_ru
+    else: markup = markup_en
 
-    bot.send_message(message.chat.id, '👌', reply_markup=markup_local)
+    bot.send_message(message.chat.id, '👌', reply_markup=markup)
 
 
 @bot.inline_handler(lambda query: True)
@@ -321,26 +313,26 @@ def status_inline(inline_query):
         try:
             if SessionsLogon == 'normal':
                 if inline_query.from_user.language_code == 'ru':
-                    status_r = f'✅ Сервера в нормальном состоянии:\n\n— Количество игроков: {player_count}.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
+                    status_r = strings.statusNormal_ru.format(player_count, time_server)
                 else:    
-                    status_r = f'✅ Server status is normal:\n\n— Player count: {player_count}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+                    status_r = strings.statusNormal_en.format(player_count, time_server)
             else:
                 if inline_query.from_user.language_code == 'ru':
-                    status_r = f'❌ Сервера в ненормальном состоянии.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
+                    status_r = strings.statusWrong_ru.format(time_server)
                 else:    
-                    status_r = f'❌ Server status is not normal.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+                    status_r = strings.statusWrong_en.format(time_server)
 
             if scheduler == 'normal':
                 if inline_query.from_user.language_code == 'ru':
-                    mm_r = f'✅ Планировщик матчмейкинга в нормальном состоянии:\n\n— Онлайн серверов: {online_servers};\n— Активных игроков: {online_players};\n— Игроков в поиске: {searching_players};\n— Среднее время поиска: {search_seconds_avg} сек.\n\nОбновлено {time_server} (UTC−8, летом UTC−7).'
+                    mm_r = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
                 else:
-                    mm_r = f'✅ Matchmaking scheduler status is normal:\n\n— Online servers: {online_servers};\n— Active players: {online_players};\n— Searching players: {searching_players};\n— Average search seconds: {search_seconds_avg} sec.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+                    mm_r = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
 
             elif not scheduler == 'normal':
                 if inline_query.from_user.language_code == 'ru':
-                    mm_r = f'❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+                    mm_r = strings.mmWrong_ru.format(time_server)
                 else:
-                    mm_r = f'❌ Matchmaking scheduler status is not normal.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+                    mm_r = strings.mmWrong_en.format(time_server)
             if inline_query.from_user.language_code == 'ru': 
                 titleStatus = 'Статус'
                 titleMM = 'Матчмейкинг'
@@ -372,13 +364,13 @@ def welcome(message):
     """First bot's message"""
     log(message)
     if message.from_user.language_code == 'ru':
-        text = f'👋🏼 Привет, {message.from_user.first_name}!\nЭтот бот предназначен для проверки количества онлайн игроков и доступности CS:GO серверов.\n\nДля большей информации воспользуйтесь /help.'
-        markup_local = markup_ru
+        text = strings.cmdStart_ru.format(message.from_user.first_name)
+        markup = markup_ru
     else:
-        text = f'👋🏼 Hey, {message.from_user.first_name}!\nThis bot is designed to check the number of online players and the availability of CS:GO servers.\n\nFor more information type /help.'
-        markup_local = markup
+        text = strings.cmdStart_en.format(message.from_user.first_name)
+        markup = markup_en
 
-    bot.send_message(message.chat.id, text, reply_markup=markup_local)
+    bot.send_message(message.chat.id, text, reply_markup=markup)
 
 
 @bot.message_handler(commands=['feedback'])
@@ -387,9 +379,9 @@ def leave_feedback(message):
     log(message)
 
     if message.from_user.language_code == 'ru':
-        text = '💬 Пожалуйста, расскажите о Ваших <b>пожеланиях</b> или <b>проблемах</b>, с которыми Вы столкнулись, используя бота.\n\nИспользуйте /cancel, чтобы отменить команду.\n\nЕсли Вы желаете диалога с разработчиком, то возможно общение в личной переписке: @zweel.'
+        text = strings.cmdFeedback_ru 
     else:
-        text = "💬 Please tell us about your <b>suggestions</b> or <b>problems</b> that you have encountered using our bot.\n\nUse /cancel to cancel this command.\n\nIf you need a dialogue with the developer, you can PM: @zweel <i>(But I'm bad at English 🙂)</i>."
+        text = strings.cmdFeedback_en
     
     bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
     bot.register_next_step_handler(message, get_feedback)
@@ -400,26 +392,27 @@ def get_feedback(message):
     if message.text == '/cancel':
         log(message)
         if message.from_user.language_code == 'ru':
-            markup_local = markup_ru
+            markup = markup_ru
         else:
-            markup_local = markup
-        bot.send_message(message.chat.id, '👍', reply_markup=markup_local)
+            markup = markup_en
+        bot.send_message(message.chat.id, '👍', reply_markup=markup)
 
     else:
         bot.send_message(config.OWNER, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
         bot.forward_message(config.OWNER, message.chat.id, message.message_id)
         
-        if TEST == False:
+        if not TEST:
+            bot.send_message(config.AQ, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
             bot.forward_message(config.AQ, message.chat.id, message.message_id)
 
         if message.from_user.language_code == 'ru':
             text = 'Отлично! Ваше сообщение отправлено.'
-            markup_local = markup_ru
+            markup = markup_ru
         else:
             text = 'Awesome! Your message has been sent.'
-            markup_local = markup
+            markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id,reply_markup=markup_local)
+        bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id,reply_markup=markup)
 
 
 @bot.message_handler(commands=['help'])
@@ -427,13 +420,13 @@ def help(message):
     """/help message"""
     log(message)
     if message.from_user.language_code == 'ru':
-        text = 'ℹ️ Этот бот разработан каналом @csgobeta и предназначен для проверки количества онлайн игроков и доступности CS:GO серверов.\n\n<b>Доступные команды:</b>\n/status – проверить доступность серверов\n/mm – показать количество онлайн игроков\n/dc – посмотреть состояние дата-центра (на английском языке)\n/feedback – оставить фидбэк про бота\n/help – получить это сообщение\n\nОбратите внимание, что этот бот также работает автоматически, нет необходимости добавлять его куда-либо. Просто откройте любой из Ваших чатов и введите ‘<code>@csgobetabot </code>ʼ в поле сообщения. Затем нажмите на результат для отправки.'
-        markup_local = markup_ru
+        text = strings.cmdHelp_ru
+        markup = markup_ru
     else:
-        text = 'ℹ️ This bot is designed by @csgobeta to check the number of online players and the availability of CS:GO servers.\n\n<b>Here are the available commands:</b>\n/status – сheck the availability of the servers\n/mm – show the count of players currently playing\n/dc – see the status of a specific data center\n/feedback – leave feedback about the bot\n/help – get this message\n\nNote that this bot also works automatically, no need to add it anywhere. Simply open any of your chats and type ‘<code>@csgobetabot </code>‘ in the message field. Then tap on a result to send.'
-        markup_local = markup
+        text = strings.cmdHelp_en
+        markup = markup_en
 
-    bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_local)
+    bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
@@ -441,6 +434,8 @@ def answer(message):
     """Answer of the bot"""
     log(message)
     try:
+        bot.send_chat_action(message.chat.id, 'typing')
+
         if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
             status(message)
 
@@ -524,16 +519,16 @@ def answer(message):
 
         else:
             if message.from_user.language_code == 'ru':
-                text = '🤷‍♀️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых команд:'
-                markup_local = markup_ru
+                text = strings.unknownRequest_ru
+                markup = markup_ru
             else: 
-                text = '🤷‍♀️ Nothing found, please use one of the following commands:'
-                markup_local = markup
+                text = strings.unknownRequest_en
+                markup = markup_en
 
-            bot.send_message(message.chat.id, text, reply_markup=markup_local)
+            bot.send_message(message.chat.id, text, reply_markup=markup)
     
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
 
 # Polling
-bot.polling()
+bot.polling(True)
