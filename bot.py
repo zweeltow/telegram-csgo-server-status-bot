@@ -439,56 +439,44 @@ def answer(message):
         if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
             status(message)
 
-
         elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
             matchmaking(message)
-
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
             dc(message)
 
-
         elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
             dc_africa(message)
-
 
         elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
             dc_australia(message)
 
-
         elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
             dc_europe(message)
-
 
         elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
             dc_asia(message)
 
-
         elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
             dc_usa(message)
-
 
         elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
             dc_south_america(message)
 
-
-        elif message.text.lower() == 'usa north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
+        elif message.text.lower() == 'north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
             dc_usa_north(message)
 
-        elif message.text.lower() == 'usa south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
+        elif message.text.lower() == 'south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
             dc_usa_south(message)
 
-
-        elif message.text.lower() == 'eu north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
+        elif message.text.lower() == 'north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
             dc_eu_north(message)
 
-
-        elif message.text.lower() == 'eu west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
+        elif message.text.lower() == 'west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
             dc_eu_west(message)
 
-        elif message.text.lower() == 'eu east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
+        elif message.text.lower() == 'east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
             dc_eu_east(message)
-
 
         elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
             dc_india(message)
@@ -496,22 +484,17 @@ def answer(message):
         elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
             dc_japan(message)
 
-
         elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
             dc_china(message)
-
 
         elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
             dc_emirates(message)
 
-
         elif message.text.lower() == 'singapore' or message.text.lower() == 'сингопур' or message.text.lower() == '/singapore':
             dc_singapore(message)
 
-
         elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
             dc_hong_kong(message)
-
 
         elif message.text == '⏪ Back' or message.text == '⏪ Назад':
             back(message)
