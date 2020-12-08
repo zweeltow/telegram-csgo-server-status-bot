@@ -199,7 +199,7 @@ def dc(message):
 
 def dc_africa(message):
     capacity, load, time_server = api_dc.africa_South()
-    text = f'🌍 South Africaʼs DC status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC-8, summer UTC-7).'
+    text = f'🇿🇦 South Africaʼs DC status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text)
 
 
