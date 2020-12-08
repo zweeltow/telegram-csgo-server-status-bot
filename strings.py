@@ -11,8 +11,8 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Player count: {}.\n\nLatest update on {} (UTC−8, summer UTC−7)."
-statusWrong_en = "❌ Server status is not normal.\n\nLatest update on {} (UTC−8, summer UTC−7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Player count: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+statusWrong_en = "❌ Server status is not normal.\n\nLatest update on {} (UTC-8, summer UTC-7)."
 # Russian
 statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Количество игроков: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено {} (UTC−8, летом UTC−7)."
@@ -20,11 +20,11 @@ statusWrong_ru = "❌ Сервера в ненормальном состоян�
 
 """Text of Matchmaking"""
 # English
-mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update on {} (UTC−8, summer UTC−7)."
-mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update on {} (UTC−8, summer UTC−7)."
+mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update on {} (UTC-8, summer UTC-7)."
 # Russian
 mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} сек.\n\nОбновлено {} (UTC−8, летом UTC−7)."
-mmWrong_ru = "❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update on {} (UTC−8, summer UTC−7)."
+mmWrong_ru = "❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update on {} (UTC-8, summer UTC-7)."
 
 
 """Text of Wrong Request"""
@@ -33,7 +33,7 @@ unknownRequest_en = "🤷‍♀️ Nothing found, please use one of the followin
 wrongAPI_en = "💀 Issues with Valve's API, the bot can't get information, please, try again later."
 # Russian
 unknownRequest_ru = "🤷‍♀️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых команд:"
-wrongAPI_ru = "💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, подождите несколько минут."
+wrongAPI_ru = "💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже."
 
 
 """DC"""
