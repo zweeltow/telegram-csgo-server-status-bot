@@ -469,13 +469,13 @@ def answer(message):
         elif message.text.lower() == 'usa south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
             dc_usa_south(message)
 
-        elif message.text.lower() == 'en north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
+        elif message.text.lower() == 'eu north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
             dc_eu_north(message)
 
-        elif message.text.lower() == 'en west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
+        elif message.text.lower() == 'eu west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
             dc_eu_west(message)
 
-        elif message.text.lower() == 'en east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
+        elif message.text.lower() == 'eu east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
             dc_eu_east(message)
 
         elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
