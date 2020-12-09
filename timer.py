@@ -30,3 +30,5 @@ class Timer:
         
     if delta_days < 0:
         delta_days = delta_days + 7
+    
+    return delta_days, delta_hours, delta_mins, delta_secs
