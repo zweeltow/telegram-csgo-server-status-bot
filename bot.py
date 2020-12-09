@@ -494,7 +494,7 @@ def answer(message):
         elif message.text.lower() == 'online devs' or message.text.lower() == 'онлайн разработчиков' or message.text.lower() == '/devcount':
             devcount(message)
  
-        elif message.text.lower() == 'timer' or message.text.lower() == 'таймер' or message.text.lower() == '/timer':
+        elif message.text.lower() == 'drop cap reset' or message.text.lower() == 'сброс дропа' or message.text.lower() == '/timer':
             timer(message)
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
