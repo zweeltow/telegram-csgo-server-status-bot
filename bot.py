@@ -74,7 +74,7 @@ markup_DC_Back.add(Back_button)
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 Status_ru = types.KeyboardButton('Статус')
 Matchmaking_ru = types.KeyboardButton('Матчмейкинг')
-Devcount_ru = types.KeyboardButton('Онлайн Разработчиков')
+Devcount_ru = types.KeyboardButton('Разработчиков в игре')
 DC_ru = types.KeyboardButton('Дата-центры (Англ.)')
 markup_ru.add(Status_ru, Matchmaking_ru, Devcount_ru, DC_ru)
 
