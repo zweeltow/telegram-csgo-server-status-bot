@@ -37,7 +37,7 @@ South_America = types.KeyboardButton('South America')
 Australia = types.KeyboardButton('Australia')
 USA =  types.KeyboardButton('USA')
 Back_button = types.KeyboardButton('⏪ Back')
-markup_DC.add( Asia, Australia, Europe, South_America, Africa, USA, Back_button)
+markup_DC.add(Africa, Asia, Australia, Europe, South_America, USA, Back_button)
 
 # DC Asia
 markup_DC_Asia = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -47,7 +47,7 @@ China = types.KeyboardButton('China')
 Singapore = types.KeyboardButton('Singapore')
 Hong_Kong = types.KeyboardButton('Hong Kong')
 Japan = types.KeyboardButton('Japan')
-markup_DC_Asia.add(India, Emirates, China, Singapore, Hong_Kong, Japan)
+markup_DC_Asia.add(China, Emirates, Hong_Kong, India, Japan, Singapore)
 
 # DC Europe
 markup_DC_EU = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -107,7 +107,7 @@ def log_inline(inline_query):
     bot.send_message(config.LOGCHANNEL, inline_query)
 
 def send_about_problem_valve_api(message):
-    """Answer of bot if Valve's API don't answered"""
+    """Answer of bot if Valve's API don't answer"""
     
     if message.from_user.language_code == "ru":
         text = strings.wrongAPI_ru
@@ -132,7 +132,7 @@ def send_about_problem_valve_inline(inline_query):
 
 
 def status(message):
-    """Get information about status of CS:GO server"""
+    """Get the status of CS:GO servers"""
     try:
         SessionsLogon, player_count, time_server = api.status()
         if SessionsLogon == 'normal':
@@ -157,7 +157,7 @@ def status(message):
 
 
 def matchmaking(message):
-    """Get information about Online servers, Active players and more about matchmaking servers"""
+    """Get information about online servers, active players and more about matchmaking servers"""
     try:
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
         if scheduler == 'normal':
@@ -181,6 +181,23 @@ def matchmaking(message):
         send_about_problem_valve_api(message)
 
 
+def devcount(message):
+    """Get the count of online devs"""
+    try:
+        dev_player_count, time_server = api.devcount()
+        if message.from_user.language_code == 'ru':
+                text = strings.devCount_en.format(dev_player_count, time_server)
+                markup = markup_ru
+        else:    
+                text = strings.devCount_ru.format(dev_player_count, time_server)
+                markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
+        
+
 def dc(message):
     try:
         if message.from_user.language_code == 'ru':
@@ -199,7 +216,7 @@ def dc(message):
 
 def dc_africa(message):
     capacity, load, time_server = api_dc.africa_South()
-    text = f'🌍 South Africaʼs DC status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC-8, summer UTC-7).'
+    text = f'🇿🇦 South Africaʼs DC status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text)
 
 
@@ -310,6 +327,7 @@ def status_inline(inline_query):
     try:        
         SessionsLogon, player_count, time_server = api.status()
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
+        dev_player_count = api.devcount()
         try:
             if SessionsLogon == 'normal':
                 if inline_query.from_user.language_code == 'ru':
@@ -333,22 +351,33 @@ def status_inline(inline_query):
                     mm_r = strings.mmWrong_ru.format(time_server)
                 else:
                     mm_r = strings.mmWrong_en.format(time_server)
+                    
+            if inline_query.from_user.language_code == 'ru':
+                    dev_r = strings.devCount_ru.format(dev_player_count, time_server)
+            else:
+                    dev_r = strings.devCount_en.format(dev_player_count, time_server)        
+                    
             if inline_query.from_user.language_code == 'ru': 
                 titleStatus = 'Статус'
                 titleMM = 'Матчмейкинг'
+                titleDev = 'Бета-версия'
 
                 descriptionStatus = 'Проверить доступность серверов'
-                descriptionMM = 'Показать количество играющих'
+                descriptionMM = 'Показать количество активных игроков'
+                descriptionDev = 'Показать количество онлайн разработчиков'
             else:
                 titleStatus = 'Status'
                 titleMM = 'Matchmaking'
+                titleDev = 'Beta version'
 
                 descriptionStatus = 'Check the availability of the servers'
-                descriptionMM = 'Show the count of players currently playing'
+                descriptionMM = 'Show the count of active players'
+                descriptionDev = 'Show the count of in-game developers'
 
             r = types.InlineQueryResultArticle('1', titleStatus, input_message_content = types.InputTextMessageContent(status_r), description=descriptionStatus)
             r2 = types.InlineQueryResultArticle('2', titleMM, input_message_content = types.InputTextMessageContent(mm_r), description=descriptionMM)
-            bot.answer_inline_query(inline_query.id, [r, r2], cache_time=10)
+            r3 = types.InlineQueryResultArticle('3', titleDev, input_message_content = types.InputTextMessageContent(dev_r), description=descriptionDev)
+            bot.answer_inline_query(inline_query.id, [r, r2, r3], cache_time=10)
             log_inline(inline_query)
         except Exception as e:
             bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
@@ -441,6 +470,9 @@ def answer(message):
 
         elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
             matchmaking(message)
+        
+        elif message.text.lower() == 'online devs' or message.text.lower() == 'онлайн разработчиков' or message.text.lower() == '/devcount':
+            devcount(message)
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
             dc(message)
