@@ -17,6 +17,11 @@ statusWrong_en = "❌ Server status is not normal.\n\nLatest update on {} (UTC-8
 statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Количество игроков: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 
+"""Text of Dev count"""
+# English
+devCount_en = "🧑‍💻 Current in-game developers in beta: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+# Russian
+devCount_ru = "🧑‍💻 Количество онлайн разработчиков в бета-версии: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 
 """Text of Matchmaking"""
 # English
