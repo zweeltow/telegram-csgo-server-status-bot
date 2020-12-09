@@ -23,6 +23,12 @@ devCount_en = "🧑‍💻 Current online developers in beta: {}.\n\nLatest upda
 # Russian
 devCount_ru = "🧑‍💻 Количество онлайн разработчиков в бета-версии: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 
+"""Text of Timer"""
+# English
+timer_en = "⏳ Time left until exp and drop cap reset:\n\n{} days {} hours {} minutes {} seconds."
+# Russian
+timer_ru = "⏳ Время до сброса ограничений опыта и дропа:\n\n{} д. {} ч. {} м. {} с."
+
 """Text of Matchmaking"""
 # English
 mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update on {} (UTC-8, summer UTC-7)."
