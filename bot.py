@@ -25,19 +25,20 @@ api_dc = ValveServersDataCentersAPI()
 markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 Status = types.KeyboardButton('Status')
 Matchmaking = types.KeyboardButton('Matchmaking')
+Devcount = types.KeyboardButton('Online Devs')
 DC = types.KeyboardButton('Data Centers')
-markup_en.add(Status, Matchmaking, DC)
+markup_en.add(Status, Matchmaking, Devcount, DC)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
 Europe = types.KeyboardButton('Europe')
 Asia = types.KeyboardButton('Asia')
-Africa = types.KeyboardButton('South Africa')
+South_Africa = types.KeyboardButton('South Africa')
 South_America = types.KeyboardButton('South America')
 Australia = types.KeyboardButton('Australia')
 USA =  types.KeyboardButton('USA')
 Back_button = types.KeyboardButton('⏪ Back')
-markup_DC.add(Africa, Asia, Australia, Europe, South_America, USA, Back_button)
+markup_DC.add(Asia, Australia, Europe, South_Africa, South_America, USA, Back_button)
 
 # DC Asia
 markup_DC_Asia = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -186,10 +187,10 @@ def devcount(message):
     try:
         dev_player_count, time_server = api.devcount()
         if message.from_user.language_code == 'ru':
-                text = strings.devCount_en.format(dev_player_count, time_server)
+                text = strings.devCount_ru.format(dev_player_count, time_server)
                 markup = markup_ru
         else:    
-                text = strings.devCount_ru.format(dev_player_count, time_server)
+                text = strings.devCount_en.format(dev_player_count, time_server)
                 markup = markup_en
 
         bot.send_message(message.chat.id, text, reply_markup=markup) 
@@ -327,7 +328,8 @@ def status_inline(inline_query):
     try:        
         SessionsLogon, player_count, time_server = api.status()
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-        dev_player_count = api.devcount()
+        dev_player_count, time_server = api.devcount()
+
         try:
             if SessionsLogon == 'normal':
                 if inline_query.from_user.language_code == 'ru':
@@ -377,7 +379,8 @@ def status_inline(inline_query):
             r = types.InlineQueryResultArticle('1', titleStatus, input_message_content = types.InputTextMessageContent(status_r), description=descriptionStatus)
             r2 = types.InlineQueryResultArticle('2', titleMM, input_message_content = types.InputTextMessageContent(mm_r), description=descriptionMM)
             r3 = types.InlineQueryResultArticle('3', titleDev, input_message_content = types.InputTextMessageContent(dev_r), description=descriptionDev)
-            bot.answer_inline_query(inline_query.id, [r, r2, r3], cache_time=10)
+
+            bot.answer_inline_query(inline_query.id, [r, r2, r3], cache_time=5)
             log_inline(inline_query)
         except Exception as e:
             bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')

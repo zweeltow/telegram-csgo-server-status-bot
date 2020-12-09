@@ -19,7 +19,7 @@ statusWrong_ru = "❌ Сервера в ненормальном состоян�
 
 """Text of Dev count"""
 # English
-devCount_en = "🧑‍💻 Current in-game developers in beta: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+devCount_en = "🧑‍💻 Current online developers in beta: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
 # Russian
 devCount_ru = "🧑‍💻 Количество онлайн разработчиков в бета-версии: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
 
