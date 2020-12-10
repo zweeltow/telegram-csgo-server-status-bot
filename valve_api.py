@@ -16,7 +16,7 @@ def get_response():
 
 
 class ValveServersAPI:
-    
+
     def status(self):
         result = get_response()
 

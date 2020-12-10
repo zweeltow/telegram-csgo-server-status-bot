@@ -353,6 +353,7 @@ def status_inline(inline_query):
         sessionsLogon, player_count, time_server = api.status()
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
         dev_player_count, time_server = api.devcount()
+        delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
 
         try:
             if sessionsLogon == 'normal':
@@ -398,6 +399,7 @@ def status_inline(inline_query):
                 descriptionMM = 'Показать количество активных игроков'
                 descriptionDev = 'Показать количество онлайн разработчиков'
                 descriptionTimer = 'Время до сброса ограничений опыта и дропа'
+                
             else:
                 titleStatus = 'Status'
                 titleMM = 'Matchmaking'
