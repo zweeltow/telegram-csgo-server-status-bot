@@ -7,6 +7,7 @@ from telebot import types
 
 import config
 import strings
+import timer
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
 
 
@@ -15,9 +16,10 @@ TEST = False
 if TEST: bot = telebot.TeleBot(config.TESTBOT) # token of the test bot
 else: bot = telebot.TeleBot(config.CSGOBETABOT) # token of the bot
 telebot.logger.setLevel(logging.DEBUG) # setup logger
-me = config.OWNER # short way to diolog with me
+me = config.OWNER # short way to dialog with me
 api = ValveServersAPI()
 api_dc = ValveServersDataCentersAPI()
+timer = Timer()
 
 
 """Setup keyboard"""
@@ -72,8 +74,9 @@ markup_DC_Back.add(Back_button)
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 Status_ru = types.KeyboardButton('Статус')
 Matchmaking_ru = types.KeyboardButton('Матчмейкинг')
+Devcount_ru = types.KeyboardButton('Разработчиков в игре')
 DC_ru = types.KeyboardButton('Дата-центры (Англ.)')
-markup_ru.add(Status_ru, Matchmaking_ru, DC_ru)
+markup_ru.add(Status_ru, Matchmaking_ru, Devcount_ru, DC_ru)
 
 # DC RU
 # markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -197,6 +200,20 @@ def devcount(message):
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
+        
+
+def timer(message):
+    """Get the count of online devs"""
+    try:
+        delta_days, delta_hours, delta_mins, delta_secs = timer()
+        if message.from_user.language_code == 'ru':
+                text = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+                markup = markup_ru
+        else:    
+                text = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
+                markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
         
 
 def dc(message):
@@ -476,6 +493,9 @@ def answer(message):
         
         elif message.text.lower() == 'online devs' or message.text.lower() == 'онлайн разработчиков' or message.text.lower() == '/devcount':
             devcount(message)
+ 
+        elif message.text.lower() == 'drop cap reset' or message.text.lower() == 'сброс дропа' or message.text.lower() == '/timer':
+            timer(message)
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
             dc(message)
