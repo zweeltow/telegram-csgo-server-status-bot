@@ -20,7 +20,7 @@ class Timer:
         actual_time = time.localtime(time.time()) # time delivers the actual time
 
         if wanted_time > actual_time[3]:
-            delta_hours = wanted_time - time[13]
+            delta_hours = wanted_time - actual_time[13]
             delta_mins = 59 - actual_time[4]
             delta_secs = 59 - actual_time[5]
 
