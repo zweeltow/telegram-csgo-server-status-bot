@@ -496,7 +496,7 @@ def answer(message):
         elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
             matchmaking(message)
         
-        elif message.text.lower() == 'online devs' or message.text.lower() == 'онлайн разработчиков' or message.text.lower() == '/devcount':
+        elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
             devcount(message)
  
         elif message.text.lower() == 'drop cap reset' or message.text.lower() == 'сброс дропа' or message.text.lower() == '/timer':
