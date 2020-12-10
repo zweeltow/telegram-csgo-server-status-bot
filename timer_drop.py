@@ -13,11 +13,11 @@ class Timer:
             if wanted_day == i[0]:
                 number_wanted_day = i[1]
 
-        today = datetime.datetime.today().weekday() # today delivers the actual day
+        today = datetime.datetime.today().weekday() # delivers the actual day
 
-        delta_days = number_wanted_day - today # delta_days describes how many days are left until the wanted day
+        delta_days = number_wanted_day - today # describes how many days are left until the wanted day
 
-        actual_time = time.localtime(time.time()) # time delivers the actual time
+        actual_time = time.localtime(time.time()) # delivers the actual time
 
         if wanted_time > actual_time[3]:
             delta_hours = wanted_time - actual_time[13]
