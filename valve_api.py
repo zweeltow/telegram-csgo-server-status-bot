@@ -8,7 +8,6 @@ API_dev_count = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrent
 
 
 def get_response():
-    
     response = requests.get(API)
     response = response.json()
     result = response['result']
@@ -17,12 +16,12 @@ def get_response():
 
 
 class ValveServersAPI:
-
+    
     def status(self):
         result = get_response()
 
         services = result['services']
-        SessionsLogon = services['SessionsLogon']
+        sessionsLogon = services['SessionsLogon']
         app = result['app']
         time_server = app['time']
 
@@ -31,7 +30,7 @@ class ValveServersAPI:
         response1 = json_response_player_count['response']
         player_count = response1['player_count']
 
-        return SessionsLogon, player_count, time_server
+        return sessionsLogon, player_count, time_server
 
 
     def matchmaking(self):

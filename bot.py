@@ -7,76 +7,77 @@ from telebot import types
 
 import config
 import strings
-import timer
+from timer_drop import Timer
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
 
 
 TEST = False
 
+
 if TEST: bot = telebot.TeleBot(config.TESTBOT) # token of the test bot
 else: bot = telebot.TeleBot(config.CSGOBETABOT) # token of the bot
 telebot.logger.setLevel(logging.DEBUG) # setup logger
-me = config.OWNER # short way to dialog with me
+me = config.OWNER # short way to dialog with developer
 api = ValveServersAPI()
 api_dc = ValveServersDataCentersAPI()
-timer = Timer()
+timer_drop = Timer()
 
 
 """Setup keyboard"""
 # English
 markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-Status = types.KeyboardButton('Status')
-Matchmaking = types.KeyboardButton('Matchmaking')
-Devcount = types.KeyboardButton('Online Devs')
-DC = types.KeyboardButton('Data Centers')
-markup_en.add(Status, Matchmaking, Devcount, DC)
+status = types.KeyboardButton('Status')
+matchmaking = types.KeyboardButton('Matchmaking')
+devcount = types.KeyboardButton('Online Devs')
+dc = types.KeyboardButton('Data Centers')
+markup_en.add(status, matchmaking, devcount, dc)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-Europe = types.KeyboardButton('Europe')
-Asia = types.KeyboardButton('Asia')
-South_Africa = types.KeyboardButton('South Africa')
-South_America = types.KeyboardButton('South America')
-Australia = types.KeyboardButton('Australia')
-USA =  types.KeyboardButton('USA')
-Back_button = types.KeyboardButton('⏪ Back')
-markup_DC.add(Asia, Australia, Europe, South_Africa, South_America, USA, Back_button)
+europe = types.KeyboardButton('Europe')
+asia = types.KeyboardButton('Asia')
+south_africa = types.KeyboardButton('South Africa')
+south_america = types.KeyboardButton('South America')
+australia = types.KeyboardButton('Australia')
+usa =  types.KeyboardButton('USA')
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC.add(asia, australia, europe, south_africa, south_america, usa, back_button)
 
 # DC Asia
 markup_DC_Asia = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-India = types.KeyboardButton('India')
-Emirates = types.KeyboardButton('Emirates')
-China = types.KeyboardButton('China')
-Singapore = types.KeyboardButton('Singapore')
-Hong_Kong = types.KeyboardButton('Hong Kong')
-Japan = types.KeyboardButton('Japan')
-markup_DC_Asia.add(China, Emirates, Hong_Kong, India, Japan, Singapore)
+india = types.KeyboardButton('India')
+emirates = types.KeyboardButton('Emirates')
+china = types.KeyboardButton('China')
+singapore = types.KeyboardButton('Singapore')
+hong_kong = types.KeyboardButton('Hong Kong')
+japan = types.KeyboardButton('Japan')
+markup_DC_Asia.add(china, emirates, hong_kong, india, japan, singapore)
 
 # DC Europe
 markup_DC_EU = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-EU_West = types.KeyboardButton('EU West')
-EU_East = types.KeyboardButton('EU East')
-EU_North = types.KeyboardButton('EU North')
-markup_DC_EU.add(EU_East, EU_North, EU_West)
+eu_West = types.KeyboardButton('EU West')
+eu_East = types.KeyboardButton('EU East')
+eu_North = types.KeyboardButton('EU North')
+markup_DC_EU.add(eu_East, eu_North, eu_West)
 
 # DC USA
 markup_DC_USA = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-USA_Northwest = types.KeyboardButton('USA North')
-USA_Southwest = types.KeyboardButton('USA South')
-markup_DC_USA.add(USA_Northwest, USA_Southwest)
+usa_Northwest = types.KeyboardButton('USA North')
+usa_Southwest = types.KeyboardButton('USA South')
+markup_DC_USA.add(usa_Northwest, usa_Southwest)
 
 # DC Back
 markup_DC_Back = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-Back_button = types.KeyboardButton('⏪ Back')
-markup_DC_Back.add(Back_button)
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC_Back.add(back_button)
 
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-Status_ru = types.KeyboardButton('Статус')
-Matchmaking_ru = types.KeyboardButton('Матчмейкинг')
-Devcount_ru = types.KeyboardButton('Разработчиков в игре')
-DC_ru = types.KeyboardButton('Дата-центры (Англ.)')
-markup_ru.add(Status_ru, Matchmaking_ru, Devcount_ru, DC_ru)
+status_ru = types.KeyboardButton('Статус')
+matchmaking_ru = types.KeyboardButton('Матчмейкинг')
+devcount_ru = types.KeyboardButton('Разработчиков в игре')
+dc_ru = types.KeyboardButton('Дата-центры (Англ.)')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, dc_ru)
 
 # DC RU
 # markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -138,8 +139,8 @@ def send_about_problem_valve_inline(inline_query):
 def status(message):
     """Get the status of CS:GO servers"""
     try:
-        SessionsLogon, player_count, time_server = api.status()
-        if SessionsLogon == 'normal':
+        sessionsLogon, player_count, time_server = api.status()
+        if sessionsLogon == 'normal':
             if message.from_user.language_code == 'ru':
                 text = strings.statusNormal_ru.format(player_count, time_server)
                 markup = markup_ru
@@ -203,9 +204,10 @@ def devcount(message):
         
 
 def timer(message):
-    """Get the count of online devs"""
+    """Get the time left until exp and drop cap resets"""
     try:
-        delta_days, delta_hours, delta_mins, delta_secs = timer()
+        delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+
         if message.from_user.language_code == 'ru':
                 text = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
                 markup = markup_ru
@@ -215,6 +217,9 @@ def timer(message):
 
         bot.send_message(message.chat.id, text, reply_markup=markup) 
         
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
 
 def dc(message):
     try:
@@ -343,12 +348,12 @@ def back(message):
 def status_inline(inline_query):
     """Inline mode"""
     try:        
-        SessionsLogon, player_count, time_server = api.status()
+        sessionsLogon, player_count, time_server = api.status()
         scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
         dev_player_count, time_server = api.devcount()
 
         try:
-            if SessionsLogon == 'normal':
+            if sessionsLogon == 'normal':
                 if inline_query.from_user.language_code == 'ru':
                     status_r = strings.statusNormal_ru.format(player_count, time_server)
                 else:    
