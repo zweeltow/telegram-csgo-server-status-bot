@@ -25,7 +25,7 @@ devCount_ru = "🧑‍💻 Количество онлайн разработч�
 
 """Text of Timer"""
 # English
-timer_en = "⏳ Time left until experience and drop cap reset:\n\n{} days {} hours {} minutes {} seconds."
+timer_en = "⏳ Time left until experience and drop cap reset:\n\n{}d {}h {}m {}s."
 # Russian
 timer_ru = "⏳ Время до сброса ограничений опыта и дропа:\n\n{} д. {} ч. {} м. {} с."
 
