@@ -11,17 +11,17 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Player count: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
-statusWrong_en = "❌ Server status is not normal.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Player count: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+statusWrong_en = "❌ Server status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Количество игроков: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
-statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено {} (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Количество игроков: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
 # English
-devCount_en = "🧑‍💻 Current online developers in beta: {}.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+devCount_en = "🧑‍💻 Current online developers in beta: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-devCount_ru = "🧑‍💻 Количество онлайн разработчиков в бета-версии: {}.\n\nОбновлено {} (UTC−8, летом UTC−7)."
+devCount_ru = "🧑‍💻 Количество онлайн разработчиков в бета-версии: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Timer"""
 # English
@@ -31,11 +31,11 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 
 """Text of Matchmaking"""
 # English
-mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update on {} (UTC-8, summer UTC-7)."
-mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} сек.\n\nОбновлено {} (UTC−8, летом UTC−7)."
-mmWrong_ru = "❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update on {} (UTC-8, summer UTC-7)."
+mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} сек.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+mmWrong_ru = "❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 
 
 """Text of Wrong Request"""
