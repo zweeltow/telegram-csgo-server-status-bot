@@ -445,7 +445,7 @@ def status_inline(inline_query):
             r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), description=description_dev)
             r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), description=description_timer)
 
-            bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
+            bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=15)
             log_inline(inline_query)
 
         except Exception as e:
