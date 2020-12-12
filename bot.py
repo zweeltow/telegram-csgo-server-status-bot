@@ -29,8 +29,8 @@ markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 status = types.KeyboardButton('Status')
 matchmaking = types.KeyboardButton('Matchmaking')
 devcount = types.KeyboardButton('Online devs')
-dc = types.KeyboardButton('Data centers')
 timer = types.KeyboardButton('Cap reset')
+dc = types.KeyboardButton('Data centers')
 markup_en.add(status, matchmaking, devcount, timer, dc)
 
 # DC
@@ -77,8 +77,8 @@ markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 status_ru = types.KeyboardButton('Статус')
 matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
-dc_ru = types.KeyboardButton('Дата-центры (Англ.)')
 timer_ru = types.KeyboardButton('Сброс ограничений')
+dc_ru = types.KeyboardButton('Дата-центры (Англ.)')
 markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
 
 # DC RU
@@ -138,87 +138,124 @@ def send_about_problem_valve_inline(inline_query):
         print(e)
 
 
-def status(message):
+def get_status():
     """Get the status of CS:GO servers"""
-    try:
-        sessionsLogon, player_count, time_server = api.status()
-        if sessionsLogon == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.statusNormal_ru.format(player_count, time_server)
-                markup = markup_ru
-            else:    
-                text = strings.statusNormal_en.format(player_count, time_server)
-                markup = markup_en
-        else:
-            if message.from_user.language_code == 'ru':
-                text = strings.statusWrong_ru.format(time_server)
-                markup = markup_ru
-            else:
-                text = strings.statusWrong_en.format(time_server)
-                markup = markup_en
+    sessionsLogon, player_count, time_server = api.status()
 
-        bot.send_message(message.chat.id, text, reply_markup=markup) 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
-        send_about_problem_valve_api(message)
+    if sessionsLogon == 'normal':
+            status_text_en = strings.statusNormal_en.format(player_count, time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, time_server)
+    else:
+            status_text_en = strings.statusWrong_en.format(time_server)
+            status_text_ru = strings.statusWrong_ru.format(time_server)
+
+    return status_text_en, status_text_ru
 
 
-def matchmaking(message):
+def get_matchmaking():
     """Get information about online servers, active players and more about matchmaking servers"""
-    try:
-        scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-        if scheduler == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-                markup = markup_ru
-            else:
-                text = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-                markup = markup_en
-        elif not scheduler == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.mmWrong_ru.format(time_server)
-                markup = markup_ru
-            else:
-                text = strings.mmWrong_en.format(time_server)
-                markup = markup_en
-    
-        bot.send_message(message.chat.id, text, reply_markup=markup)
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
-        send_about_problem_valve_api(message)
+    scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
+
+    if scheduler == 'normal':
+            mm_text_en = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+            mm_text_ru = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+    elif not scheduler == 'normal':
+            mm_text_en = strings.mmWrong_en.format(time_server)
+            mm_text_ru = strings.mmWrong_ru.format(time_server)
+
+    return mm_text_en, mm_text_ru
 
 
-def devcount(message):
+def get_devcount():
     """Get the count of online devs"""
-    try:
-        dev_player_count, time_server = api.devcount()
-        if message.from_user.language_code == 'ru':
-                text = strings.devCount_ru.format(dev_player_count, time_server)
-                markup = markup_ru
-        else:    
-                text = strings.devCount_en.format(dev_player_count, time_server)
-                markup = markup_en
+    dev_player_count, time_server = api.devcount()
 
-        bot.send_message(message.chat.id, text, reply_markup=markup) 
+    devcount_text_en = strings.devCount_en.format(dev_player_count, time_server)
+    devcount_text_ru = strings.devCount_ru.format(dev_player_count, time_server)
+
+    return devcount_text_en, devcount_text_ru
+
+
+def get_timer():
+    """Get the time left until exp and drop cap reset"""
+    delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+
+    timer_text_en = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
+    timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+
+    return timer_text_en, timer_text_ru
+
+def send_status(message):
+    """Send the status of CS:GO servers"""
+    try:
+        status_text_en, status_text_ru = get_status()
+
+        if message.from_user.language_code == 'ru':
+            text = status_text_ru
+            markup = markup_ru
+        else:
+            text = status_text_en
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
-        
 
-def timer(message):
-    """Get the time left until exp and drop cap reset"""
+
+def send_matchmaking(message):
+    """Send information about online servers, active players and more about matchmaking servers"""
     try:
-        delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+        mm_text_en, mm_text_ru = get_matchmaking()
 
         if message.from_user.language_code == 'ru':
-                text = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+            text = mm_text_ru
+            markup = markup_ru
+        else:
+            text = mm_text_en
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
+
+
+def send_devcount(message):
+    """Send the count of online devs"""
+    try:
+        devcount_text_en, devcount_text_ru = get_devcount()
+
+        if message.from_user.language_code == 'ru':
+                text = devcount_text_ru
                 markup = markup_ru
         else:    
-                text = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
+                text = devcount_text_en
                 markup = markup_en
 
         bot.send_message(message.chat.id, text, reply_markup=markup) 
-        
+
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
+
+
+def send_timer(message):
+    """Send the time left until exp and drop cap reset"""
+    try:
+        timer_text_en, timer_text_ru = get_timer()
+
+        if message.from_user.language_code == 'ru':
+                text = timer_text_ru
+                markup = markup_ru
+        else:
+                text = timer_text_en
+                markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
@@ -355,40 +392,45 @@ def status_inline(inline_query):
         dev_player_count, time_server = api.devcount()
         delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
 
+        status_text_en, status_text_ru = get_status()
+
         try:
+            # status part
             if sessionsLogon == 'normal':
                 if inline_query.from_user.language_code == 'ru':
-                    status_r = strings.statusNormal_ru.format(player_count, time_server)
+                    status_r = status_text_ru
                 else:    
-                    status_r = strings.statusNormal_en.format(player_count, time_server)
+                    status_r = status_text_en
             else:
                 if inline_query.from_user.language_code == 'ru':
                     status_r = strings.statusWrong_ru.format(time_server)
-                else:    
+                else:
                     status_r = strings.statusWrong_en.format(time_server)
-
+            
+            # MM part
             if scheduler == 'normal':
                 if inline_query.from_user.language_code == 'ru':
                     mm_r = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
                 else:
                     mm_r = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-
             elif not scheduler == 'normal':
                 if inline_query.from_user.language_code == 'ru':
                     mm_r = strings.mmWrong_ru.format(time_server)
                 else:
                     mm_r = strings.mmWrong_en.format(time_server)
-                    
+
+            # dev online part  
             if inline_query.from_user.language_code == 'ru':
                     dev_r = strings.devCount_ru.format(dev_player_count, time_server)
             else:
-                    dev_r = strings.devCount_en.format(dev_player_count, time_server)   
-                    
+                    dev_r = strings.devCount_en.format(dev_player_count, time_server)
+            # timer part
             if inline_query.from_user.language_code == 'ru':
                     timer_r = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
             else:
                     timer_r = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)        
-                    
+            
+            # text part
             if inline_query.from_user.language_code == 'ru': 
                 titleStatus = 'Статус'
                 titleMM = 'Матчмейкинг'
@@ -450,7 +492,7 @@ def leave_feedback(message):
         text = strings.cmdFeedback_ru 
     else:
         text = strings.cmdFeedback_en
-    
+
     bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
     bot.register_next_step_handler(message, get_feedback)
 
@@ -505,16 +547,16 @@ def answer(message):
         bot.send_chat_action(message.chat.id, 'typing')
 
         if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
-            status(message)
+            send_status(message)
 
         elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
-            matchmaking(message)
+            send_matchmaking(message)
         
         elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
-            devcount(message)
+            send_devcount(message)
  
         elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
-            timer(message)
+            send_timer(message)
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
             dc(message)
@@ -554,7 +596,7 @@ def answer(message):
 
         elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
             dc_india(message)
-            
+
         elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
             dc_japan(message)
 
