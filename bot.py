@@ -386,80 +386,68 @@ def back(message):
 @bot.inline_handler(lambda query: True)
 def status_inline(inline_query):
     """Inline mode"""
-    try:        
-        sessionsLogon, player_count, time_server = api.status()
-        scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-        dev_player_count, time_server = api.devcount()
-        delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
-
+    try:
         status_text_en, status_text_ru = get_status()
+        mm_text_en, mm_text_ru = get_matchmaking()
+        devcount_text_en, devcount_text_ru = get_devcount()
+        timer_text_en, timer_text_ru = get_timer()
 
         try:
             # status part
-            if sessionsLogon == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    status_r = status_text_ru
-                else:    
-                    status_r = status_text_en
+            if inline_query.from_user.language_code == 'ru':
+                status_r = status_text_ru
             else:
-                if inline_query.from_user.language_code == 'ru':
-                    status_r = strings.statusWrong_ru.format(time_server)
-                else:
-                    status_r = strings.statusWrong_en.format(time_server)
+                status_r = status_text_en
             
             # MM part
-            if scheduler == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    mm_r = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-                else:
-                    mm_r = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-            elif not scheduler == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    mm_r = strings.mmWrong_ru.format(time_server)
-                else:
-                    mm_r = strings.mmWrong_en.format(time_server)
+            if inline_query.from_user.language_code == 'ru':
+                mm_r = mm_text_ru
+            else:
+                mm_r = mm_text_en
 
             # dev online part  
             if inline_query.from_user.language_code == 'ru':
-                    dev_r = strings.devCount_ru.format(dev_player_count, time_server)
+                dev_r = devcount_text_ru
             else:
-                    dev_r = strings.devCount_en.format(dev_player_count, time_server)
+                dev_r = devcount_text_en      
+
             # timer part
             if inline_query.from_user.language_code == 'ru':
-                    timer_r = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+                timer_r = timer_text_ru
             else:
-                    timer_r = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)        
+                timer_r = timer_text_en     
             
             # text part
             if inline_query.from_user.language_code == 'ru': 
-                titleStatus = 'Статус'
-                titleMM = 'Матчмейкинг'
-                titleDev = 'Бета-версия'
-                titleTimer = 'Сброс ограничений'
+                title_status = 'Статус'
+                title_mm = 'Матчмейкинг'
+                title_dev = 'Бета-версия'
+                title_timer = 'Сброс ограничений'
 
-                descriptionStatus = 'Проверить доступность серверов'
-                descriptionMM = 'Показать количество активных игроков'
-                descriptionDev = 'Показать количество онлайн разработчиков'
-                descriptionTimer = 'Время до сброса ограничений опыта и дропа'
+                description_status = 'Проверить доступность серверов'
+                description_mm = 'Показать количество активных игроков'
+                description_dev = 'Показать количество онлайн разработчиков'
+                description_timer = 'Время до сброса ограничений опыта и дропа'
                 
             else:
-                titleStatus = 'Status'
-                titleMM = 'Matchmaking'
-                titleDev = 'Beta version'
-                titleTimer = 'Drop cap reset'
+                title_status = 'Status'
+                title_mm = 'Matchmaking'
+                title_dev = 'Beta version'
+                title_timer = 'Drop cap reset'
 
-                descriptionStatus = 'Check the availability of the servers'
-                descriptionMM = 'Show the count of active players'
-                descriptionDev = 'Show the count of in-game developers'
-                descriptionTimer = 'Time left until experience and drop cap reset'
+                description_status = 'Check the availability of the servers'
+                description_mm = 'Show the count of active players'
+                description_dev = 'Show the count of in-game developers'
+                description_timer = 'Time left until experience and drop cap reset'
 
-            r = types.InlineQueryResultArticle('1', titleStatus, input_message_content = types.InputTextMessageContent(status_r), description=descriptionStatus)
-            r2 = types.InlineQueryResultArticle('2', titleMM, input_message_content = types.InputTextMessageContent(mm_r), description=descriptionMM)
-            r3 = types.InlineQueryResultArticle('3', titleDev, input_message_content = types.InputTextMessageContent(dev_r), description=descriptionDev)
-            r4 = types.InlineQueryResultArticle('4', titleTimer, input_message_content = types.InputTextMessageContent(timer_r), description=descriptionTimer)
+            r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), description=description_status)
+            r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), description=description_mm)
+            r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), description=description_dev)
+            r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), description=description_timer)
 
             bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
             log_inline(inline_query)
+
         except Exception as e:
             bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
             print(e)
