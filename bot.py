@@ -384,7 +384,7 @@ def back(message):
 
 
 @bot.inline_handler(lambda query: True)
-def status_inline(inline_query):
+def send_inline(inline_query):
     """Inline mode"""
     try:
         status_text_en, status_text_ru = get_status()
@@ -393,29 +393,17 @@ def status_inline(inline_query):
         timer_text_en, timer_text_ru = get_timer()
 
         try:
-            # status part
             if inline_query.from_user.language_code == 'ru':
                 status_r = status_text_ru
+                mm_r = mm_text_ru
+                dev_r = devcount_text_ru
+                timer_r = timer_text_ru
+
             else:
                 status_r = status_text_en
-            
-            # MM part
-            if inline_query.from_user.language_code == 'ru':
-                mm_r = mm_text_ru
-            else:
                 mm_r = mm_text_en
-
-            # dev online part  
-            if inline_query.from_user.language_code == 'ru':
-                dev_r = devcount_text_ru
-            else:
-                dev_r = devcount_text_en      
-
-            # timer part
-            if inline_query.from_user.language_code == 'ru':
-                timer_r = timer_text_ru
-            else:
-                timer_r = timer_text_en     
+                dev_r = devcount_text_en
+                timer_r = timer_text_en
             
             # text part
             if inline_query.from_user.language_code == 'ru': 
