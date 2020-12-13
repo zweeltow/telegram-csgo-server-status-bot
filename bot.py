@@ -7,72 +7,79 @@ from telebot import types
 
 import config
 import strings
+from timer_drop import Timer
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
 
 
 TEST = False
 
-if TEST: bot = telebot.TeleBot(config.TESTBOT) # token of the test bot
-else: bot = telebot.TeleBot(config.CSGOBETABOT) # token of the bot
+
+if TEST: bot = telebot.TeleBot(config.TESTBOT) # the token of the test bot
+else: bot = telebot.TeleBot(config.CSGOBETABOT) # the token of the bot
 telebot.logger.setLevel(logging.DEBUG) # setup logger
-me = config.OWNER # short way to diolog with me
+me = config.OWNER # short way to contact the developer
 api = ValveServersAPI()
 api_dc = ValveServersDataCentersAPI()
+timer_drop = Timer()
 
 
 """Setup keyboard"""
 # English
 markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-Status = types.KeyboardButton('Status')
-Matchmaking = types.KeyboardButton('Matchmaking')
-DC = types.KeyboardButton('Data Centers')
-markup_en.add(Status, Matchmaking, DC)
+status = types.KeyboardButton('Status')
+matchmaking = types.KeyboardButton('Matchmaking')
+devcount = types.KeyboardButton('Online devs')
+timer = types.KeyboardButton('Cap reset')
+dc = types.KeyboardButton('Data centers')
+markup_en.add(status, matchmaking, devcount, timer, dc)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-Europe = types.KeyboardButton('Europe')
-Asia = types.KeyboardButton('Asia')
-Africa = types.KeyboardButton('South Africa')
-South_America = types.KeyboardButton('South America')
-Australia = types.KeyboardButton('Australia')
-USA =  types.KeyboardButton('USA')
-Back_button = types.KeyboardButton('⏪ Back')
-markup_DC.add( Asia, Australia, Europe, South_America, Africa, USA, Back_button)
+europe = types.KeyboardButton('Europe')
+asia = types.KeyboardButton('Asia')
+south_africa = types.KeyboardButton('South Africa')
+south_america = types.KeyboardButton('South America')
+australia = types.KeyboardButton('Australia')
+usa =  types.KeyboardButton('USA')
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC.add(asia, australia, europe, south_africa, south_america, usa, back_button)
 
 # DC Asia
 markup_DC_Asia = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-India = types.KeyboardButton('India')
-Emirates = types.KeyboardButton('Emirates')
-China = types.KeyboardButton('China')
-Singapore = types.KeyboardButton('Singapore')
-Hong_Kong = types.KeyboardButton('Hong Kong')
-Japan = types.KeyboardButton('Japan')
-markup_DC_Asia.add(India, Emirates, China, Singapore, Hong_Kong, Japan)
+india = types.KeyboardButton('India')
+emirates = types.KeyboardButton('Emirates')
+china = types.KeyboardButton('China')
+singapore = types.KeyboardButton('Singapore')
+hong_kong = types.KeyboardButton('Hong Kong')
+japan = types.KeyboardButton('Japan')
+markup_DC_Asia.add(china, emirates, hong_kong, india, japan, singapore)
 
 # DC Europe
 markup_DC_EU = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-EU_West = types.KeyboardButton('EU West')
-EU_East = types.KeyboardButton('EU East')
-EU_North = types.KeyboardButton('EU North')
-markup_DC_EU.add(EU_East, EU_North, EU_West)
+eu_West = types.KeyboardButton('EU West')
+eu_East = types.KeyboardButton('EU East')
+eu_North = types.KeyboardButton('EU North')
+markup_DC_EU.add(eu_East, eu_North, eu_West)
 
 # DC USA
 markup_DC_USA = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-USA_Northwest = types.KeyboardButton('USA North')
-USA_Southwest = types.KeyboardButton('USA South')
-markup_DC_USA.add(USA_Northwest, USA_Southwest)
+usa_Northwest = types.KeyboardButton('USA North')
+usa_Southwest = types.KeyboardButton('USA South')
+markup_DC_USA.add(usa_Northwest, usa_Southwest)
 
 # DC Back
 markup_DC_Back = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-Back_button = types.KeyboardButton('⏪ Back')
-markup_DC_Back.add(Back_button)
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC_Back.add(back_button)
 
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-Status_ru = types.KeyboardButton('Статус')
-Matchmaking_ru = types.KeyboardButton('Матчмейкинг')
-DC_ru = types.KeyboardButton('Дата-центры (Англ.)')
-markup_ru.add(Status_ru, Matchmaking_ru, DC_ru)
+status_ru = types.KeyboardButton('Статус')
+matchmaking_ru = types.KeyboardButton('Матчмейкинг')
+devcount_ru = types.KeyboardButton('Разработчиков в игре')
+timer_ru = types.KeyboardButton('Сброс ограничений')
+dc_ru = types.KeyboardButton('Дата-центры (Англ.)')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
 
 # DC RU
 # markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -107,7 +114,7 @@ def log_inline(inline_query):
     bot.send_message(config.LOGCHANNEL, inline_query)
 
 def send_about_problem_valve_api(message):
-    """Answer of bot if Valve's API don't answered"""
+    """Answer of bot if Valve's API don't answer"""
     
     if message.from_user.language_code == "ru":
         text = strings.wrongAPI_ru
@@ -119,7 +126,7 @@ def send_about_problem_valve_api(message):
 
 def send_about_problem_valve_inline(inline_query):
     # if inline_query.from_user.language_code == "ru":
-    #     bot.send_message(message.chat.id, '💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, подождите несколько минут.')
+    #     bot.send_message(message.chat.id, '💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже.')
     # else:
     #     bot.send_message(message.chat.id, "💀 Issues with Valve's API, the bot can't get information, please, try again later.")
     try:
@@ -131,55 +138,127 @@ def send_about_problem_valve_inline(inline_query):
         print(e)
 
 
-def status(message):
-    """Get information about status of CS:GO server"""
+def get_status():
+    """Get the status of CS:GO servers"""
+    sessionsLogon, player_count, time_server = api.status()
+
+    if sessionsLogon == 'normal':
+            status_text_en = strings.statusNormal_en.format(player_count, time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, time_server)
+    else:
+            status_text_en = strings.statusWrong_en.format(time_server)
+            status_text_ru = strings.statusWrong_ru.format(time_server)
+
+    return status_text_en, status_text_ru
+
+
+def get_matchmaking():
+    """Get information about online servers, active players and more about matchmaking servers"""
+    scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
+
+    if scheduler == 'normal':
+            mm_text_en = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+            mm_text_ru = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+    elif not scheduler == 'normal':
+            mm_text_en = strings.mmWrong_en.format(time_server)
+            mm_text_ru = strings.mmWrong_ru.format(time_server)
+
+    return mm_text_en, mm_text_ru
+
+
+def get_devcount():
+    """Get the count of online devs"""
+    dev_player_count, time_server = api.devcount()
+
+    devcount_text_en = strings.devCount_en.format(dev_player_count, time_server)
+    devcount_text_ru = strings.devCount_ru.format(dev_player_count, time_server)
+
+    return devcount_text_en, devcount_text_ru
+
+
+def get_timer():
+    """Get the time left until exp and drop cap reset"""
+    delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+
+    timer_text_en = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
+    timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+
+    return timer_text_en, timer_text_ru
+
+def send_status(message):
+    """Send the status of CS:GO servers"""
     try:
-        SessionsLogon, player_count, time_server = api.status()
-        if SessionsLogon == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.statusNormal_ru.format(player_count, time_server)
-                markup = markup_ru
-            else:    
-                text = strings.statusNormal_en.format(player_count, time_server)
-                markup = markup_en
+        status_text_en, status_text_ru = get_status()
+
+        if message.from_user.language_code == 'ru':
+            text = status_text_ru
+            markup = markup_ru
         else:
-            if message.from_user.language_code == 'ru':
-                text = strings.statusWrong_ru.format(time_server)
+            text = status_text_en
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
+
+
+def send_matchmaking(message):
+    """Send information about online servers, active players and more about matchmaking servers"""
+    try:
+        mm_text_en, mm_text_ru = get_matchmaking()
+
+        if message.from_user.language_code == 'ru':
+            text = mm_text_ru
+            markup = markup_ru
+        else:
+            text = mm_text_en
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_valve_api(message)
+
+
+def send_devcount(message):
+    """Send the count of online devs"""
+    try:
+        devcount_text_en, devcount_text_ru = get_devcount()
+
+        if message.from_user.language_code == 'ru':
+                text = devcount_text_ru
                 markup = markup_ru
-            else:
-                text = strings.statusWrong_en.format(time_server)
+        else:    
+                text = devcount_text_en
                 markup = markup_en
 
         bot.send_message(message.chat.id, text, reply_markup=markup) 
+
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
 
 
-def matchmaking(message):
-    """Get information about Online servers, Active players and more about matchmaking servers"""
+def send_timer(message):
+    """Send the time left until exp and drop cap reset"""
     try:
-        scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-        if scheduler == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+        timer_text_en, timer_text_ru = get_timer()
+
+        if message.from_user.language_code == 'ru':
+                text = timer_text_ru
                 markup = markup_ru
-            else:
-                text = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
+        else:
+                text = timer_text_en
                 markup = markup_en
-        elif not scheduler == 'normal':
-            if message.from_user.language_code == 'ru':
-                text = strings.mmWrong_ru.format(time_server)
-                markup = markup_ru
-            else:
-                text = strings.mmWrong_en.format(time_server)
-                markup = markup_en
-    
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
         send_about_problem_valve_api(message)
-
 
 def dc(message):
     try:
@@ -199,13 +278,13 @@ def dc(message):
 
 def dc_africa(message):
     capacity, load, time_server = api_dc.africa_South()
-    text = f'🌍 South Africa DCʼ status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇿🇦 South Africaʼs DC status is OK:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text)
 
 
 def dc_australia(message):
     capacity, load, time_server = api_dc.australia()
-    text = f'🇦🇺 Australia DCʼ status is OK:\n\n• Location: Sydney;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇦🇺 Australiaʼs DC status is OK:\n\n• Location: Sydney;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text)
 
 
@@ -216,19 +295,19 @@ def dc_europe(message):
 
 def dc_eu_north(message):
     capacity, load, time_server = api_dc.eu_North()
-    text = f'🇪🇺 North Europe DCʼ status is OK:\n\n• Location: Stockholm;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇸🇪 Swedenʼs DC status is OK:\n\n• Location: Stockholm;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_eu_west(message):
     capacity, load, capacity_Spain, load_Spain, time_server = api_dc.eu_West()
-    text = f'🇪🇺 West Europe DCʼ status is OK:\n\n• Location: Luxembourg;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇪🇸 Spain DCʼ status is OK:\n\n• Location: Mardid;\n• Load: {load_Spain};\n• Capacity: {capacity_Spain}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇱🇺 Luxembourgʼs DC status is OK:\n\n• Location: Luxembourg;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇪🇸 Spainʼs DC status is OK:\n\n• Location: Mardid;\n• Load: {load_Spain};\n• Capacity: {capacity_Spain}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_eu_east(message):
     capacity_East, capacity_Poland, load_East, load_Poland, time_server = api_dc.eu_East()
-    text = f'🇪🇺 East Europe DCʼ status is OK:\n\n• Location: Vienna;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\n🇵🇱 Poland DCʼ status is OK:\n\n• Location: Warsaw;\n• Load: {load_Poland};\n• Capacity: {capacity_Poland}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇦🇹 Austriaʼs DC status is OK:\n\n• Location: Vienna;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\n🇵🇱 Polandʼs DC status is OK:\n\n• Location: Warsaw;\n• Load: {load_Poland};\n• Capacity: {capacity_Poland}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
@@ -244,55 +323,55 @@ def dc_usa(message):
 
 def dc_usa_north(message):
     capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, time_server = api_dc.usa_North()
-    text = f'🇺🇸 Northcentral DCʼ status is OK:\n\n• Location: Chicago;\n• Load: {load_US_Northcentral};\n• Capacity: {capacity_US_Northcentral}.\n\n🇺🇸 Northeast DCʼ status is OK:\n\n• Location: Sterling;\n• Load: {load_US_Northeast};\n• Capacity: {capacity_US_Northeast}.\n\n 🇺🇸 Northwest DCʼ status is OK:\n\n• Location: Moses Lake;\n• Load: {load_US_Northwest};\n• Capacity: {capacity_US_Northwest}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇺🇸 Northcentral DC status is OK:\n\n• Location: Chicago;\n• Load: {load_US_Northcentral};\n• Capacity: {capacity_US_Northcentral}.\n\n🇺🇸 Northeast DC status is OK:\n\n• Location: Sterling;\n• Load: {load_US_Northeast};\n• Capacity: {capacity_US_Northeast}.\n\n🇺🇸 Northwest DC status is OK:\n\n• Location: Moses Lake;\n• Load: {load_US_Northwest};\n• Capacity: {capacity_US_Northwest}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_usa_south(message):
     capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, time_server = api_dc.usa_South()
-    text = f'🇺🇸 Southwest DCʼ status is OK:\n\n• Location: Los Angeles;\n• Load: {load_US_Southwest};\n• Capacity: {capacity_US_Southwest}.\n\n 🇺🇸 Southeast DCʼ status is OK:\n\n• Location: Atlanta;\n• Load: {load_US_Southeast};\n• Capacity: {capacity_US_Southeast}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇺🇸 Southwest DC status is OK:\n\n• Location: Los Angeles;\n• Load: {load_US_Southwest};\n• Capacity: {capacity_US_Southwest}.\n\n🇺🇸 Southeast DC status is OK:\n\n• Location: Atlanta;\n• Load: {load_US_Southeast};\n• Capacity: {capacity_US_Southeast}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_south_america(message):
     capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, time_server = api_dc.sa()
-    text = f'🇧🇷 Brazil DCʼ status is OK:\n\n• Location: Sao Paulo;\n• Load: {load_Brazil};\n• Capacity: {capacity_Brazil}.\n\n🇨🇱 Chile DCʼ status is OK:\n\n• Location: Santiago;\n• Load: {load_Chile};\n• Capacity: {capacity_Chile}.\n\n🇵🇪 Peru DCʼ status is OK:\n\n• Location: Lima;\n• Load: {load_Peru};\n• Capacity: {capacity_Peru}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇧🇷 Brazilʼs DC status is OK:\n\n• Location: Sao Paulo;\n• Load: {load_Brazil};\n• Capacity: {capacity_Brazil}.\n\n🇨🇱 Chileʼs DC status is OK:\n\n• Location: Santiago;\n• Load: {load_Chile};\n• Capacity: {capacity_Chile}.\n\n🇵🇪 Peruʼs DC status is OK:\n\n• Location: Lima;\n• Load: {load_Peru};\n• Capacity: {capacity_Peru}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_india(message):
     capacity, capacity_East, load, load_East, time_server = api_dc.india()
-    text = f'🇮🇳 India DCʼ status is OK:\n\n• Location: Mumbai;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇮🇳 East India DCʼ status is OK:\n\n• Location: Chennai;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇮🇳 Indiaʼs DC status is OK:\n\n• Location: Mumbai;\n• Load: {load};\n• Capacity: {capacity}.\n\n• Location: Chennai;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_japan(message):
     capacity, load, time_server = api_dc.japan()
-    text = f'🇯🇵 Japan DCʼ status is OK:\n\n• Location: Tokyo;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇯🇵 Japanʼs DC status is OK:\n\n• Location: Tokyo;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_china(message):
     capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, time_server = api_dc.china()
-    text = f'🇨🇳 China DCʼ status is OK: \n\n• Location: Shanghai;\n• Load: {load_Shanghai};\n• Capacity: {capacity_Shanghai}.\n\n• Location: Tianjin;\n• Load: {load_Tianjin};\n• Capacity: {capacity_Tianjin}.\n\n• Location: Guangzhou;\n• Load: {load_Guangzhou};\n• Capacity: {capacity_Guangzhou}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇨🇳 Chinaʼs DC status is OK: \n\n• Location: Shanghai;\n• Load: {load_Shanghai};\n• Capacity: {capacity_Shanghai}.\n\n• Location: Tianjin;\n• Load: {load_Tianjin};\n• Capacity: {capacity_Tianjin}.\n\n• Location: Guangzhou;\n• Load: {load_Guangzhou};\n• Capacity: {capacity_Guangzhou}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_emirates(message):
     capacity, load, time_server = api_dc.emirates()
-    text = f'🇦🇪 Emirates DCʼ status is OK:\n\n• Location: Dubai;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇦🇪 Emiratesʼ DC status is OK:\n\n• Location: Dubai;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_singapore(message):
     capacity, load, time_server = api_dc.singapore()
-    text = f'🇸🇬 Singapore DCʼ status is OK:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇸🇬 Singaporeʼs DC status is OK:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
 
 
 def dc_hong_kong(message):
     capacity, load, time_server = api_dc.hong_kong()
-    text = f'🇭🇰 Hong Kong DCʼ status is OK:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update on {time_server} (UTC−8, summer UTC−7).'
+    text = f'🇭🇰 Hong Kongʼs DC status is OK:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
     bot.send_message(message.chat.id, text, reply_markup=markup_DC)
  
 
@@ -305,51 +384,58 @@ def back(message):
 
 
 @bot.inline_handler(lambda query: True)
-def status_inline(inline_query):
+def send_inline(inline_query):
     """Inline mode"""
-    try:        
-        SessionsLogon, player_count, time_server = api.status()
-        scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
+    try:
+        status_text_en, status_text_ru = get_status()
+        mm_text_en, mm_text_ru = get_matchmaking()
+        devcount_text_en, devcount_text_ru = get_devcount()
+        timer_text_en, timer_text_ru = get_timer()
+
         try:
-            if SessionsLogon == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    status_r = strings.statusNormal_ru.format(player_count, time_server)
-                else:    
-                    status_r = strings.statusNormal_en.format(player_count, time_server)
+            if inline_query.from_user.language_code == 'ru':
+                status_r = status_text_ru
+                mm_r = mm_text_ru
+                dev_r = devcount_text_ru
+                timer_r = timer_text_ru
+
             else:
-                if inline_query.from_user.language_code == 'ru':
-                    status_r = strings.statusWrong_ru.format(time_server)
-                else:    
-                    status_r = strings.statusWrong_en.format(time_server)
-
-            if scheduler == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    mm_r = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-                else:
-                    mm_r = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-
-            elif not scheduler == 'normal':
-                if inline_query.from_user.language_code == 'ru':
-                    mm_r = strings.mmWrong_ru.format(time_server)
-                else:
-                    mm_r = strings.mmWrong_en.format(time_server)
+                status_r = status_text_en
+                mm_r = mm_text_en
+                dev_r = devcount_text_en
+                timer_r = timer_text_en
+            
+            # text part
             if inline_query.from_user.language_code == 'ru': 
-                titleStatus = 'Статус'
-                titleMM = 'Матчмейкинг'
+                title_status = 'Статус'
+                title_mm = 'Матчмейкинг'
+                title_dev = 'Бета-версия'
+                title_timer = 'Сброс ограничений'
 
-                descriptionStatus = 'Проверить доступность серверов'
-                descriptionMM = 'Показать количество играющих'
+                description_status = 'Проверить доступность серверов'
+                description_mm = 'Показать количество активных игроков'
+                description_dev = 'Показать количество онлайн разработчиков'
+                description_timer = 'Время до сброса ограничений опыта и дропа'
+                
             else:
-                titleStatus = 'Status'
-                titleMM = 'Matchmaking'
+                title_status = 'Status'
+                title_mm = 'Matchmaking'
+                title_dev = 'Beta version'
+                title_timer = 'Drop cap reset'
 
-                descriptionStatus = 'Check the availability of the servers'
-                descriptionMM = 'Show the count of players currently playing'
+                description_status = 'Check the availability of the servers'
+                description_mm = 'Show the count of active players'
+                description_dev = 'Show the count of in-game developers'
+                description_timer = 'Time left until experience and drop cap reset'
 
-            r = types.InlineQueryResultArticle('1', titleStatus, input_message_content = types.InputTextMessageContent(status_r), description=descriptionStatus)
-            r2 = types.InlineQueryResultArticle('2', titleMM, input_message_content = types.InputTextMessageContent(mm_r), description=descriptionMM)
-            bot.answer_inline_query(inline_query.id, [r, r2], cache_time=10)
+            r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), description=description_status)
+            r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), description=description_mm)
+            r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), description=description_dev)
+            r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), description=description_timer)
+
+            bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=15)
             log_inline(inline_query)
+
         except Exception as e:
             bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
             print(e)
@@ -382,13 +468,13 @@ def leave_feedback(message):
         text = strings.cmdFeedback_ru 
     else:
         text = strings.cmdFeedback_en
-    
+
     bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
     bot.register_next_step_handler(message, get_feedback)
 
 
 def get_feedback(message):
-    """Get feedback from user of bot"""
+    """Get feedback from users"""
     if message.text == '/cancel':
         log(message)
         if message.from_user.language_code == 'ru':
@@ -437,40 +523,37 @@ def answer(message):
         bot.send_chat_action(message.chat.id, 'typing')
 
         if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
-            status(message)
-
+            send_status(message)
 
         elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
-            matchmaking(message)
-
+            send_matchmaking(message)
+        
+        elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
+            send_devcount(message)
+ 
+        elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
+            send_timer(message)
 
         elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
             dc(message)
 
-
         elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
             dc_africa(message)
-
 
         elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
             dc_australia(message)
 
-
         elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
             dc_europe(message)
-
 
         elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
             dc_asia(message)
 
-
         elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
             dc_usa(message)
 
-
         elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
             dc_south_america(message)
-
 
         elif message.text.lower() == 'usa north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
             dc_usa_north(message)
@@ -478,10 +561,8 @@ def answer(message):
         elif message.text.lower() == 'usa south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
             dc_usa_south(message)
 
-
         elif message.text.lower() == 'eu north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
             dc_eu_north(message)
-
 
         elif message.text.lower() == 'eu west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
             dc_eu_west(message)
@@ -489,29 +570,23 @@ def answer(message):
         elif message.text.lower() == 'eu east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
             dc_eu_east(message)
 
-
         elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
             dc_india(message)
-            
+
         elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
             dc_japan(message)
-
 
         elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
             dc_china(message)
 
-
         elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
             dc_emirates(message)
-
 
         elif message.text.lower() == 'singapore' or message.text.lower() == 'сингопур' or message.text.lower() == '/singapore':
             dc_singapore(message)
 
-
         elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
             dc_hong_kong(message)
-
 
         elif message.text == '⏪ Back' or message.text == '⏪ Назад':
             back(message)

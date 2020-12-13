@@ -4,10 +4,10 @@ import config
 
 API = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_player_count = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
+API_dev_count = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
 
 
 def get_response():
-    
     response = requests.get(API)
     response = response.json()
     result = response['result']
@@ -21,7 +21,7 @@ class ValveServersAPI:
         result = get_response()
 
         services = result['services']
-        SessionsLogon = services['SessionsLogon']
+        sessionsLogon = services['SessionsLogon']
         app = result['app']
         time_server = app['time']
 
@@ -30,7 +30,7 @@ class ValveServersAPI:
         response1 = json_response_player_count['response']
         player_count = response1['player_count']
 
-        return SessionsLogon, player_count, time_server
+        return sessionsLogon, player_count, time_server
 
 
     def matchmaking(self):
@@ -46,7 +46,21 @@ class ValveServersAPI:
         search_seconds_avg = matchmaking['search_seconds_avg']
 
         return scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players
+        
+        
+    def devcount(self):
+        result = get_response()
 
+        app = result['app']
+        time_server = app['time']
+
+        response_dev_player_count = requests.get(API_dev_count)
+        json_response_dev_player_count = response_dev_player_count.json()
+        response1 = json_response_dev_player_count['response']
+        dev_player_count = response1['player_count']
+
+        return dev_player_count, time_server
+    
 
 class ValveServersDataCentersAPI:
 
