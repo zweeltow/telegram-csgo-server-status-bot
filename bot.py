@@ -7,6 +7,7 @@ from telebot import types
 
 import config
 import strings
+
 from timer_drop import Timer
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
 
@@ -125,13 +126,15 @@ def send_about_problem_valve_api(message):
 
 
 def send_about_problem_valve_inline(inline_query):
-    # if inline_query.from_user.language_code == "ru":
-    #     bot.send_message(message.chat.id, '💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже.')
-    # else:
-    #     bot.send_message(message.chat.id, "💀 Issues with Valve's API, the bot can't get information, please, try again later.")
+    if inline_query.from_user.language_code == "ru":
+        text = "💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже.\n\n❤️ @csgobetabot"
+        markup = markup_ru
+    else:
+        text = "💀 Issues with Valve's API, the bot can't get information, please, try again later.\n\n❤️ @csgobetabot"
+        markup = markup_en
+
     try:
-        r = types.InlineQueryResultArticle('1', "💀 Issues with Valve's API, try again later", input_message_content = "💀 Issues with Valve's API, the bot can't get information, please, try again later.\n\n❤️ @csgobetabot", description="The bot can't get information about servers")
-        bot.answer_inline_query(inline_query.id, [r])
+        bot.send_message(inline_query.from_user.id, text, reply_markup=markup)
 
     except Exception as e:
         bot.send_message(config.OWNER, f'❗️Error: {e}\n\ninline_query')
