@@ -57,15 +57,15 @@ markup_DC_Asia.add(china, emirates, hong_kong, india, japan, singapore)
 
 # DC Europe
 markup_DC_EU = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-eu_West = types.KeyboardButton('EU West')
-eu_East = types.KeyboardButton('EU East')
-eu_North = types.KeyboardButton('EU North')
+eu_West = types.KeyboardButton('West')
+eu_East = types.KeyboardButton('East')
+eu_North = types.KeyboardButton('Nоrth')
 markup_DC_EU.add(eu_East, eu_North, eu_West)
 
 # DC USA
 markup_DC_USA = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-usa_Northwest = types.KeyboardButton('USA North')
-usa_Southwest = types.KeyboardButton('USA South')
+usa_Northwest = types.KeyboardButton('North')
+usa_Southwest = types.KeyboardButton('South')
 markup_DC_USA.add(usa_Northwest, usa_Southwest)
 
 # DC Back
@@ -558,19 +558,19 @@ def answer(message):
         elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
             dc_south_america(message)
 
-        elif message.text.lower() == 'usa north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
+        elif message.text.lower() == 'north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
             dc_usa_north(message)
 
-        elif message.text.lower() == 'usa south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
+        elif message.text.lower() == 'south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
             dc_usa_south(message)
 
-        elif message.text.lower() == 'eu north' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
+        elif message.text.lower() == 'nоrth' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
             dc_eu_north(message)
 
-        elif message.text.lower() == 'eu west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
+        elif message.text.lower() == 'west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
             dc_eu_west(message)
 
-        elif message.text.lower() == 'eu east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
+        elif message.text.lower() == 'east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
             dc_eu_east(message)
 
         elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
