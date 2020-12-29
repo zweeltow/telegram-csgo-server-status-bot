@@ -11,10 +11,10 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Player count: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Online players: {};\n\n• 24-hour peak: {}. \n\nLatest update: {} (UTC-8, summer UTC-7)."
 statusWrong_en = "❌ Server status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Количество игроков: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков: {};\n\n• 24-часовой пик: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
@@ -41,10 +41,10 @@ mmWrong_ru = "❌ Планировщик матчмейкинга в ненор�
 """Text of Wrong Request"""
 # English
 unknownRequest_en = "🤷‍♀️ Nothing found, please use one of the following commands:"
-wrongAPI_en = "💀 Issues with Valve's API, the bot can't get information, please, try again later."
+wrongAPI_en = "💀 Issues with Valve's API, please try again later."
 # Russian
 unknownRequest_ru = "🤷‍♀️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых команд:"
-wrongAPI_ru = "💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже."
+wrongAPI_ru = "💀 Проблемы с API Valve, пожалуйста, попробуйте позже."
 
 
 """DC"""
