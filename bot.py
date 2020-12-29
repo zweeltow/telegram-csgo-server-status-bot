@@ -127,10 +127,10 @@ def send_about_problem_valve_api(message):
 
 def send_about_problem_valve_inline(inline_query):
     if inline_query.from_user.language_code == "ru":
-        text = "💀 Проблемы с API Valve, бот не может получить информацию, пожалуйста, попробуйте позже.\n\n❤️ @csgobetabot"
+        text = "💀 Проблемы с API Valve, пожалуйста, попробуйте позже.\n\n❤️ @csgobetabot"
         markup = markup_ru
     else:
-        text = "💀 Issues with Valve's API, the bot can't get information, please, try again later.\n\n❤️ @csgobetabot"
+        text = "💀 Issues with Valve's API, please try again later.\n\n❤️ @csgobetabot"
         markup = markup_en
 
     try:
