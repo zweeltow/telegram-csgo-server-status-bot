@@ -10,7 +10,7 @@ import strings
 
 from timer_drop import Timer
 from valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from online_peak import Peak24h
+from online_peak import PeakOnline
 
 
 TEST = False
@@ -146,11 +146,11 @@ def send_about_problem_valve_inline(inline_query):
 def get_status():
     """Get the status of CS:GO servers"""
     sessionsLogon, player_count, time_server = api.status()
-    peak = peak_count.get_peak24h()
+    peak24, peak_all = peak_count.get_peak24h()
 
     if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, peak, time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, peak, time_server)
+            status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, peak24, peak_all, time_server)
     else:
             status_text_en = strings.statusWrong_en.format(time_server)
             status_text_ru = strings.statusWrong_ru.format(time_server)
