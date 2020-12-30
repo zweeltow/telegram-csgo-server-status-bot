@@ -23,7 +23,7 @@ me = config.OWNER # short way to contact the developer
 api = ValveServersAPI()
 api_dc = ValveServersDataCentersAPI()
 timer_drop = Timer()
-peak_count = Peak24h()
+peak_count = PeakOnline()
 
 
 """Setup keyboard"""
