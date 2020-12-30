@@ -148,8 +148,8 @@ def get_status():
     peak = peak24h()
 
     if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, peak24h, time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, peak24h, time_server)
+            status_text_en = strings.statusNormal_en.format(player_count, peak, time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, peak, time_server)
     else:
             status_text_en = strings.statusWrong_en.format(time_server)
             status_text_ru = strings.statusWrong_ru.format(time_server)
