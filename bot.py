@@ -146,7 +146,7 @@ def send_about_problem_valve_inline(inline_query):
 def get_status():
     """Get the status of CS:GO servers"""
     sessionsLogon, player_count, time_server = api.status()
-    peak24, peak_all = peak_count.get_peak24h()
+    peak24, peak_all = peak_count.get_peak()
 
     if sessionsLogon == 'normal':
             status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, time_server)
