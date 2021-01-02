@@ -5,12 +5,12 @@ import logging
 import telebot
 from telebot import types
 
-import config
-import strings
+import core.config
+import core.strings
 
-from timer_drop import Timer
-from valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from online_peak import PeakOnline
+from app.timer_drop import Timer
+from app.valve_api import ValveServersAPI, ValveServersDataCentersAPI
+from app.online_peak import PeakOnline
 
 
 TEST = False
