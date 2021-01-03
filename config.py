@@ -7,3 +7,6 @@ OWNER = ''
 AQ = ''
 
 LOGCHANNEL = ''
+
+STEAM_USERNAME = ''
+STEAM_PASS = ''

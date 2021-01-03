@@ -21,7 +21,7 @@ def save(path, data_str, mode='w'):
         if os.path.isdir(directory):
             return save(path, data_str, mode)
         else:
-            print('Could not write to ' + path)
+            print(f'Could not write to {path}')
             return False
     else:
         return True
@@ -35,7 +35,7 @@ def read(path):
             fileContents = f.read()
         return fileContents
     except IOError:
-        print('Could not find or open file: ' + path)
+        print(f'Could not find or open file: {path}')
         return False
 
 
@@ -62,7 +62,7 @@ def readJson(path):
         try:
             return json.loads(f)
         except ValueError:
-            print('Could not parse JSON file: ' + path)
+            print(f'Could not parse JSON file: {path}')
             return False
     else:
         return False

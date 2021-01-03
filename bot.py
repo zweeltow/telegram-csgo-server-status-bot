@@ -5,13 +5,13 @@ import logging
 import telebot
 from telebot import types
 
-import core.config
-import core.strings
+import config
+import strings
 
-from app.timer_drop import Timer
-from app.valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from app.online_peak import PeakOnline
-from app.unique_monthly import Monthly
+from timer_drop import Timer
+from valve_api import ValveServersAPI, ValveServersDataCentersAPI
+from online_peak import PeakOnline
+from unique_monthly import Monthly
 
 
 TEST = False
@@ -144,6 +144,13 @@ def send_about_problem_valve_inline(inline_query):
         bot.send_message(config.OWNER, f'❗️Error: {e}\n\ninline_query')
         print(e)
 
+
+"""I'll try to do something with it later"""
+# class SendAlert():
+#     def send_alert(self, id):
+#         chatID = -1001280394480 # just for beta works only in t.me/csgobetachat
+#         # bot.send_message(chatID, f'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{id}`.', parse_mode='Markdown', reply_markup=markup_del)
+#         bot.send_message(me, "Работает!")
 
 def get_status():
     """Get the status of CS:GO servers"""
@@ -613,6 +620,8 @@ def answer(message):
     
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
+
+# exec(open("/root/tgbot/telegram-csgo-server-status-bot/update_notifier.py").read())
 
 # Polling
 bot.polling(True)

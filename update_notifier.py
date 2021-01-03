@@ -9,24 +9,28 @@ import logging
 
 
 import file_manager
-import alerts
+# import alerts
+
+from bot import SendAlert
+
+import config
 
 
 def setup():
     client = SteamClient()
     try:
-        client.login(username='', password='')
+        client.login(username=config.STEAM_USERNAME, password=config.STEAM_PASS)
     except:
         error_message = traceback.format_exc()
         now = str(datetime.now())
-        print(now + ' - Error:\n' + error_message + '\n\n\n')
+        print(f'{now} - Error:\n{error_message}\n\n\n')
         time.sleep(60)
         setup()
         
-    checkForUpdates(client)
+    check_for_updates(client)
 
 
-def checkForUpdates(client):
+def check_for_updates(client):
     while True:
         try:
             delta = client.get_product_info(apps=[730], timeout=15)
@@ -36,20 +40,20 @@ def checkForUpdates(client):
                 for k, val in values.items():
                     currentBuild = val['depots']['branches']['public']['buildid']
 
-            cacheFile = file_manager.readJson('cache.json')
+            cacheFile = file_manager.readJson('/root/tgbot/telegram-csgo-server-status-bot/cache.json')
             bIDCache = cacheFile['build_ID']
 
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
-                file_manager.updateJson('cache.json', currentBuild)
-                alerts.sendAlert(currentBuild)
+                file_manager.updateJson('/root/tgbot/telegram-csgo-server-status-bot/cache.json', currentBuild)
+                SendAlert().send_alert(currentBuild)
 
             time.sleep(10)
 
         except AttributeError:
             error_message = traceback.format_exc()
             now = str(datetime.now())
-            print(now + ' - Error:\n' + error_message + '\n\n\n')
+            print(f'{now} - Error:\n{error_message}\n\n\n')
             client.logout()
             time.sleep(60)
             setup()
