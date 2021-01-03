@@ -34,7 +34,7 @@ def checkForUpdates(client):
 
             for key, values in delta.items():
                 for k, val in values.items():
-                    currentBuild = val['depots']['branches']['dpr']['buildid']
+                    currentBuild = val['depots']['branches']['public']['buildid']
 
             cacheFile = file_manager.readJson('cache.json')
             bIDCache = cacheFile['build_ID']
