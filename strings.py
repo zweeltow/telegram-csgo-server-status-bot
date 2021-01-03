@@ -11,10 +11,10 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Online players: {};\n• 24-hour peak: {};\n• All-time peak: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Online players: {};\n• 24-hour peak: {};\n• All-time peak: {};\n• Monthly unique players: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 statusWrong_en = "❌ Server status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков: {};\n• 24-часовой пик: {};n\n• Рекордный пик: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков: {};\n• 24-часовой пик: {};\n• Рекордный пик: {};\n• Ежемесячные уникальные игроки: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ Сервера в ненормальном состоянии.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
@@ -31,10 +31,10 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 
 """Text of Matchmaking"""
 # English
-mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} sec.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} s.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} сек.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} с.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 mmWrong_ru = "❌ Планировщик матчмейкинга в ненормальном состоянии.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 
 
