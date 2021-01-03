@@ -11,6 +11,7 @@ import core.strings
 from app.timer_drop import Timer
 from app.valve_api import ValveServersAPI, ValveServersDataCentersAPI
 from app.online_peak import PeakOnline
+from app.unique_monthly import Monthly
 
 
 TEST = False
@@ -24,6 +25,7 @@ api = ValveServersAPI()
 api_dc = ValveServersDataCentersAPI()
 timer_drop = Timer()
 peak_count = PeakOnline()
+month_unique = Monthly()
 
 
 """Setup keyboard"""
@@ -147,10 +149,11 @@ def get_status():
     """Get the status of CS:GO servers"""
     sessionsLogon, player_count, time_server = api.status()
     peak24, peak_all = peak_count.get_peak()
+    unique = month_unique.get_unique()
 
     if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, peak24, peak_all, time_server)
+            status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, unique, time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, peak24, peak_all, unique, time_server)
     else:
             status_text_en = strings.statusWrong_en.format(time_server)
             status_text_ru = strings.statusWrong_ru.format(time_server)
