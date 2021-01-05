@@ -7,10 +7,13 @@ import time
 import traceback
 import logging
 
-import file_manager
-import alerts as bot
+from apps import alerts as bot
+from apps import file_manager
 
 import config
+
+
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/apps/cache.json"
 
 
 def setup():
@@ -37,12 +40,12 @@ def check_for_updates(client):
                 for k, val in values.items():
                     currentBuild = val['depots']['branches']['public']['buildid']
 
-            cacheFile = file_manager.readJson('/root/tgbot/telegram-csgo-server-status-bot/cache.json')
+            cacheFile = file_manager.readJson(JSON_FILE_PATH)
             bIDCache = cacheFile['build_ID']
 
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
-                file_manager.updateJson('/root/tgbot/telegram-csgo-server-status-bot/cache.json', currentBuild)
+                file_manager.updateJson(JSON_FILE_PATH, currentBuild)
                 bot.send_alert(currentBuild)
 
             time.sleep(10)

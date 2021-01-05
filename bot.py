@@ -9,10 +9,10 @@ from telebot import types
 import config
 import strings
 
-from timer_drop import Timer
-from valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from online_peak import PeakOnline
-from unique_monthly import Monthly
+from apps.timer_drop import Timer
+from apps.valve_api import ValveServersAPI, ValveServersDataCentersAPI
+from apps.online_peak import PeakOnline
+from apps.unique_monthly import Monthly
 
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
