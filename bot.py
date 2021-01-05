@@ -142,14 +142,6 @@ def send_about_problem_valve_inline(inline_query):
         print(e)
 
 
-"""I'll try to do something with it later"""
-class SendAlert:
-    def send_alert(self, currentBuild):
-        bot.stop_polling()
-        chatID = -1001280394480 # just for beta works only in t.me/csgobetachat
-        bot.send_message(me, f'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{currentBuild}`.', parse_mode='Markdown', reply_markup=markup_del)
-
-
 def get_status():
     """Get the status of CS:GO servers"""
     sessionsLogon, player_count, time_server = api.status()
