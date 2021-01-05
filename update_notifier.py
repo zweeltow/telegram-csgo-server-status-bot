@@ -7,11 +7,8 @@ import time
 import traceback
 import logging
 
-
 import file_manager
-# import alerts
-
-from bot import SendAlert
+import alerts as bot
 
 import config
 
@@ -46,7 +43,7 @@ def check_for_updates(client):
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
                 file_manager.updateJson('/root/tgbot/telegram-csgo-server-status-bot/cache.json', currentBuild)
-                SendAlert().send_alert(currentBuild)
+                bot.send_alert(currentBuild)
 
             time.sleep(10)
 

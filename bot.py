@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import time
 
 import telebot
 from telebot import types
@@ -14,11 +15,7 @@ from online_peak import PeakOnline
 from unique_monthly import Monthly
 
 
-TEST = False
-
-
-if TEST: bot = telebot.TeleBot(config.TESTBOT) # the token of the test bot
-else: bot = telebot.TeleBot(config.CSGOBETABOT) # the token of the bot
+bot = telebot.TeleBot(config.BOT_TOKEN)
 telebot.logger.setLevel(logging.DEBUG) # setup logger
 me = config.OWNER # short way to contact the developer
 api = ValveServersAPI()
@@ -146,11 +143,12 @@ def send_about_problem_valve_inline(inline_query):
 
 
 """I'll try to do something with it later"""
-# class SendAlert():
-#     def send_alert(self, id):
-#         chatID = -1001280394480 # just for beta works only in t.me/csgobetachat
-#         # bot.send_message(chatID, f'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{id}`.', parse_mode='Markdown', reply_markup=markup_del)
-#         bot.send_message(me, "Работает!")
+class SendAlert:
+    def send_alert(self, currentBuild):
+        bot.stop_polling()
+        chatID = -1001280394480 # just for beta works only in t.me/csgobetachat
+        bot.send_message(me, f'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{currentBuild}`.', parse_mode='Markdown', reply_markup=markup_del)
+
 
 def get_status():
     """Get the status of CS:GO servers"""
@@ -465,30 +463,41 @@ def send_inline(inline_query):
 def welcome(message):
     """First bot's message"""
     log(message)
-    if message.from_user.language_code == 'ru':
-        text = strings.cmdStart_ru.format(message.from_user.first_name)
-        markup = markup_ru
-    else:
-        text = strings.cmdStart_en.format(message.from_user.first_name)
-        markup = markup_en
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdStart_ru.format(message.from_user.first_name)
+            markup = markup_ru
+        else:
+            text = strings.cmdStart_en.format(message.from_user.first_name)
+            markup = markup_en
 
-    bot.send_message(message.chat.id, text, reply_markup=markup)
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+    else:
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
 
 
 @bot.message_handler(commands=['feedback'])
 def leave_feedback(message):
     """Send feedback"""
     log(message)
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdFeedback_ru 
+        else:
+            text = strings.cmdFeedback_en
 
-    if message.from_user.language_code == 'ru':
-        text = strings.cmdFeedback_ru 
+        bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
+        bot.register_next_step_handler(message, get_feedback)
     else:
-        text = strings.cmdFeedback_en
-
-    bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
-    bot.register_next_step_handler(message, get_feedback)
-
-
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
+        
 def get_feedback(message):
     """Get feedback from users"""
     if message.text == '/cancel':
@@ -503,7 +512,7 @@ def get_feedback(message):
         bot.send_message(config.OWNER, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
         bot.forward_message(config.OWNER, message.chat.id, message.message_id)
         
-        if not TEST:
+        if not config.TEST_MODE:
             bot.send_message(config.AQ, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
             bot.forward_message(config.AQ, message.chat.id, message.message_id)
 
@@ -521,14 +530,28 @@ def get_feedback(message):
 def help(message):
     """/help message"""
     log(message)
-    if message.from_user.language_code == 'ru':
-        text = strings.cmdHelp_ru
-        markup = markup_ru
-    else:
-        text = strings.cmdHelp_en
-        markup = markup_en
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdHelp_ru
+            markup = markup_ru
+        else:
+            text = strings.cmdHelp_en
+            markup = markup_en
 
-    bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup, disable_web_page_preview=True)
+        bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup, disable_web_page_preview=True)
+    else:
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
+
+
+@bot.message_handler(commands=['delkey'])
+def delete_keyboard(message):
+    bot.delete_message(message.chat.id, message.message_id)
+    bot.send_message(message.chat.id, "👍", reply_markup=markup_del)
+    time.sleep(10)
+    bot.delete_message(message.chat.id, message.message_id+1)
 
 
 @bot.message_handler(content_types=['text'])
@@ -536,92 +559,91 @@ def answer(message):
     """Answer of the bot"""
     log(message)
     try:
-        bot.send_chat_action(message.chat.id, 'typing')
+        if message.chat.type == "private":
+            bot.send_chat_action(message.chat.id, 'typing')
 
-        if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
-            send_status(message)
+            if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
+                send_status(message)
 
-        elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
-            send_matchmaking(message)
-        
-        elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
-            send_devcount(message)
- 
-        elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
-            send_timer(message)
+            elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
+                send_matchmaking(message)
+            
+            elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
+                send_devcount(message)
+    
+            elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
+                send_timer(message)
 
-        elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
-            dc(message)
+            elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
+                dc(message)
 
-        elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
-            dc_africa(message)
+            elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
+                dc_africa(message)
 
-        elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
-            dc_australia(message)
+            elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
+                dc_australia(message)
 
-        elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
-            dc_europe(message)
+            elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
+                dc_europe(message)
 
-        elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
-            dc_asia(message)
+            elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
+                dc_asia(message)
 
-        elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
-            dc_usa(message)
+            elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
+                dc_usa(message)
 
-        elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
-            dc_south_america(message)
+            elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
+                dc_south_america(message)
 
-        elif message.text.lower() == 'north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
-            dc_usa_north(message)
+            elif message.text.lower() == 'north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
+                dc_usa_north(message)
 
-        elif message.text.lower() == 'south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
-            dc_usa_south(message)
+            elif message.text.lower() == 'south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
+                dc_usa_south(message)
 
-        elif message.text.lower() == 'nоrth' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
-            dc_eu_north(message)
+            elif message.text.lower() == 'nоrth' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
+                dc_eu_north(message)
 
-        elif message.text.lower() == 'west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
-            dc_eu_west(message)
+            elif message.text.lower() == 'west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
+                dc_eu_west(message)
 
-        elif message.text.lower() == 'east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
-            dc_eu_east(message)
+            elif message.text.lower() == 'east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
+                dc_eu_east(message)
 
-        elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
-            dc_india(message)
+            elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
+                dc_india(message)
 
-        elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
-            dc_japan(message)
+            elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
+                dc_japan(message)
 
-        elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
-            dc_china(message)
+            elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
+                dc_china(message)
 
-        elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
-            dc_emirates(message)
+            elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
+                dc_emirates(message)
 
-        elif message.text.lower() == 'singapore' or message.text.lower() == 'сингопур' or message.text.lower() == '/singapore':
-            dc_singapore(message)
+            elif message.text.lower() == 'singapore' or message.text.lower() == 'сингопур' or message.text.lower() == '/singapore':
+                dc_singapore(message)
 
-        elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
-            dc_hong_kong(message)
+            elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
+                dc_hong_kong(message)
 
-        elif message.text == '⏪ Back' or message.text == '⏪ Назад':
-            back(message)
+            elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+                back(message)
 
 
-        else:
-            if message.from_user.language_code == 'ru':
-                text = strings.unknownRequest_ru
-                markup = markup_ru
-            else: 
-                text = strings.unknownRequest_en
-                markup = markup_en
+            else:
+                if message.from_user.language_code == 'ru':
+                    text = strings.unknownRequest_ru
+                    markup = markup_ru
+                else: 
+                    text = strings.unknownRequest_en
+                    markup = markup_en
 
-            bot.send_message(message.chat.id, text, reply_markup=markup)
+                bot.send_message(message.chat.id, text, reply_markup=markup)
     
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
-
-# exec(open("/root/tgbot/telegram-csgo-server-status-bot/update_notifier.py").read())
 
 # Polling
 bot.polling(True)

@@ -1,9 +1,11 @@
-# import telebot
-# from .. import config
+import telebot
+import config
 
-# bot = telebot.TeleBot(config.TESTBOT) # the token of the test bot
 
-# def send_alert(id):
-#     chatID = -1001280394480 # just for beta works only in t.me/csgobetachat
-#         # bot.send_message(chatID, f'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{id}`.', parse_mode='Markdown', reply_markup=markup_del)
-#     bot.send_message(config.OWNER, "Работает!")
+def send_alert(currentBuild):
+    bot = telebot.TeleBot(config.BOT_TOKEN)
+    csgobetachat = -1001280394480 # just for beta works only in t.me/csgobetachat
+    text = 'Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{}`.'
+    chat_list = [csgobetachat, config.AQ]
+    for chatID in chat_list:
+        bot.send_message(chatID, text.format(currentBuild), parse_mode='Markdown')
