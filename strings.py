@@ -31,7 +31,7 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 
 """Text of Matchmaking"""
 # English
-mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {} s.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: {};\n• Active players: {};\n• Searching players: {};\n• Average search seconds: {}s.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 mmWrong_en = "❌ Matchmaking scheduler status is not normal.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
 mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {};\n• Активных игроков: {};\n• Игроков в поиске: {};\n• Среднее время поиска: {} с.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
