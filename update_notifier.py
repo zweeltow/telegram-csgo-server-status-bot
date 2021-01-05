@@ -13,7 +13,7 @@ from apps import file_manager
 import config
 
 
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/apps/cache.json"
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
 
 def setup():
