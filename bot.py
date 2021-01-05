@@ -11,8 +11,7 @@ import strings
 
 from apps.timer_drop import Timer
 from apps.valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from apps.online_peak import PeakOnline
-from apps.unique_monthly import Monthly
+from apps.online_peak import PeakOnline, Monthly
 
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
