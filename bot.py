@@ -202,7 +202,7 @@ def send_status(message):
             text = status_text_en
             markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
@@ -221,7 +221,7 @@ def send_matchmaking(message):
             text = mm_text_en
             markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
@@ -240,7 +240,7 @@ def send_devcount(message):
                 text = devcount_text_en
                 markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup) 
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')

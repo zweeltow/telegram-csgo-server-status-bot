@@ -11,17 +11,17 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Online players right now: </code>{}</code>;\n• 24-hour peak: </code>{}</code>;\n• All-time peak: </code>{}</code>;\n• Monthly unique players: </code>{}</code>.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
-statusWrong_en = "❌ Something went wrong with the servers.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Online players right now: <code>{}</code>;\n• 24-hour peak: <code>{}</code>;\n• All-time peak: <code>{}</code>;\n• Monthly unique players: <code>{}</code>.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
+statusWrong_en = "❌ Something went wrong with the servers.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков прямо сейчас: </code>{}</code>;\n• 24-часовой пик: </code>{}</code>;\n• Рекордный пик: </code>{}</code>;\n• Ежемесячные уникальные игроки: </code>{}</code>.\n\nОбновлено: </code>{}</code> (UTC−8, летом UTC−7)."
-statusWrong_ru = "❌ С серверами что-то не так.\n\nОбновлено: </code>{}</code> (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков прямо сейчас: <code>{}</code>;\n• 24-часовой пик: <code>{}</code>;\n• Рекордный пик: <code>{}</code>;\n• Ежемесячные уникальные игроки: <code>{}</code>.\n\nОбновлено: <code>{}</code> (UTC−8, летом UTC−7)."
+statusWrong_ru = "❌ С серверами что-то не так.\n\nОбновлено: <code>{}</code> (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
 # English
-devCount_en = "🧑‍💻 Current online developers in the beta-version of CS:GO: </code>{}</code>.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
+devCount_en = "🧑‍💻 Current online developers in the beta-version of CS:GO: <code>{}</code>.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
 # Russian
-devCount_ru = "🧑‍💻 Текущий онлайн разработчиков в бета-версии CS:GO: </code>{}</code>.\n\nОбновлено: </code>{}</code> (UTC−8, летом UTC−7)."
+devCount_ru = "🧑‍💻 Текущий онлайн разработчиков в бета-версии CS:GO: <code>{}</code>.\n\nОбновлено: <code>{}</code> (UTC−8, летом UTC−7)."
 
 """Text of Timer"""
 # English
@@ -31,11 +31,11 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 
 """Text of Matchmaking"""
 # English
-mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: </code>{}</code>;\n• Active players: </code>{}</code>;\n• Searching players: </code>{}</code>;\n• Average search seconds: </code>{}</code>s.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
-mmWrong_en = "❌ Something went wrong with the matchmaking scheduler.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
+mmNormal_en = "✅ Matchmaking scheduler status is normal:\n\n• Online servers: <code>{}</code>;\n• Active players: <code>{}</code>;\n• Searching players: <code>{}</code>;\n• Average search seconds: <code>{}</code>s.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
+mmWrong_en = "❌ Something went wrong with the matchmaking scheduler.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
 # Russian
-mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: </code>{}</code>;\n• Активных игроков: </code>{}</code>;\n• Игроков в поиске: </code>{}</code>;\n• Среднее время поиска: </code>{}</code> с.\n\nОбновлено: </code>{}</code> (UTC−8, летом UTC−7)."
-mmWrong_ru = "❌ С планировщиком матчмейкинга что-то не так.\n\nLatest update: </code>{}</code> (UTC-8, summer UTC-7)."
+mmNormal_ru = "✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: <code>{}</code>;\n• Активных игроков: <code>{}</code>;\n• Игроков в поиске: <code>{}</code>;\n• Среднее время поиска: <code>{}</code> с.\n\nОбновлено: <code>{}</code> (UTC−8, летом UTC−7)."
+mmWrong_ru = "❌ С планировщиком матчмейкинга что-то не так.\n\nLatest update: <code>{}</code> (UTC-8, summer UTC-7)."
 
 
 """Text of Wrong Request"""
