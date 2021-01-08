@@ -16,11 +16,11 @@ class PeakOnline:
 
         peak24 = peak24.replace('<strong>', '')
         peak24 = peak24.replace('</strong>', '')
-        peak24 = peak24.replace(',', '')
+
 
         peak_all = peak_all.replace('<strong>', '')
         peak_all = peak_all.replace('</strong>', '')
-        peak_all = peak_all.replace(',', '')
+
 
         return peak24, peak_all
 
@@ -30,6 +30,5 @@ class Monthly:
         soup = BeautifulSoup(requests.get(url_cs, headers=headers).content, 'html.parser')
 
         unique = soup.find("div", {"class": "monthly"}).string
-        unique = unique.replace(',', '')
-
+        
         return unique
