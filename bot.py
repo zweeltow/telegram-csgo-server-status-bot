@@ -148,8 +148,8 @@ def get_status():
     unique = month_unique.get_unique()
 
     if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, unique, time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, peak24, peak_all, unique, time_server)
+            status_text_en = strings.statusNormal_en.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
     else:
             status_text_en = strings.statusWrong_en.format(time_server)
             status_text_ru = strings.statusWrong_ru.format(time_server)
