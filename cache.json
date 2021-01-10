@@ -1,1 +1,15 @@
-{"build_ID": ""}
+{
+    "build_ID": "",
+    "sessionsLogon": "",
+    "player_count": "",
+    "time_server": "",
+    "scheduler": "",
+    "online_server_count": "",
+    "active_player_count": "",
+    "search_seconds_avg": "",
+    "searching_players": "",
+    "dev_player_count": "",
+    "peak_24_hours": "",
+    "peak_all_time": "",
+    "unique_monthly": ""
+}
