@@ -52,6 +52,15 @@ class CSGOGameCoordinator:
         f = open(JSON_FILE_PATH, 'a')
         f.write(data)
         f.close()
+        
+        fin = open(JSON_FILE_PATH,"r")  
+        parsed = json.load(fin)
+        fin.close()
+        line = json.dumps(parsed, indent=4, sort_keys=True)
+        fout = open(JSON_FILE_PATH,"w")
+        fout.write(line)
+        fout.close()
+
 
         items = file_manager.readJson(JSON_FILE_PATH)
         delta = items['services'][4]
