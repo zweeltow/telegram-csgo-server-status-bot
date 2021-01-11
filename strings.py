@@ -11,23 +11,23 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Online players right now: {:,};\n• 24-hour peak: {:,};\n• All-time peak: {:,};\n• Monthly unique players: {:,}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Online players: {:,};\n• 24-hour peak: {:,};\n• All-time peak: {:,};\n• Monthly unique players: {:,}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 statusWrong_en = "❌ Something went wrong with the servers.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков прямо сейчас: {:,};\n• 24-часовой пик: {:,};\n• Рекордный пик: {:,};\n• Ежемесячные уникальные игроки: {:,}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков: {:,};\n• 24-часовой пик: {:,};\n• Рекордный пик: {:,};\n• Ежемесячные уникальные игроки: {:,}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ С серверами что-то не так.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
 # English
-devCount_en = "🧑‍💻 Current online developers in the beta-version of CS:GO: {:,}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+devCount_en = "🧑‍💻 Current online developers in the beta-version of CS:GO: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
 devCount_ru = "🧑‍💻 Текущий онлайн разработчиков в бета-версии CS:GO: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Timer"""
 # English
-timer_en = "⏳ Time left until experience and drop cap reset: {:,}d {:,}h {:,}m {:,}s."
+timer_en = "⏳ Time left until experience and drop cap reset: {}d {}h {}m {}s."
 # Russian
-timer_ru = "⏳ Время до сброса ограничений опыта и дропа: {:,} д. {:,} ч. {:,} м. {:,} с."
+timer_ru = "⏳ Время до сброса ограничений опыта и дропа: {} д. {} ч. {} м. {} с."
 
 """Text of Matchmaking"""
 # English
