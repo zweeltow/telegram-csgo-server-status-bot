@@ -1,7 +1,7 @@
 import datetime
 import time
 
-class Timer:
+class TimerDrop:
 
     def get_delta(self):
         wanted_day = 'wednesday'
