@@ -11,8 +11,7 @@ import strings
 
 from apps.timer_drop import Timer
 from apps.valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from apps.online_peak import PeakOnline
-from apps.unique_monthly import Monthly
+from apps.online_peak import PeakOnline, Monthly
 
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
@@ -149,8 +148,8 @@ def get_status():
     unique = month_unique.get_unique()
 
     if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, peak24, peak_all, unique, time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, peak24, peak_all, unique, time_server)
+            status_text_en = strings.statusNormal_en.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
+            status_text_ru = strings.statusNormal_ru.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
     else:
             status_text_en = strings.statusWrong_en.format(time_server)
             status_text_ru = strings.statusWrong_ru.format(time_server)
@@ -203,7 +202,7 @@ def send_status(message):
             text = status_text_en
             markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
@@ -222,7 +221,7 @@ def send_matchmaking(message):
             text = mm_text_en
             markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
@@ -241,7 +240,7 @@ def send_devcount(message):
                 text = devcount_text_en
                 markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup) 
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
