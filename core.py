@@ -69,7 +69,7 @@ def info_updater():
             if scheduler != sCache:
                 file_manager.updateJsonS(JSON_FILE_PATH, scheduler)
             
-            if  server_count != scCache:
+            if server_count != scCache:
                 file_manager.updateJsonSC(JSON_FILE_PATH, server_count)
                 
             if online_players != apCache:
