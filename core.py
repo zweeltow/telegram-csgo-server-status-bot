@@ -36,8 +36,8 @@ def info_updater():
             
             cacheFile = file_manager.readJson(JSON_FILE_PATH)
             
-            gcCache = cacheFile['game_coordinator_status']
-            wsCache = cacheFile['valve_webapi_status']
+            gcCache = cacheFile['game_coordinator']
+            wsCache = cacheFile['valve_webapi']
             slCache = cacheFile['sessionsLogon']
             pcCache = cacheFile['online_player_count']
             tsCache = cacheFile['time_server']
