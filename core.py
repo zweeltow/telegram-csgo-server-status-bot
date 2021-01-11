@@ -19,7 +19,8 @@ gc = CSGOGameCoordinator()
 def info_updater():
     while True:
         try:
-            gc_status = gc.get_status()
+            gc_status = gc.get_status()[0]
+            webapi_status = gc.get_status()[1]
             sessionsLogon = api.status()[0]
             player_count = api.status()[1]
             time_server = api.status()[2]
@@ -36,6 +37,7 @@ def info_updater():
             cacheFile = file_manager.readJson(JSON_FILE_PATH)
             
             gcCache = cacheFile['game_coordinator_status']
+            wsCache = cacheFile['valve_webapi_status']
             slCache = cacheFile['sessionsLogon']
             pcCache = cacheFile['player_count']
             tsCache = cacheFile['time_server']
@@ -51,6 +53,9 @@ def info_updater():
 
             if gc_status != gcCache:
                 file_manager.updateJsonGC(JSON_FILE_PATH, gc_status)
+                              
+            if webapi_status != wsCache:
+                file_manager.updateJsonWS(JSON_FILE_PATH, webapi_status)
                 
             if sessionsLogon != slCache:
                 file_manager.updateJsonSL(JSON_FILE_PATH, sessionsLogon)
