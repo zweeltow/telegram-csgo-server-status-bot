@@ -80,6 +80,18 @@ def updateJson(path, new_id):
     jsonFile.write(json.dumps(data, indent=4))
     jsonFile.close()
 
+def updateJsonGC(path, new_gc):
+    jsonFile = open(path, 'r')
+    data = json.load(jsonFile)
+    jsonFile.close()
+
+    tmp = data['game_coordinator_status']
+    data['game_coordinator_status'] = new_gc
+
+    jsonFile = open(path, "w+")
+    jsonFile.write(json.dumps(data, indent=4))
+    jsonFile.close()
+    
 def updateJsonSL(path, new_sl):
     jsonFile = open(path, 'r')
     data = json.load(jsonFile)
