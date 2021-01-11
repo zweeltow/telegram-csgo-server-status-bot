@@ -3,21 +3,23 @@ from datetime import datetime
 import time
 import traceback
 import logging
+from apps import file_manager
 
 from apps.valve_api import ValveServersAPI
-from apps import file_manager
-from apps.online_peak import PeakOnline, Monthly
+from apps.parser import PeakOnline, Monthly, CSGOGameCoordinator
 
 JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
 api = ValveServersAPI()
 peak_count = PeakOnline()
 month_unique = Monthly()
+gc = CSGOGameCoordinator()
 
 
 def info_updater():
     while True:
         try:
+            gc_status = gc.get_status()
             sessionsLogon = api.status()[0]
             player_count = api.status()[1]
             time_server = api.status()[2]
@@ -33,6 +35,7 @@ def info_updater():
             
             cacheFile = file_manager.readJson(JSON_FILE_PATH)
             
+            gcCache = cacheFile['game_coordinator_status']
             slCache = cacheFile['sessionsLogon']
             pcCache = cacheFile['player_count']
             tsCache = cacheFile['time_server']
@@ -46,6 +49,9 @@ def info_updater():
             paCache = cacheFile['peak_all_time']
             uqCache = cacheFile['unique_monthly']
 
+            if gc_status != gcCache:
+                file_manager.updateJsonGC(JSON_FILE_PATH, gc_status)
+                
             if sessionsLogon != slCache:
                 file_manager.updateJsonSL(JSON_FILE_PATH, sessionsLogon)
                 
