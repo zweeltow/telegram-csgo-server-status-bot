@@ -1,7 +1,7 @@
 {
     "build_ID": "",
-    "game_coordinator_status": "",
-    "valve_webapi_status": "",
+    "game_coordinator": "",
+    "valve_webapi": "",
     "sessionsLogon": "",
     "online_player_count": "",
     "player_count": "",
