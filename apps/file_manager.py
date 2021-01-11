@@ -85,8 +85,8 @@ def updateJsonGC(path, new_gc):
     data = json.load(jsonFile)
     jsonFile.close()
 
-    tmp = data['game_coordinator_status']
-    data['game_coordinator_status'] = new_gc
+    tmp = data['game_coordinator']
+    data['game_coordinator'] = new_gc
 
     jsonFile = open(path, "w+")
     jsonFile.write(json.dumps(data, indent=4))
@@ -97,8 +97,8 @@ def updateJsonWS(path, new_ws):
     data = json.load(jsonFile)
     jsonFile.close()
 
-    tmp = data['valve_webapi_status']
-    data['valve_webapi_status'] = new_ws
+    tmp = data['valve_webapi']
+    data['valve_webapi'] = new_ws
 
     jsonFile = open(path, "w+")
     jsonFile.write(json.dumps(data, indent=4))
