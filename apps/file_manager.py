@@ -68,7 +68,7 @@ def readJson(path):
         return False
 
 
-def updateJson(path, new_id):
+def updateJsonID(path, new_id):
     jsonFile = open(path, 'r')
     data = json.load(jsonFile)
     jsonFile.close()
