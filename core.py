@@ -39,7 +39,7 @@ def info_updater():
             gcCache = cacheFile['game_coordinator_status']
             wsCache = cacheFile['valve_webapi_status']
             slCache = cacheFile['sessionsLogon']
-            pcCache = cacheFile['player_count']
+            pcCache = cacheFile['online_player_count']
             tsCache = cacheFile['time_server']
             sCache = cacheFile['scheduler']
             scCache = cacheFile['online_server_count']
@@ -53,7 +53,7 @@ def info_updater():
 
             if gc_status != gcCache:
                 file_manager.updateJsonGC(JSON_FILE_PATH, gc_status)
-                              
+              
             if webapi_status != wsCache:
                 file_manager.updateJsonWS(JSON_FILE_PATH, webapi_status)
                 
