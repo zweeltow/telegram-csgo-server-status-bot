@@ -56,7 +56,7 @@ class CSGOGameCoordinator:
         fin = open(JSON_FILE_PATH,"r")  
         parsed = json.load(fin)
         fin.close()
-        line = json.dumps(parsed, indent=4, sort_keys=True)
+        line = json.dumps(parsed, indent=4)
         fout = open(JSON_FILE_PATH,"w")
         fout.write(line)
         fout.close()
