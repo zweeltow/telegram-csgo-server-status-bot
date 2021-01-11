@@ -6,7 +6,7 @@ import logging
 from apps import file_manager
 
 from apps.valve_api import ValveServersAPI
-from apps.parser import PeakOnline, Monthly, CSGOGameCoordinator
+from apps.scrapper import PeakOnline, Monthly, CSGOGameCoordinator
 
 JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
