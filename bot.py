@@ -342,9 +342,10 @@ def dc(message):
 def dc_africa(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']    
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.africa_South()
-        text = f'🇿🇦 South Africaʼs DC status:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.africa_South()
+        text = f'🇿🇦 South Africaʼs DC status:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text)
     else:
         send_about_problem_valve_api(message)
@@ -353,9 +354,10 @@ def dc_africa(message):
 def dc_australia(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']  
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.australia()
-        text = f'🇦🇺 Australiaʼs DC status:\n\n• Location: Sydney;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.australia()
+        text = f'🇦🇺 Australiaʼs DC status:\n\n• Location: Sydney;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text)
     else:
         send_about_problem_valve_api(message)
@@ -374,9 +376,10 @@ def dc_europe(message):
 def dc_eu_north(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.eu_North()
-        text = f'🇸🇪 Swedenʼs DC status:\n\n• Location: Stockholm;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.eu_North()
+        text = f'🇸🇪 Swedenʼs DC status:\n\n• Location: Stockholm;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -385,9 +388,10 @@ def dc_eu_north(message):
 def dc_eu_west(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, capacity_Spain, load_Spain, time_server = api_dc.eu_West()
-        text = f'🇱🇺 Luxembourgʼs DC status:\n\n• Location: Luxembourg;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇪🇸 Spainʼs DC status:\n\n• Location: Mardid;\n• Load: {load_Spain};\n• Capacity: {capacity_Spain}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load, capacity_Spain, load_Spain = api_dc.eu_West()
+        text = f'🇱🇺 Luxembourgʼs DC status:\n\n• Location: Luxembourg;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇪🇸 Spainʼs DC status:\n\n• Location: Mardid;\n• Load: {load_Spain};\n• Capacity: {capacity_Spain}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -396,9 +400,10 @@ def dc_eu_west(message):
 def dc_eu_east(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_East, capacity_Poland, load_East, load_Poland, time_server = api_dc.eu_East()
-        text = f'🇦🇹 Austriaʼs DC status:\n\n• Location: Vienna;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\n🇵🇱 Polandʼs DC status:\n\n• Location: Warsaw;\n• Load: {load_Poland};\n• Capacity: {capacity_Poland}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity_East, capacity_Poland, load_East, load_Poland = api_dc.eu_East()
+        text = f'🇦🇹 Austriaʼs DC status:\n\n• Location: Vienna;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\n🇵🇱 Polandʼs DC status:\n\n• Location: Warsaw;\n• Load: {load_Poland};\n• Capacity: {capacity_Poland}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -427,9 +432,10 @@ def dc_usa(message):
 def dc_usa_north(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, time_server = api_dc.usa_North()
-        text = f'🇺🇸 Northcentral DC status:\n\n• Location: Chicago;\n• Load: {load_US_Northcentral};\n• Capacity: {capacity_US_Northcentral}.\n\n🇺🇸 Northeast DC status:\n\n• Location: Sterling;\n• Load: {load_US_Northeast};\n• Capacity: {capacity_US_Northeast}.\n\n🇺🇸 Northwest DC status:\n\n• Location: Moses Lake;\n• Load: {load_US_Northwest};\n• Capacity: {capacity_US_Northwest}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest = api_dc.usa_North()
+        text = f'🇺🇸 Northcentral DC status:\n\n• Location: Chicago;\n• Load: {load_US_Northcentral};\n• Capacity: {capacity_US_Northcentral}.\n\n🇺🇸 Northeast DC status:\n\n• Location: Sterling;\n• Load: {load_US_Northeast};\n• Capacity: {capacity_US_Northeast}.\n\n🇺🇸 Northwest DC status:\n\n• Location: Moses Lake;\n• Load: {load_US_Northwest};\n• Capacity: {capacity_US_Northwest}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -438,9 +444,10 @@ def dc_usa_north(message):
 def dc_usa_south(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, time_server = api_dc.usa_South()
-        text = f'🇺🇸 Southwest DC status:\n\n• Location: Los Angeles;\n• Load: {load_US_Southwest};\n• Capacity: {capacity_US_Southwest}.\n\n🇺🇸 Southeast DC status:\n\n• Location: Atlanta;\n• Load: {load_US_Southeast};\n• Capacity: {capacity_US_Southeast}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest = api_dc.usa_South()
+        text = f'🇺🇸 Southwest DC status:\n\n• Location: Los Angeles;\n• Load: {load_US_Southwest};\n• Capacity: {capacity_US_Southwest}.\n\n🇺🇸 Southeast DC status:\n\n• Location: Atlanta;\n• Load: {load_US_Southeast};\n• Capacity: {capacity_US_Southeast}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -449,9 +456,10 @@ def dc_usa_south(message):
 def dc_south_america(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, time_server = api_dc.sa()
-        text = f'🇧🇷 Brazilʼs DC status:\n\n• Location: Sao Paulo;\n• Load: {load_Brazil};\n• Capacity: {capacity_Brazil}.\n\n🇨🇱 Chileʼs DC status:\n\n• Location: Santiago;\n• Load: {load_Chile};\n• Capacity: {capacity_Chile}.\n\n🇵🇪 Peruʼs DC status:\n\n• Location: Lima;\n• Load: {load_Peru};\n• Capacity: {capacity_Peru}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil = api_dc.sa()
+        text = f'🇧🇷 Brazilʼs DC status:\n\n• Location: Sao Paulo;\n• Load: {load_Brazil};\n• Capacity: {capacity_Brazil}.\n\n🇨🇱 Chileʼs DC status:\n\n• Location: Santiago;\n• Load: {load_Chile};\n• Capacity: {capacity_Chile}.\n\n🇵🇪 Peruʼs DC status:\n\n• Location: Lima;\n• Load: {load_Peru};\n• Capacity: {capacity_Peru}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -460,9 +468,10 @@ def dc_south_america(message):
 def dc_india(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, capacity_East, load, load_East, time_server = api_dc.india()
-        text = f'🇮🇳 Indiaʼs DC status:\n\n• Location: Mumbai;\n• Load: {load};\n• Capacity: {capacity}.\n\n• Location: Chennai;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, capacity_East, load, load_East = api_dc.india()
+        text = f'🇮🇳 Indiaʼs DC status:\n\n• Location: Mumbai;\n• Load: {load};\n• Capacity: {capacity}.\n\n• Location: Chennai;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -471,9 +480,10 @@ def dc_india(message):
 def dc_japan(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.japan()
-        text = f'🇯🇵 Japanʼs DC status:\n\n• Location: Tokyo;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.japan()
+        text = f'🇯🇵 Japanʼs DC status:\n\n• Location: Tokyo;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -482,9 +492,10 @@ def dc_japan(message):
 def dc_china(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, time_server = api_dc.china()
-        text = f'🇨🇳 Chinaʼs DC status: \n\n• Location: Shanghai;\n• Load: {load_Shanghai};\n• Capacity: {capacity_Shanghai}.\n\n• Location: Tianjin;\n• Load: {load_Tianjin};\n• Capacity: {capacity_Tianjin}.\n\n• Location: Guangzhou;\n• Load: {load_Guangzhou};\n• Capacity: {capacity_Guangzhou}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou = api_dc.china()
+        text = f'🇨🇳 Chinaʼs DC status: \n\n• Location: Shanghai;\n• Load: {load_Shanghai};\n• Capacity: {capacity_Shanghai}.\n\n• Location: Tianjin;\n• Load: {load_Tianjin};\n• Capacity: {capacity_Tianjin}.\n\n• Location: Guangzhou;\n• Load: {load_Guangzhou};\n• Capacity: {capacity_Guangzhou}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -493,9 +504,10 @@ def dc_china(message):
 def dc_emirates(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.emirates()
-        text = f'🇦🇪 Emiratesʼ DC status:\n\n• Location: Dubai;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.emirates()
+        text = f'🇦🇪 Emiratesʼ DC status:\n\n• Location: Dubai;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -504,9 +516,10 @@ def dc_emirates(message):
 def dc_singapore(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.singapore()
-        text = f'🇸🇬 Singaporeʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.singapore()
+        text = f'🇸🇬 Singaporeʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
@@ -515,9 +528,10 @@ def dc_singapore(message):
 def dc_hong_kong(message):
     cacheFile = file_manager.readJson(JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
-        capacity, load, time_server = api_dc.hong_kong()
-        text = f'🇭🇰 Hong Kongʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
+        capacity, load = api_dc.hong_kong()
+        text = f'🇭🇰 Hong Kongʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {tsCache} (UTC-8, summer UTC-7).'
         bot.send_message(message.chat.id, text, reply_markup=markup_DC)
     else:
         send_about_problem_valve_api(message)
