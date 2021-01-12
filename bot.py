@@ -836,6 +836,10 @@ def delete_keyboard(message):
     time.sleep(10)
     bot.delete_message(message.chat.id, message.message_id+1)
 
+@bot.message_handler(content_types=['text'])
+def send_meme(message):
+    if message.forward_from_chat.id == CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
+        bot.send_sticker(CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
 
 @bot.message_handler(content_types=['text'])
 def answer(message):
