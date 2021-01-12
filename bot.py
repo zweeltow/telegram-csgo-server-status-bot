@@ -689,7 +689,7 @@ def send_inline(inline_query):
                 r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), thumb_url='https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', description=description_mm)
                 r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
                 r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
-                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=15)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
 
                 log_inline(inline_query)
 
@@ -730,7 +730,7 @@ def send_inline(inline_query):
                 r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
                 r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
 
-                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=15)
+                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=5)
                 log_inline(inline_query)
 
             except Exception as e:
