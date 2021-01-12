@@ -2,12 +2,12 @@ import requests
 import config
 
 
-API_1 = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
-API_2 = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
-API_3 = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
+API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
+API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
+API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
 
 def get_response():
-    response = requests.get(API_1)
+    response = requests.get(API_server_status)
     response = response.json()
     result = response['result']
 
@@ -15,7 +15,7 @@ def get_response():
 
 class ValveServersAPI:
 
-    def first_api(self): 
+    def get_status(self): 
     
         result = get_response()
 
@@ -33,9 +33,9 @@ class ValveServersAPI:
         return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
         
         
-    def second_api(self):
+    def get_players(self):
 
-        response = requests.get(API_2)
+        response = requests.get(API_csgo_players)
         data = response.json()
         player_count = data['response']['player_count']
 
@@ -43,9 +43,9 @@ class ValveServersAPI:
 
         
         
-    def third_api(self):
+    def get_devs(self):
 
-        response = requests.get(API_3)
+        response = requests.get(API_dev_players)
         data = response.json()
         dev_player_count = data['response']['player_count']
 
