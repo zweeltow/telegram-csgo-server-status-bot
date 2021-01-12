@@ -11,17 +11,18 @@ cmdFeedback_ru = "💬 Пожалуйста, расскажите о Ваших 
 
 """Text of Status"""
 # English
-statusNormal_en = "✅ Server status is normal:\n\n• Online players: {:,};\n• 24-hour peak: {:,};\n• All-time peak: {:,};\n• Monthly unique players: {:,}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+statusNormal_en = "✅ Server status is normal:\n\n• Connection: {};\n• Online players: {:,};\n• 24-hour peak: {:,};\n• All-time peak: {:,};\n• Monthly unique players: {:,}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 statusWrong_en = "❌ Something went wrong with the servers.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Онлайн игроков: {:,};\n• 24-часовой пик: {:,};\n• Рекордный пик: {:,};\n• Ежемесячные уникальные игроки: {:,}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusNormal_ru = "✅ Сервера в нормальном состоянии:\n\n• Соединение: нормальное;\n• Онлайн игроков: {:,};\n• 24-часовой пик: {:,};\n• Рекордный пик: {:,};\n• Ежемесячные уникальные игроки: {:,}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+statusNormalSL_ru = "✅ Сервера в нормальном состоянии:\n\n• С соединением что-то не так.\n• Онлайн игроков: {:,};\n• 24-часовой пик: {:,};\n• Рекордный пик: {:,};\n• Ежемесячные уникальные игроки: {:,}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 statusWrong_ru = "❌ С серверами что-то не так.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Dev count"""
 # English
-devCount_en = "🧑‍💻 Current online developers in the beta-version of CS:GO: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
+devCount_en = "🧑‍💻 Current online developers in the beta-version: {}.\n\nLatest update: {} (UTC-8, summer UTC-7)."
 # Russian
-devCount_ru = "🧑‍💻 Текущий онлайн разработчиков в бета-версии CS:GO: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
+devCount_ru = "🧑‍💻 Текущий онлайн разработчиков в бета-версии: {}.\n\nОбновлено: {} (UTC−8, летом UTC−7)."
 
 """Text of Timer"""
 # English
@@ -41,12 +42,24 @@ mmWrong_ru = "❌ С планировщиком матчмейкинга что-
 """Text of Wrong Request"""
 # English
 unknownRequest_en = "🤷‍♀️ Nothing found, please use one of the following commands:"
-wrongAPI_en = "💀 Issues with Valve's API, please try again later."
 # Russian
 unknownRequest_ru = "🤷‍♀️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых команд:"
+
+
+"""Text of Wrong API"""
+# English
+wrongAPI_en = "💀 Issues with Valve's API, please try again later."
+# Russian
 wrongAPI_ru = "💀 Проблемы с API Valve, пожалуйста, попробуйте позже."
 
-""" """
+
+"""Text of something wrong"""
+# English
+wrongBOT_en = "🧐 Sorry, something’s not right. Please try again later."
+# Russian
+wrongBOT_ru = "🧐 Извините, что-то не так. Пожалуйста, попробуйте позже."
+
+"""Text of new BuildID"""
 #Russian
 notiNewBuild_ru = "🆕 Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{}`."
 
