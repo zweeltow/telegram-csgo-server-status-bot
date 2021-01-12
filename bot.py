@@ -22,7 +22,7 @@ me = config.OWNER # short way to contact the developer
 api_dc = ValveServersDataCentersAPI()
 timer_drop = TimerDrop()
 
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
+JSON_FILE_PATH = "cache.json"
 
 
 
@@ -630,7 +630,8 @@ def dc_hong_kong(message):
 def back(message):
     if message.from_user.language_code == 'ru':
         markup = markup_ru
-    else: markup = markup_en
+    else:
+        markup = markup_en
 
     bot.send_message(message.chat.id, '👌', reply_markup=markup)
 
