@@ -22,7 +22,7 @@ me = config.OWNER # short way to contact the developer
 api_dc = ValveServersDataCentersAPI()
 timer_drop = TimerDrop()
 
-JSON_FILE_PATH = "cache.json"
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
 
 
