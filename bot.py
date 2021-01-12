@@ -22,9 +22,6 @@ me = config.OWNER # short way to contact the developer
 api_dc = ValveServersDataCentersAPI()
 timer_drop = TimerDrop()
 
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
-
-
 
 """Setup keyboard"""
 # English
@@ -166,7 +163,7 @@ def send_about_problem_bot(message):
 def get_status():
     """Get the status of CS:GO servers"""
     
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     gcCache = cacheFile['game_coordinator']
     slCache = cacheFile['sessionsLogon']
     pcCache = cacheFile['online_player_count']
@@ -192,7 +189,7 @@ def get_status():
 def get_matchmaking():
     """Get information about online servers, active players and more about matchmaking servers"""
     
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     tsCache = cacheFile['time_server']
     sCache = cacheFile['scheduler']
     scCache = cacheFile['online_server_count']
@@ -213,7 +210,7 @@ def get_matchmaking():
 def get_devcount():
     """Get the count of online devs"""
     
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     tsCache = cacheFile['time_server']
     dcCache = cacheFile['dev_player_count']
 
@@ -237,7 +234,7 @@ def get_timer():
 
 def send_status(message):
     """Send the status of CS:GO servers"""
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
@@ -261,7 +258,7 @@ def send_status(message):
 
 def send_matchmaking(message):
     """Send information about online servers, active players and more about matchmaking servers"""
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
@@ -285,7 +282,7 @@ def send_matchmaking(message):
 
 def send_devcount(message):
     """Send the count of online devs"""
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
@@ -327,7 +324,7 @@ def send_timer(message):
         
 
 def dc(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
@@ -348,7 +345,7 @@ def dc(message):
 
 
 def dc_africa(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']    
     if wsCache == 'Normal':
@@ -364,7 +361,7 @@ def dc_africa(message):
     
 
 def dc_australia(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']  
     if wsCache == 'Normal':
@@ -379,7 +376,7 @@ def dc_australia(message):
     
 
 def dc_europe(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         if message.from_user.language_code == 'ru':
@@ -394,7 +391,7 @@ def dc_europe(message):
 
 
 def dc_eu_north(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -411,7 +408,7 @@ def dc_eu_north(message):
 
 
 def dc_eu_west(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -428,7 +425,7 @@ def dc_eu_west(message):
     
 
 def dc_eu_east(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -445,7 +442,7 @@ def dc_eu_east(message):
 
 
 def dc_asia(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         if message.from_user.language_code == 'ru':
@@ -460,7 +457,7 @@ def dc_asia(message):
 
 
 def dc_usa(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         if message.from_user.language_code == 'ru':
@@ -475,7 +472,7 @@ def dc_usa(message):
 
 
 def dc_usa_north(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -492,7 +489,7 @@ def dc_usa_north(message):
 
 
 def dc_usa_south(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -509,7 +506,7 @@ def dc_usa_south(message):
 
 
 def dc_south_america(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -526,7 +523,7 @@ def dc_south_america(message):
 
 
 def dc_india(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -543,7 +540,7 @@ def dc_india(message):
 
 
 def dc_japan(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -560,7 +557,7 @@ def dc_japan(message):
 
 
 def dc_china(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -577,7 +574,7 @@ def dc_china(message):
 
 
 def dc_emirates(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
@@ -594,7 +591,7 @@ def dc_emirates(message):
 
 
 def dc_singapore(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
@@ -611,7 +608,7 @@ def dc_singapore(message):
 
 
 def dc_hong_kong(message):
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
@@ -639,7 +636,7 @@ def back(message):
 @bot.inline_handler(lambda query: True)
 def send_inline(inline_query):
     """Inline mode"""
-    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    cacheFile = file_manager.readJson(config.JSON_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:

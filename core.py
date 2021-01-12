@@ -3,12 +3,11 @@ from datetime import datetime
 import time
 import traceback
 import logging
-from apps import file_manager
+import config
 
+from apps import file_manager
 from apps.valve_api import ValveServersAPI
 from apps.scrapper import PeakOnline, Monthly, CSGOGameCoordinator
-
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
 api = ValveServersAPI()
 peak_count = PeakOnline()
@@ -52,46 +51,46 @@ def info_updater():
             uqCache = cacheFile['unique_monthly']
 
             if gc_status != gcCache:
-                file_manager.updateJsonGC(JSON_FILE_PATH, gc_status)
+                file_manager.updateJsonGC(config.JSON_FILE_PATH, gc_status)
               
             if webapi_status != wsCache:
-                file_manager.updateJsonWS(JSON_FILE_PATH, webapi_status)
+                file_manager.updateJsonWS(config.JSON_FILE_PATH, webapi_status)
                 
             if sessionsLogon != slCache:
-                file_manager.updateJsonSL(JSON_FILE_PATH, sessionsLogon)
+                file_manager.updateJsonSL(config.JSON_FILE_PATH, sessionsLogon)
                 
             if player_count != pcCache:
-                file_manager.updateJsonPC(JSON_FILE_PATH, player_count)
+                file_manager.updateJsonPC(config.JSON_FILE_PATH, player_count)
                 
             if time_server != tsCache:
-                file_manager.updateJsonTS(JSON_FILE_PATH, time_server)
+                file_manager.updateJsonTS(config.JSON_FILE_PATH, time_server)
                 
             if scheduler != sCache:
-                file_manager.updateJsonS(JSON_FILE_PATH, scheduler)
+                file_manager.updateJsonS(config.JSON_FILE_PATH, scheduler)
             
             if server_count != scCache:
-                file_manager.updateJsonSC(JSON_FILE_PATH, server_count)
+                file_manager.updateJsonSC(config.JSON_FILE_PATH, server_count)
                 
             if online_players != apCache:
-                file_manager.updateJsonAP(JSON_FILE_PATH, online_players)
+                file_manager.updateJsonAP(config.JSON_FILE_PATH, online_players)
                 
             if search_seconds_avg != ssCache:
-                file_manager.updateJsonSS(JSON_FILE_PATH, search_seconds_avg)
+                file_manager.updateJsonSS(config.JSON_FILE_PATH, search_seconds_avg)
                 
             if searching_players != spCache:
-                file_manager.updateJsonSP(JSON_FILE_PATH, searching_players)
+                file_manager.updateJsonSP(config.JSON_FILE_PATH, searching_players)
                
             if dev_player_count != dcCache:
-                file_manager.updateJsonDC(JSON_FILE_PATH, dev_player_count)
+                file_manager.updateJsonDC(config.JSON_FILE_PATH, dev_player_count)
                 
             if peak24 != p24Cache:
-                file_manager.updateJsonP24(JSON_FILE_PATH, peak24)
+                file_manager.updateJsonP24(config.JSON_FILE_PATH, peak24)
                 
             if peak_all != paCache:
-                file_manager.updateJsonPA(JSON_FILE_PATH, peak_all)
+                file_manager.updateJsonPA(config.JSON_FILE_PATH, peak_all)
                 
             if unique != uqCache:
-                file_manager.updateJsonUQ(JSON_FILE_PATH, unique)
+                file_manager.updateJsonUQ(config.JSON_FILE_PATH, unique)
 
             time.sleep(10)
 
