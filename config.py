@@ -13,6 +13,9 @@ KEY = '' # from https://steamcommunity.com/dev/apikey
 OWNER = ''
 AQ = ''
 
+CSGOBETACHAT = ''
+CSGOBETACHANNEL = ''
+
 LOGCHANNEL = ''
 
 STEAM_USERNAME = ''

@@ -2,6 +2,7 @@
 
 import logging
 import time
+import json
 
 import telebot
 from telebot import types
@@ -9,19 +10,20 @@ from telebot import types
 import config
 import strings
 
-from apps.timer_drop import Timer
-from apps.valve_api import ValveServersAPI, ValveServersDataCentersAPI
-from apps.online_peak import PeakOnline, Monthly
+from apps.timer import TimerDrop
+from apps.valve_api import ValveServersDataCentersAPI
+from apps import file_manager
 
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 telebot.logger.setLevel(logging.DEBUG) # setup logger
 me = config.OWNER # short way to contact the developer
-api = ValveServersAPI()
+
 api_dc = ValveServersDataCentersAPI()
-timer_drop = Timer()
-peak_count = PeakOnline()
-month_unique = Monthly()
+timer_drop = TimerDrop()
+
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
+
 
 
 """Setup keyboard"""
@@ -79,19 +81,42 @@ status_ru = types.KeyboardButton('Статус')
 matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
-dc_ru = types.KeyboardButton('Дата-центры (Англ.)')
+dc_ru = types.KeyboardButton('Дата-центры')
 markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
 
 # DC RU
-# markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
-# Europe_ru = types.KeyboardButton('Европа')
-# Asia_ru = types.KeyboardButton('Азия')
-# Africa_ru = types.KeyboardButton('Южная Африка')
-# South_America_ru = types.KeyboardButton('Южная Америка')
-# Australia_ru = types.KeyboardButton('Австралия') 
-# USA_ru =  types.KeyboardButton('США')
-# Back_button_ru = types.KeyboardButton('⏪ Назад')
-# markup_DC_ru.add(Australia_ru, Asia_ru, Europe_ru, USA_ru, South_America_ru, Africa_ru, Back_button_ru)
+markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+Europe_ru = types.KeyboardButton('Европа')
+Asia_ru = types.KeyboardButton('Азия')
+Africa_ru = types.KeyboardButton('Южная Африка')
+South_America_ru = types.KeyboardButton('Южная Америка')
+Australia_ru = types.KeyboardButton('Австралия') 
+USA_ru =  types.KeyboardButton('США')
+Back_button_ru = types.KeyboardButton('⏪ Назад')
+markup_DC_ru.add(Australia_ru, Asia_ru, Europe_ru, USA_ru, South_America_ru, Africa_ru, Back_button_ru)
+
+# DC Europe Russian
+markup_DC_EU_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+eu_West_ru = types.KeyboardButton('Запад')
+eu_East_ru = types.KeyboardButton('Восток')
+eu_North_ru = types.KeyboardButton('Север')
+markup_DC_EU_ru.add(eu_East_ru, eu_West_ru, eu_North_ru)
+
+# DC Asia Russian
+markup_DC_Asia_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+india_ru = types.KeyboardButton('Индия')
+emirates_ru = types.KeyboardButton('Эмираты')
+china_ru = types.KeyboardButton('Китай')
+singapore_ru = types.KeyboardButton('Сингапур')
+hong_kong_ru = types.KeyboardButton('Гонконг')
+japan_ru = types.KeyboardButton('Япония')
+markup_DC_Asia_ru.add(hong_kong_ru, india_ru, china_ru, singapore_ru, emirates_ru, japan_ru)
+
+# DC USA Russian
+markup_DC_USA_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+usa_Northwest_ru = types.KeyboardButton('Сeвер')
+usa_Southwest_ru = types.KeyboardButton('Юг')
+markup_DC_USA_ru.add(usa_Northwest_ru, usa_Southwest_ru)
 
 """Delete Keyboard"""
 markup_del = types.ReplyKeyboardRemove(False)
@@ -114,6 +139,7 @@ def log_inline(inline_query):
     # bot.send_message(config.OWNER, f'[<a href="tg://user?id={inline_query.from_user.id}">{inline_query.from_user.id}</a>] {inline_query.from_user.first_name} "{inline_query.from_user.username}" {inline_query.from_user.last_name} used <b>inline</b>', parse_mode='html', disable_notification=True)
     bot.send_message(config.LOGCHANNEL, inline_query)
 
+
 def send_about_problem_valve_api(message):
     """Answer of bot if Valve's API don't answer"""
     
@@ -123,60 +149,76 @@ def send_about_problem_valve_api(message):
         text = strings.wrongAPI_en
 
     bot.send_message(message.chat.id, text)
-
-
-def send_about_problem_valve_inline(inline_query):
-    if inline_query.from_user.language_code == "ru":
-        text = "💀 Проблемы с API Valve, пожалуйста, попробуйте позже.\n\n❤️ @csgobetabot"
-        markup = markup_ru
+    
+    
+def send_about_problem_bot(message):
+    """If anything goes wrong"""
+    if message.from_user.language_code == "ru":
+        text = strings.wrongBOT_ru
     else:
-        text = "💀 Issues with Valve's API, please try again later.\n\n❤️ @csgobetabot"
-        markup = markup_en
+        text = strings.wrongBOT_en
+        
+    bot.send_message(message.chat.id, text)
 
-    try:
-        bot.send_message(inline_query.from_user.id, text, reply_markup=markup)
 
-    except Exception as e:
-        bot.send_message(config.OWNER, f'❗️Error: {e}\n\ninline_query')
-        print(e)
 
 
 def get_status():
     """Get the status of CS:GO servers"""
-    sessionsLogon, player_count, time_server = api.status()
-    peak24, peak_all = peak_count.get_peak()
-    unique = month_unique.get_unique()
-
-    if sessionsLogon == 'normal':
-            status_text_en = strings.statusNormal_en.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
-            status_text_ru = strings.statusNormal_ru.format(player_count, int(peak24), int(peak_all), int(unique), time_server)
+    
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    gcCache = cacheFile['game_coordinator']
+    slCache = cacheFile['sessionsLogon']
+    pcCache = cacheFile['online_player_count']
+    tsCache = cacheFile['time_server']
+    p24Cache = cacheFile['peak_24_hours']
+    paCache = cacheFile['peak_all_time']
+    uqCache = cacheFile['unique_monthly']
+    
+    if gcCache == 'Normal':
+        if slCache == 'normal':
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_ru = strings.statusNormal_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+        elif not slCache == 'normal':
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_ru = strings.statusNormalSL_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
     else:
-            status_text_en = strings.statusWrong_en.format(time_server)
-            status_text_ru = strings.statusWrong_ru.format(time_server)
+            status_text_en = strings.statusWrong_en.format(tsCache)
+            status_text_ru = strings.statusWrong_ru.format(tsCache)
 
     return status_text_en, status_text_ru
 
 
 def get_matchmaking():
     """Get information about online servers, active players and more about matchmaking servers"""
-    scheduler, online_servers, online_players, time_server, search_seconds_avg, searching_players = api.matchmaking()
-
-    if scheduler == 'normal':
-            mm_text_en = strings.mmNormal_en.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-            mm_text_ru = strings.mmNormal_ru.format(online_servers, online_players, searching_players, search_seconds_avg, time_server)
-    elif not scheduler == 'normal':
-            mm_text_en = strings.mmWrong_en.format(time_server)
-            mm_text_ru = strings.mmWrong_ru.format(time_server)
+    
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    tsCache = cacheFile['time_server']
+    sCache = cacheFile['scheduler']
+    scCache = cacheFile['online_server_count']
+    apCache = cacheFile['active_player_count']
+    ssCache = cacheFile['search_seconds_avg']
+    spCache = cacheFile['searching_players']
+    
+    if sCache == 'normal':
+        mm_text_en = strings.mmNormal_en.format(scCache, apCache, spCache, ssCache, tsCache)
+        mm_text_ru = strings.mmNormal_ru.format(scCache, apCache, spCache, ssCache, tsCache)
+    elif not sCache == 'normal':
+        mm_text_en = strings.mmWrong_en.format(tsCache)
+        mm_text_ru = strings.mmWrong_ru.format(tsCache)
 
     return mm_text_en, mm_text_ru
 
 
 def get_devcount():
     """Get the count of online devs"""
-    dev_player_count, time_server = api.devcount()
+    
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    tsCache = cacheFile['time_server']
+    dcCache = cacheFile['dev_player_count']
 
-    devcount_text_en = strings.devCount_en.format(dev_player_count, time_server)
-    devcount_text_ru = strings.devCount_ru.format(dev_player_count, time_server)
+    devcount_text_en = strings.devCount_en.format(dcCache, tsCache)
+    devcount_text_ru = strings.devCount_ru.format(dcCache, tsCache)
 
     return devcount_text_en, devcount_text_ru
 
@@ -189,61 +231,79 @@ def get_timer():
     timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
 
     return timer_text_en, timer_text_ru
+    
+    
+    
 
 def send_status(message):
     """Send the status of CS:GO servers"""
-    try:
-        status_text_en, status_text_ru = get_status()
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        try:
+            status_text_en, status_text_ru = get_status()
 
-        if message.from_user.language_code == 'ru':
-            text = status_text_ru
-            markup = markup_ru
-        else:
-            text = status_text_en
-            markup = markup_en
+            if message.from_user.language_code == 'ru':
+                text = status_text_ru
+                markup = markup_ru
+            else:
+                text = status_text_en
+                markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
         send_about_problem_valve_api(message)
 
 
 def send_matchmaking(message):
     """Send information about online servers, active players and more about matchmaking servers"""
-    try:
-        mm_text_en, mm_text_ru = get_matchmaking()
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        try:
+            mm_text_en, mm_text_ru = get_matchmaking()
 
-        if message.from_user.language_code == 'ru':
-            text = mm_text_ru
-            markup = markup_ru
-        else:
-            text = mm_text_en
-            markup = markup_en
+            if message.from_user.language_code == 'ru':
+                text = mm_text_ru
+                markup = markup_ru
+            else:
+                text = mm_text_en
+                markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
-        send_about_problem_valve_api(message)
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
+        send_about_problem_valve_api(message)        
 
 
 def send_devcount(message):
     """Send the count of online devs"""
-    try:
-        devcount_text_en, devcount_text_ru = get_devcount()
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        try:
+            devcount_text_en, devcount_text_ru = get_devcount()
 
-        if message.from_user.language_code == 'ru':
-                text = devcount_text_ru
-                markup = markup_ru
-        else:    
-                text = devcount_text_en
-                markup = markup_en
+            if message.from_user.language_code == 'ru':
+                    text = devcount_text_ru
+                    markup = markup_ru
+            else:    
+                    text = devcount_text_en
+                    markup = markup_en
 
-        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
         send_about_problem_valve_api(message)
 
 
@@ -263,127 +323,315 @@ def send_timer(message):
 
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
-        send_about_problem_valve_api(message)
+        send_about_problem_bot(message)
+        
 
 def dc(message):
-    try:
-        if message.from_user.language_code == 'ru':
-            text = '📶 Выберите интересующий регион, чтобы получить информацию о дата-центрах (на английском):'
-            markup = markup_DC
-        else:
-            text = '📶 Select the region you are interested in, to get information about the data centers:'
-            markup = markup_DC
-        
-        bot.send_message(message.chat.id, text, reply_markup=markup)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        try:
+            if message.from_user.language_code == 'ru':
+                text = '📶 Выберите интересующий регион, чтобы получить информацию о дата-центрах:'
+                markup = markup_DC_ru
+            else:
+                text = '📶 Select the region you are interested in, to get information about the data centers:'
+                markup = markup_DC
+            
+            bot.send_message(message.chat.id, text, reply_markup=markup)
 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
         send_about_problem_valve_api(message)
 
 
 def dc_africa(message):
-    capacity, load, time_server = api_dc.africa_South()
-    text = f'🇿🇦 South Africaʼs DC status:\n\n• Location: Johannesburg;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text)
-
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']    
+    if wsCache == 'Normal':
+        capacity, load = api_dc.africa_South()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_africa_ru.format(load, capacity, tsCache)
+        else:
+            text = strings.dc_africa_en.format(load, capacity, tsCache)
+            
+        bot.send_message(message.chat.id, text)
+    else:
+        send_about_problem_valve_api(message)
+    
 
 def dc_australia(message):
-    capacity, load, time_server = api_dc.australia()
-    text = f'🇦🇺 Australiaʼs DC status:\n\n• Location: Sydney;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text)
-
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']  
+    if wsCache == 'Normal':
+        capacity, load = api_dc.australia()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_australia_ru.format(load, capacity, tsCache)
+        else:
+            text = strings.dc_australia_en.format(load, capacity, tsCache)           
+        bot.send_message(message.chat.id, text)
+    else:
+        send_about_problem_valve_api(message)
+    
 
 def dc_europe(message):
-    text = '📍 Specify the region...'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC_EU)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите регион...'
+            markup = markup_DC_EU_ru            
+        else:
+            text = '📍 Specify the region...'
+            markup = markup_DC_EU
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_eu_north(message):
-    capacity, load, time_server = api_dc.eu_North()
-    text = f'🇸🇪 Swedenʼs DC status:\n\n• Location: Stockholm;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load = api_dc.eu_North()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_north_eu_ru.format(load, capacity, tsCache)
+            markup = markup_DC_ru 
+        else:
+            text = strings.dc_north_eu_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_eu_west(message):
-    capacity, load, capacity_Spain, load_Spain, time_server = api_dc.eu_West()
-    text = f'🇱🇺 Luxembourgʼs DC status:\n\n• Location: Luxembourg;\n• Load: {load};\n• Capacity: {capacity}.\n\n🇪🇸 Spainʼs DC status:\n\n• Location: Mardid;\n• Load: {load_Spain};\n• Capacity: {capacity_Spain}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
-
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load, capacity_Spain, load_Spain = api_dc.eu_West()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_west_eu_ru.format(load, capacity, load_Spain, capacity_Spain, tsCache)
+            markup = markup_DC_ru 
+        else:
+            text = strings.dc_west_eu_en.format(load, capacity, load_Spain, capacity_Spain, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+    
 
 def dc_eu_east(message):
-    capacity_East, capacity_Poland, load_East, load_Poland, time_server = api_dc.eu_East()
-    text = f'🇦🇹 Austriaʼs DC status:\n\n• Location: Vienna;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\n🇵🇱 Polandʼs DC status:\n\n• Location: Warsaw;\n• Load: {load_Poland};\n• Capacity: {capacity_Poland}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_East, capacity_Poland, load_East, load_Poland = api_dc.eu_East()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_east_eu_ru.format(load_East, capacity_East, load_Poland, capacity_Poland, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_east_eu_en.format(load_East, capacity_East, load_Poland, capacity_Poland, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_asia(message):
-    text = '📍 Specify the country...'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC_Asia)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите страну...'
+            markup = markup_DC_Asia_ru
+        else:
+            text = '📍 Specify the country...'
+            markup = markup_DC_Asia
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_usa(message):
-    text = '📍 Specify the region...'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC_USA)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите регион...'
+            markup = markup_DC_USA_ru
+        else:
+            text = '📍 Specify the region...'
+            markup = markup_DC_USA
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_usa_north(message):
-    capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, time_server = api_dc.usa_North()
-    text = f'🇺🇸 Northcentral DC status:\n\n• Location: Chicago;\n• Load: {load_US_Northcentral};\n• Capacity: {capacity_US_Northcentral}.\n\n🇺🇸 Northeast DC status:\n\n• Location: Sterling;\n• Load: {load_US_Northeast};\n• Capacity: {capacity_US_Northeast}.\n\n🇺🇸 Northwest DC status:\n\n• Location: Moses Lake;\n• Load: {load_US_Northwest};\n• Capacity: {capacity_US_Northwest}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest = api_dc.usa_North()
+        if message.from_user.language_code == 'ru':        
+            text = strings.dc_north_us_ru.format(load_US_Northcentral, capacity_US_Northcentral, load_US_Northeast, capacity_US_Northeast, load_US_Northwest, capacity_US_Northwest, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_north_us_en.format(load_US_Northcentral, capacity_US_Northcentral, load_US_Northeast, capacity_US_Northeast, load_US_Northwest, capacity_US_Northwest, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_usa_south(message):
-    capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, time_server = api_dc.usa_South()
-    text = f'🇺🇸 Southwest DC status:\n\n• Location: Los Angeles;\n• Load: {load_US_Southwest};\n• Capacity: {capacity_US_Southwest}.\n\n🇺🇸 Southeast DC status:\n\n• Location: Atlanta;\n• Load: {load_US_Southeast};\n• Capacity: {capacity_US_Southeast}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest = api_dc.usa_South()
+        if message.from_user.language_code == 'ru':        
+            text = strings.dc_south_us_ru.format(load_US_Southwest, capacity_US_Southwest, load_US_Southeast, capacity_US_Southeast, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_south_us_en.format(load_US_Southwest, capacity_US_Southwest, load_US_Southeast, capacity_US_Southeast, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_south_america(message):
-    capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, time_server = api_dc.sa()
-    text = f'🇧🇷 Brazilʼs DC status:\n\n• Location: Sao Paulo;\n• Load: {load_Brazil};\n• Capacity: {capacity_Brazil}.\n\n🇨🇱 Chileʼs DC status:\n\n• Location: Santiago;\n• Load: {load_Chile};\n• Capacity: {capacity_Chile}.\n\n🇵🇪 Peruʼs DC status:\n\n• Location: Lima;\n• Load: {load_Peru};\n• Capacity: {capacity_Peru}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil = api_dc.sa()
+        if message.from_user.language_code == 'ru':  
+            text = strings.dc_south_america_ru.format(load_Brazil, capacity_Brazil, load_Chile, capacity_Chile, load_Peru, capacity_Peru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_south_america_en.format(load_Brazil, capacity_Brazil, load_Chile, capacity_Chile, load_Peru, capacity_Peru, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_india(message):
-    capacity, capacity_East, load, load_East, time_server = api_dc.india()
-    text = f'🇮🇳 Indiaʼs DC status:\n\n• Location: Mumbai;\n• Load: {load};\n• Capacity: {capacity}.\n\n• Location: Chennai;\n• Load: {load_East};\n• Capacity: {capacity_East}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, capacity_East, load, load_East = api_dc.india()
+        if message.from_user.language_code == 'ru':  
+            text = strings.dc_india_ru.format(load, capacity, load_East, capacity_East, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_india_en.format(load, capacity, load_East, capacity_East, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_japan(message):
-    capacity, load, time_server = api_dc.japan()
-    text = f'🇯🇵 Japanʼs DC status:\n\n• Location: Tokyo;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load = api_dc.japan()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_japan_ru.format(load, capacity, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_japan_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_china(message):
-    capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, time_server = api_dc.china()
-    text = f'🇨🇳 Chinaʼs DC status: \n\n• Location: Shanghai;\n• Load: {load_Shanghai};\n• Capacity: {capacity_Shanghai}.\n\n• Location: Tianjin;\n• Load: {load_Tianjin};\n• Capacity: {capacity_Tianjin}.\n\n• Location: Guangzhou;\n• Load: {load_Guangzhou};\n• Capacity: {capacity_Guangzhou}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou = api_dc.china()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_china_ru.format(load_Shanghai, capacity_Shanghai, load_Tianjin, capacity_Tianjin, load_Guangzhou, capacity_Guangzhou, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_china_en.format(load_Shanghai, capacity_Shanghai, load_Tianjin, capacity_Tianjin, load_Guangzhou, capacity_Guangzhou, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_emirates(message):
-    capacity, load, time_server = api_dc.emirates()
-    text = f'🇦🇪 Emiratesʼ DC status:\n\n• Location: Dubai;\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load = api_dc.emirates()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_emirates_ru.format(load, capacity, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_emirates_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_singapore(message):
-    capacity, load, time_server = api_dc.singapore()
-    text = f'🇸🇬 Singaporeʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
+    if wsCache == 'Normal':
+        capacity, load = api_dc.singapore()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_singapore_ru.format(load, capacity, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_singapore_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
 
 
 def dc_hong_kong(message):
-    capacity, load, time_server = api_dc.hong_kong()
-    text = f'🇭🇰 Hong Kongʼs DC status:\n\n• Load: {load};\n• Capacity: {capacity}.\n\nLatest update: {time_server} (UTC-8, summer UTC-7).'
-    bot.send_message(message.chat.id, text, reply_markup=markup_DC)
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
+    if wsCache == 'Normal':
+        capacity, load = api_dc.hong_kong()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_hong_kong_ru.format(load, capacity, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_hong_kong_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
  
 
 def back(message):
     if message.from_user.language_code == 'ru':
         markup = markup_ru
-    else: markup = markup_en
+    else:
+        markup = markup_en
 
     bot.send_message(message.chat.id, '👌', reply_markup=markup)
 
@@ -391,63 +639,105 @@ def back(message):
 @bot.inline_handler(lambda query: True)
 def send_inline(inline_query):
     """Inline mode"""
-    try:
-        status_text_en, status_text_ru = get_status()
-        mm_text_en, mm_text_ru = get_matchmaking()
-        devcount_text_en, devcount_text_ru = get_devcount()
-        timer_text_en, timer_text_ru = get_timer()
-
+    cacheFile = file_manager.readJson(JSON_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            if inline_query.from_user.language_code == 'ru':
-                status_r = status_text_ru
-                mm_r = mm_text_ru
-                dev_r = devcount_text_ru
-                timer_r = timer_text_ru
+            status_text_en, status_text_ru = get_status()
+            mm_text_en, mm_text_ru = get_matchmaking()
+            devcount_text_en, devcount_text_ru = get_devcount()
+            timer_text_en, timer_text_ru = get_timer()
 
-            else:
-                status_r = status_text_en
-                mm_r = mm_text_en
-                dev_r = devcount_text_en
-                timer_r = timer_text_en
-            
-            # text part
-            if inline_query.from_user.language_code == 'ru': 
-                title_status = 'Статус'
-                title_mm = 'Матчмейкинг'
-                title_dev = 'Бета-версия'
-                title_timer = 'Сброс ограничений'
+            try:
+                if inline_query.from_user.language_code == 'ru':
+                    status_r = status_text_ru
+                    mm_r = mm_text_ru
+                    dev_r = devcount_text_ru
+                    timer_r = timer_text_ru
 
-                description_status = 'Проверить доступность серверов'
-                description_mm = 'Показать количество активных игроков'
-                description_dev = 'Показать количество онлайн разработчиков'
-                description_timer = 'Время до сброса ограничений опыта и дропа'
+                else:
+                    status_r = status_text_en
+                    mm_r = mm_text_en
+                    dev_r = devcount_text_en
+                    timer_r = timer_text_en
                 
-            else:
-                title_status = 'Status'
-                title_mm = 'Matchmaking'
-                title_dev = 'Beta version'
-                title_timer = 'Drop cap reset'
+                # text part
+                if inline_query.from_user.language_code == 'ru': 
+                    title_status = 'Статус'
+                    title_mm = 'Матчмейкинг'
+                    title_dev = 'Бета-версия'
+                    title_timer = 'Сброс ограничений'
 
-                description_status = 'Check the availability of the servers'
-                description_mm = 'Show the count of active players'
-                description_dev = 'Show the count of in-game developers'
-                description_timer = 'Time left until experience and drop cap reset'
+                    description_status = 'Проверить доступность серверов'
+                    description_mm = 'Показать количество активных игроков'
+                    description_dev = 'Показать количество онлайн разработчиков'
+                    description_timer = 'Время до сброса ограничений опыта и дропа'
+                    
+                else:
+                    title_status = 'Status'
+                    title_mm = 'Matchmaking'
+                    title_dev = 'Beta version'
+                    title_timer = 'Drop cap reset'
 
-            r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), description=description_status)
-            r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), description=description_mm)
-            r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), description=description_dev)
-            r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), description=description_timer)
+                    description_status = 'Check the availability of the servers'
+                    description_mm = 'Show the count of active players'
+                    description_dev = 'Show the count of in-game developers'
+                    description_timer = 'Time left until experience and drop cap reset'
 
-            bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=15)
-            log_inline(inline_query)
+                r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), thumb_url='https://telegra.ph/file/57ba2b279c53d69d72481.jpg', description=description_status)
+                r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), thumb_url='https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', description=description_mm)
+                r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
+                r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=15)
+
+                log_inline(inline_query)
+
+            except Exception as e:
+                bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
+                print(e)
 
         except Exception as e:
-            bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
-            print(e)
+            bot.send_message(me, f'❗️{e}')
+    else:
+        try:
+            timer_text_en, timer_text_ru = get_timer()
 
-    except Exception as e:
-        bot.send_message(me, f'❗️{e}')
-        send_about_problem_valve_inline(inline_query)
+            try:
+                if inline_query.from_user.language_code == 'ru':
+                    wrong_r = strings.wrongAPI_ru
+                    timer_r = timer_text_ru
+
+                else:
+                    wrong_r = strings.wrongAPI_en
+                    timer_r = timer_text_en
+                
+                # text part
+                if inline_query.from_user.language_code == 'ru': 
+                    title_un = 'Нет данных'
+                    title_timer = 'Сброс ограничений'
+
+                    description_un = 'Не получилось связаться с API Valve'
+                    description_timer = 'Время до сброса ограничений опыта и дропа'
+                    
+                else:
+                    title_un = 'No data'
+                    title_timer = 'Drop cap reset'
+
+                    description_un = 'Unable to call Valve API'
+                    description_timer = 'Time left until experience and drop cap reset'
+
+                r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
+                r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+
+                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=15)
+                log_inline(inline_query)
+
+            except Exception as e:
+                bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
+                print(e)
+                
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
 
 
 @bot.message_handler(commands=['start'])
@@ -488,7 +778,8 @@ def leave_feedback(message):
             bot.delete_message(message.chat.id, message.message_id)
         except:
             pass
-        
+
+  
 def get_feedback(message):
     """Get feedback from users"""
     if message.text == '/cancel':
@@ -565,7 +856,7 @@ def answer(message):
             elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
                 send_timer(message)
 
-            elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры (англ.)' or message.text.lower() == '/dc':
+            elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры' or message.text.lower() == '/dc':
                 dc(message)
 
             elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
@@ -586,19 +877,19 @@ def answer(message):
             elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
                 dc_south_america(message)
 
-            elif message.text.lower() == 'north' or message.text.lower() == 'северные сша' or message.text.lower() == '/usa_north':
+            elif message.text.lower() == 'north' or message.text.lower() == 'сeвер' or message.text.lower() == '/usa_north':
                 dc_usa_north(message)
 
-            elif message.text.lower() == 'south' or message.text.lower() == 'южные сша' or message.text.lower() == '/usa_south':
+            elif message.text.lower() == 'south' or message.text.lower() == 'юг' or message.text.lower() == '/usa_south':
                 dc_usa_south(message)
 
-            elif message.text.lower() == 'nоrth' or message.text.lower() == 'северная европа' or message.text.lower() == '/eu_north':
+            elif message.text.lower() == 'nоrth' or message.text.lower() == 'север' or message.text.lower() == '/eu_north':
                 dc_eu_north(message)
 
-            elif message.text.lower() == 'west' or message.text.lower() == 'западная европа' or message.text.lower() == '/eu_west':
+            elif message.text.lower() == 'west' or message.text.lower() == 'запад' or message.text.lower() == '/eu_west':
                 dc_eu_west(message)
 
-            elif message.text.lower() == 'east' or message.text.lower() == 'восточная европа' or message.text.lower() == '/eu_east':
+            elif message.text.lower() == 'east' or message.text.lower() == 'восток' or message.text.lower() == '/eu_east':
                 dc_eu_east(message)
 
             elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
@@ -613,7 +904,7 @@ def answer(message):
             elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
                 dc_emirates(message)
 
-            elif message.text.lower() == 'singapore' or message.text.lower() == 'сингопур' or message.text.lower() == '/singapore':
+            elif message.text.lower() == 'singapore' or message.text.lower() == 'сингапур' or message.text.lower() == '/singapore':
                 dc_singapore(message)
 
             elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':

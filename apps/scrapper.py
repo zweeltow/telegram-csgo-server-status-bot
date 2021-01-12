@@ -1,9 +1,14 @@
 import requests
+import json
 from bs4 import BeautifulSoup
+from apps import file_manager
 
 url_db = 'https://steamdb.info/app/730/graphs/'
 url_cs = 'https://blog.counter-strike.net'
+url_ss = 'https://crowbar.steamstat.us/gravity.json'
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'}
+
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/ss_cache.json"
 
 class PeakOnline:
     def get_peak(self):
@@ -33,3 +38,34 @@ class Monthly:
         unique = unique.replace(',', '')
 
         return unique
+        
+class CSGOGameCoordinator:
+    def get_status(self):
+        soup = BeautifulSoup(requests.get(url_ss, headers=headers).content, 'html.parser')
+
+        data = soup.get_text()
+
+        f = open(JSON_FILE_PATH, 'r+')
+        f.truncate(0)
+        f.close()
+
+        f = open(JSON_FILE_PATH, 'a')
+        f.write(data)
+        f.close()
+        
+        fin = open(JSON_FILE_PATH,"r")  
+        parsed = json.load(fin)
+        fin.close()
+        line = json.dumps(parsed, indent=4)
+        fout = open(JSON_FILE_PATH,"w")
+        fout.write(line)
+        fout.close()
+
+        
+        items = file_manager.readJson(JSON_FILE_PATH)
+        delta1 = items['services'][4]
+        delta2 = items['services'][61]
+        gc_status = delta1[2]
+        webapi_status = delta2[2]
+
+        return gc_status, webapi_status

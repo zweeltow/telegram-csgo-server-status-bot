@@ -6,11 +6,11 @@ from datetime import datetime
 import time
 import traceback
 import logging
-
-from apps import alerts as bot
-from apps import file_manager
+import telebot
 
 import config
+import strings
+from apps import file_manager
 
 
 JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
@@ -45,8 +45,8 @@ def check_for_updates(client):
 
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
-                file_manager.updateJson(JSON_FILE_PATH, currentBuild)
-                bot.send_alert(currentBuild)
+                file_manager.updateJsonID(JSON_FILE_PATH, currentBuild)
+                send_alert(currentBuild)
 
             time.sleep(10)
 
@@ -59,6 +59,17 @@ def check_for_updates(client):
             setup()
 
 
+def send_alert(currentBuild):
+    bot = telebot.TeleBot(config.BOT_TOKEN)
+    text = strings.notiNewBuild_ru.format(currentBuild)
+    if not config.TEST_MODE:
+        chat_list = [config.CSGOBETACHAT, config.AQ]
+    else:
+        chat_list = [config.OWNER]
+    for chatID in chat_list:
+        bot.send_message(chatID, text, parse_mode='Markdown')
+
+
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, format='%(process)d %(message)s')
+    logging.basicConfig(level=logging.DEBUG, format='%(process)d %(message)s')
     setup()
