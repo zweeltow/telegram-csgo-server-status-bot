@@ -142,20 +142,24 @@ def send_about_problem_valve_api(message):
     
     if message.from_user.language_code == "ru":
         text = strings.wrongAPI_ru
+        markup = markup_ru       
     else:
         text = strings.wrongAPI_en
+        markup = markup_en   
 
-    bot.send_message(message.chat.id, text)
+    bot.send_message(message.chat.id, text, reply_markup=markup)
     
     
 def send_about_problem_bot(message):
     """If anything goes wrong"""
     if message.from_user.language_code == "ru":
         text = strings.wrongBOT_ru
+        markup = markup_ru
     else:
         text = strings.wrongBOT_en
+        markup = markup_en  
         
-    bot.send_message(message.chat.id, text)
+    bot.send_message(message.chat.id, text, reply_markup=markup)
 
 
 

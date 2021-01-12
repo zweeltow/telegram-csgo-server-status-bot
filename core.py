@@ -20,15 +20,15 @@ def info_updater():
         try:
             gc_status = gc.get_status()[0]
             webapi_status = gc.get_status()[1]
-            sessionsLogon = api.first_api()[1]
-            player_count = api.second_api()
-            time_server = api.first_api()[4]
-            scheduler = api.first_api()[0]
-            server_count = api.first_api()[2]
-            online_players = api.first_api()[3]
-            search_seconds_avg = api.first_api()[5]
-            searching_players = api.first_api()[6]
-            dev_player_count = api.third_api()
+            sessionsLogon = api.get_status()[1]
+            player_count = api.get_players()
+            time_server = api.get_status()[4]
+            scheduler = api.get_status()[0]
+            server_count = api.get_status()[2]
+            online_players = api.get_status()[3]
+            search_seconds_avg = api.get_status()[5]
+            searching_players = api.get_status()[6]
+            dev_player_count = api.get_devs()
             peak24 = peak_count.get_peak()[0]
             peak_all = peak_count.get_peak()[1]
             unique = month_unique.get_unique()
