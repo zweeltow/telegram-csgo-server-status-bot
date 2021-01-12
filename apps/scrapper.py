@@ -61,9 +61,11 @@ class CSGOGameCoordinator:
         fout.write(line)
         fout.close()
 
-
+        
         items = file_manager.readJson(JSON_FILE_PATH)
-        delta = items['services'][4]
-        gc_status = delta[2]
+        delta1 = items['services'][4]
+        delta2 = items['services'][61]
+        gc_status = delta1[2]
+        webapi_status = delta2[2]
 
-        return gc_status
+        return gc_status, webapi_status
