@@ -92,7 +92,7 @@ def info_updater():
             if unique != uqCache:
                 file_manager.updateJsonUQ(config.CACHE_FILE_PATH, unique)
 
-            time.sleep(90)
+            time.sleep(60)
 
         except AttributeError:
             error_message = traceback.format_exc()
