@@ -173,7 +173,8 @@ class ValveServersDataCentersAPI:
 
     def eu_West(self):
         """
-        EU West (Luxembourg)"""
+        EU West (Luxembourg)    
+        Spain (Mardid)"""    
         result = get_response()
         datacenters = result['datacenters']
 
@@ -192,18 +193,13 @@ class ValveServersDataCentersAPI:
     def eu_East(self):
         """
         EU East (Vienna)
-        Spain (Mardid)
         Poland (Warsaw)"""
         result = get_response()
         datacenters = result['datacenters']
 
         EU_East = datacenters['EU East']
-        capacity_East = EU_East['capacity']
-        load_East = EU_East['load']
-
-        Spain = datacenters['Spain']
-        capacity_Spain = Spain['capacity']
-        load_Spain = Spain['load']
+        capacity = EU_East['capacity']
+        load = EU_East['load']
 
         Poland = datacenters['Poland']
         capacity_Poland = Poland['capacity']
@@ -211,7 +207,7 @@ class ValveServersDataCentersAPI:
 
 
 
-        return capacity_East, capacity_Poland, load_East, load_Poland
+        return capacity, capacity_Poland, load, load_Poland
 
     def eu_North(self):
         """
