@@ -836,10 +836,6 @@ def delete_keyboard(message):
     time.sleep(10)
     bot.delete_message(message.chat.id, message.message_id+1)
 
-@bot.message_handler(content_types=['text'])
-def send_meme(message):
-    if message.forward_from_chat.id == config.CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
-        bot.send_sticker(config.CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
 
 @bot.message_handler(content_types=['text'])
 def answer(message):
@@ -918,7 +914,6 @@ def answer(message):
             elif message.text == '⏪ Back' or message.text == '⏪ Назад':
                 back(message)
 
-
             else:
                 if message.from_user.language_code == 'ru':
                     text = strings.unknownRequest_ru
@@ -928,6 +923,11 @@ def answer(message):
                     markup = markup_en
 
                 bot.send_message(message.chat.id, text, reply_markup=markup)
+                
+        else:
+            if message.from_user.id == 777000:
+                if message.forward_from_chat.id == config.CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
+                    bot.send_sticker(config.CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
     
     except Exception as e:
         bot.send_message(me, f'❗️{e}')
