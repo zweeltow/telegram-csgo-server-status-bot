@@ -8,7 +8,7 @@ from apps import file_manager
 from apps.valve_api import ValveServersAPI
 from apps.scrapper import PeakOnline, Monthly, CSGOGameCoordinator
 
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
+JSON_FILE_PATH = "cache.json"
 
 api = ValveServersAPI()
 peak_count = PeakOnline()
@@ -21,15 +21,15 @@ def info_updater():
         try:
             gc_status = gc.get_status()[0]
             webapi_status = gc.get_status()[1]
-            sessionsLogon = api.status()[0]
-            player_count = api.status()[1]
-            time_server = api.status()[2]
-            scheduler = api.matchmaking()[0]
-            server_count = api.matchmaking()[1]
-            online_players = api.matchmaking()[2]
-            search_seconds_avg = api.matchmaking()[4]
-            searching_players = api.matchmaking()[5]
-            dev_player_count = api.devcount()[0]
+            sessionsLogon = api.first_api()[1]
+            player_count = api.second_api()
+            time_server = api.first_api()[4]
+            scheduler = api.first_api()[0]
+            server_count = api.first_api()[2]
+            online_players = api.first_api()[3]
+            search_seconds_avg = api.first_api()[5]
+            searching_players = api.first_api()[6]
+            dev_player_count = api.third_api()
             peak24 = peak_count.get_peak()[0]
             peak_all = peak_count.get_peak()[1]
             unique = month_unique.get_unique()
