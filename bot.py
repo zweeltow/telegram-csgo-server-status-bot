@@ -838,8 +838,8 @@ def delete_keyboard(message):
 
 @bot.message_handler(content_types=['text'])
 def send_meme(message):
-    if message.forward_from_chat.id == CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
-        bot.send_sticker(CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
+    if message.forward_from_chat.id == config.CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
+        bot.send_sticker(config.CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
 
 @bot.message_handler(content_types=['text'])
 def answer(message):
