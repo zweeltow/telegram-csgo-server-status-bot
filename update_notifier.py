@@ -37,12 +37,12 @@ def check_for_updates(client):
                 for k, val in values.items():
                     currentBuild = val['depots']['branches']['public']['buildid']
 
-            cacheFile = file_manager.readJs
+            cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
             bIDCache = cacheFile['build_ID']
 
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
-                file_manager.updateJson
+                file_manager.updateJsonID(config.CACHE_FILE_PATH, currentBuild)
                 send_alert(currentBuild)
 
             time.sleep(10)

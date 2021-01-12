@@ -46,24 +46,24 @@ class CSGOGameCoordinator:
 
         data = soup.get_text()
 
-        f = open(config.JSON_FILE_PATH, 'r+')
+        f = open(config.SS_CACHE_FILE_PATH, 'r+')
         f.truncate(0)
         f.close()
 
-        f = open(config.JSON_FILE_PATH, 'a')
+        f = open(config.SS_CACHE_FILE_PATH, 'a')
         f.write(data)
         f.close()
         
-        fin = open(config.JSON_FILE_PATH,"r")  
+        fin = open(config.SS_CACHE_FILE_PATH,"r")  
         parsed = json.load(fin)
         fin.close()
         line = json.dumps(parsed, indent=4)
-        fout = open(config.JSON_FILE_PATH,"w")
+        fout = open(config.SS_CACHE_FILE_PATH,"w")
         fout.write(line)
         fout.close()
 
         
-        items = file_manager.readJson(config.JSON_FILE_PATH)
+        items = file_manager.readJson(config.SS_CACHE_FILE_PATH)
         delta1 = items['services'][4]
         delta2 = items['services'][61]
         gc_status = delta1[2]
