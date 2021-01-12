@@ -8,7 +8,7 @@ from apps import file_manager
 from apps.valve_api import ValveServersAPI
 from apps.scrapper import PeakOnline, Monthly, CSGOGameCoordinator
 
-JSON_FILE_PATH = "cache.json"
+JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
 
 api = ValveServersAPI()
 peak_count = PeakOnline()
