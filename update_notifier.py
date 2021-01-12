@@ -13,9 +13,6 @@ import strings
 from apps import file_manager
 
 
-JSON_FILE_PATH = "/root/tgbot/telegram-csgo-server-status-bot/cache.json"
-
-
 def setup():
     client = SteamClient()
     try:
@@ -40,12 +37,12 @@ def check_for_updates(client):
                 for k, val in values.items():
                     currentBuild = val['depots']['branches']['public']['buildid']
 
-            cacheFile = file_manager.readJson(JSON_FILE_PATH)
+            cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
             bIDCache = cacheFile['build_ID']
 
             if currentBuild != bIDCache:
                 print('New update found! Sending alerts...')
-                file_manager.updateJsonID(JSON_FILE_PATH, currentBuild)
+                file_manager.updateJsonID(config.CACHE_FILE_PATH, currentBuild)
                 send_alert(currentBuild)
 
             time.sleep(10)
