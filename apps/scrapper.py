@@ -13,60 +13,70 @@ headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko
 
 class PeakOnline:
     def get_peak(self):
-        soup = BeautifulSoup(requests.get(url_db, headers=headers).content, 'html.parser')
+        try:
+            soup = BeautifulSoup(requests.get(url_db, headers=headers).content, 'html.parser')
 
-        peak = soup.find_all("strong")
+            peak = soup.find_all("strong")
 
-        peak24 = str(peak[1])
-        peak_all = str(peak[2])
+            peak24 = str(peak[1])
+            peak_all = str(peak[2])
 
-        peak24 = peak24.replace('<strong>', '')
-        peak24 = peak24.replace('</strong>', '')
-        peak24 = peak24.replace(',', '')
+            peak24 = peak24.replace('<strong>', '')
+            peak24 = peak24.replace('</strong>', '')
+            peak24 = peak24.replace(',', '')
 
-        peak_all = peak_all.replace('<strong>', '')
-        peak_all = peak_all.replace('</strong>', '')
-        peak_all = peak_all.replace(',', '')
+            peak_all = peak_all.replace('<strong>', '')
+            peak_all = peak_all.replace('</strong>', '')
+            peak_all = peak_all.replace(',', '')
 
-        return peak24, peak_all
+            return peak24, peak_all
+        except:
+            peak24 = 'N/A'
+            peak_all = 'N/A'
+            return peak24, peak_all
 
 
 class Monthly:
     def get_unique(self):
-        soup = BeautifulSoup(requests.get(url_cs, headers=headers).content, 'html.parser')
+        try:
+            soup = BeautifulSoup(requests.get(url_cs, headers=headers).content, 'html.parser')
 
-        unique = soup.find("div", {"class": "monthly"}).string
-        unique = unique.replace(',', '')
+            unique = soup.find("div", {"class": "monthly"}).string
+            unique = unique.replace(',', '')
 
-        return unique
+            return unique
+        except:
+            unique = 'N/A'
+            return unique
         
 class CSGOGameCoordinator:
     def get_status(self):
-        soup = BeautifulSoup(requests.get(url_ss, headers=headers).content, 'html.parser')
+        try:
+            soup = BeautifulSoup(requests.get(url_ss, headers=headers).content, 'html.parser')
 
-        data = soup.get_text()
+            data = soup.get_text()
 
-        f = open(config.SS_CACHE_FILE_PATH, 'r+')
-        f.truncate(0)
-        f.close()
+            f = open(config.SS_CACHE_FILE_PATH, 'r+')
+            f.truncate(0)
+            f.close()
 
-        f = open(config.SS_CACHE_FILE_PATH, 'a')
-        f.write(data)
-        f.close()
-        
-        fin = open(config.SS_CACHE_FILE_PATH,"r")  
-        parsed = json.load(fin)
-        fin.close()
-        line = json.dumps(parsed, indent=4)
-        fout = open(config.SS_CACHE_FILE_PATH,"w")
-        fout.write(line)
-        fout.close()
+            f = open(config.SS_CACHE_FILE_PATH, 'a')
+            f.write(data)
+            f.close()
+            
+            fin = open(config.SS_CACHE_FILE_PATH,"r")  
+            parsed = json.load(fin)
+            fin.close()
+            line = json.dumps(parsed, indent=4)
+            fout = open(config.SS_CACHE_FILE_PATH,"w")
+            fout.write(line)
+            fout.close()
+            
+            items = file_manager.readJson(config.SS_CACHE_FILE_PATH)
+            delta = items['services'][4]
+            gc_status = delta[2]
 
-        
-        items = file_manager.readJson(config.SS_CACHE_FILE_PATH)
-        delta1 = items['services'][4]
-        delta2 = items['services'][61]
-        gc_status = delta1[2]
-        webapi_status = delta2[2]
-
-        return gc_status, webapi_status
+            return gc_status
+        except:
+            gc_status = 'N/A'
+            return gc_status
