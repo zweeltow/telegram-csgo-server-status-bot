@@ -256,7 +256,7 @@ class ValveServersDataCentersAPI:
 #
 #   South America
 #
-    """ Brazil (Sao Paulo) && Chile, (Santiago) && Peru (Lima)"""
+    """Brazil (Sao Paulo) && Chile, (Santiago) && Peru (Lima)"""
     def sa(self):
         try:
             result = get_response()
@@ -390,11 +390,8 @@ class ValveServersDataCentersAPI:
             capacity = load = capacity_ru = load_ru = 'N/A'
             return capacity, load, capacity_ru, load_ru
 
+    """China Shanghai && China Tianjin && China Guangzhou"""
     def china(self):
-        '''
-        China Shanghai
-        China Tianjin
-        China Guangzhou'''
         try:
             result = get_response()
             capacity_raw = result['datacenters']['China Shanghai']['capacity']
