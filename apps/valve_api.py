@@ -5,51 +5,75 @@ import config
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
 API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
+    
 
 def get_response():
     response = requests.get(API_server_status)
     response = response.json()
     result = response['result']
-
     return result
 
 class ValveServersAPI:
 
     def get_status(self): 
-    
-        result = get_response()
+        try:
+            result = get_response()
 
-        matchmaking = result['matchmaking']
-        
-        scheduler = matchmaking['scheduler']
-        sessionsLogon = result['services']['SessionsLogon']
-        time_server = result['app']['time']
+            matchmaking = result['matchmaking']
+            
+            scheduler = matchmaking['scheduler']
+            sessionsLogon = result['services']['SessionsLogon']
+            time_server = result['app']['time']
 
-        online_servers = matchmaking['online_servers']
-        online_players = matchmaking['online_players']
-        searching_players = matchmaking['searching_players']        
-        search_seconds_avg = matchmaking['search_seconds_avg']
+            online_servers = matchmaking['online_servers']
+            online_players = matchmaking['online_players']
+            searching_players = matchmaking['searching_players']        
+            search_seconds_avg = matchmaking['search_seconds_avg']
 
-        return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
-        
-        
+            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
+        except:
+            scheduler = 'N/A'
+            sessionsLogon = 'N/A'
+            online_servers = 'N/A'
+            online_players = 'N/A'
+            time_server = 'N/A'
+            search_seconds_avg = 'N/A'
+            searching_players = 'N/A'
+            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
+            
     def get_players(self):
+        try:
+            response = requests.get(API_csgo_players)
+            data = response.json()
+            player_count = data['response']['player_count']
 
-        response = requests.get(API_csgo_players)
-        data = response.json()
-        player_count = data['response']['player_count']
-
-        return player_count
-
-        
-        
+            return player_count
+        except:
+            player_count = 'N/A'
+            return player_count
+            
     def get_devs(self):
+        try:
+            response = requests.get(API_dev_players)
+            data = response.json()
+            dev_player_count = data['response']['player_count']
 
-        response = requests.get(API_dev_players)
-        data = response.json()
-        dev_player_count = data['response']['player_count']
-
-        return dev_player_count
+            return dev_player_count
+        except:
+            dev_player_count = 'N/A'
+            return dev_player_count
+            
+    def check_status(self):
+        try:
+            response = requests.get(API_server_status)
+            if response.status_code == 200:
+                webapi_status = 'Normal'
+            else:
+                webapi_status = 'N/A'
+            return webapi_status
+        except requests.ConnectionError:
+            webapi_status = 'N/A'
+            return webapi_status
     
 class ValveServersDataCentersAPI:
 
