@@ -679,7 +679,7 @@ class ValveServersDataCentersAPI:
             else:
                 load_ru = load
 
-            return capacity, load, load_ru, capacity_ru
+            return capacity, load, capacity_ru, load_ru
         except:
             capacity = 'N/A'
             load = 'N/A'
