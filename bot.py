@@ -416,12 +416,12 @@ def dc_eu_west(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, capacity_Spain, load_Spain, capacity_ru, load_ru, capacity_Spain_ru, load_Spain_ru = api_dc.eu_West()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = api_dc.eu_West()
         if message.from_user.language_code == 'ru':
-            text = strings.dc_west_eu_ru.format(load_ru, capacity_ru, load_Spain_ru, capacity_Spain_ru, tsCache)
+            text = strings.dc_west_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
             markup = markup_DC_ru 
         else:
-            text = strings.dc_west_eu_en.format(load, capacity, load_Spain, capacity_Spain, tsCache)
+            text = strings.dc_west_eu_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -433,12 +433,12 @@ def dc_eu_east(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, capacity_Poland, load, load_Poland, capacity_ru, capacity_Poland_ru, load_ru, load_Poland_ru = api_dc.eu_East()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = api_dc.eu_East()
         if message.from_user.language_code == 'ru':
-            text = strings.dc_east_eu_ru.format(load_ru, capacity_ru, load_Poland_ru, capacity_Poland_ru, tsCache)
+            text = strings.dc_east_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_east_eu_en.format(load, capacity, load_Poland, capacity_Poland, tsCache)
+            text = strings.dc_east_eu_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -480,12 +480,12 @@ def dc_usa_north(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru = api_dc.usa_North()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.usa_North()
         if message.from_user.language_code == 'ru':        
-            text = strings.dc_north_us_ru.format(load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru, tsCache)
+            text = strings.dc_north_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_north_us_en.format(load_US_Northcentral, capacity_US_Northcentral, load_US_Northeast, capacity_US_Northeast, load_US_Northwest, capacity_US_Northwest, tsCache)
+            text = strings.dc_north_us_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -497,12 +497,12 @@ def dc_usa_south(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru = api_dc.usa_South()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = api_dc.usa_South()
         if message.from_user.language_code == 'ru':        
-            text = strings.dc_south_us_ru.format(load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru, tsCache)
+            text = strings.dc_south_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_south_us_en.format(load_US_Southwest, capacity_US_Southwest, load_US_Southeast, capacity_US_Southeast, tsCache)
+            text = strings.dc_south_us_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -514,12 +514,12 @@ def dc_south_america(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru = api_dc.sa()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_secondary, capacity_tertiary_ru, load_tertiary_ru = api_dc.sa()
         if message.from_user.language_code == 'ru':  
-            text = strings.dc_south_america_ru.format(load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru, tsCache)
+            text = strings.dc_south_america_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_south_america_en.format(load_Brazil, capacity_Brazil, load_Chile, capacity_Chile, load_Peru, capacity_Peru, tsCache)
+            text = strings.dc_south_america_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -531,12 +531,12 @@ def dc_india(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, capacity_East, load, load_East, load_ru, capacity_ru, load_East_ru, capacity_East_ru = api_dc.india()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = api_dc.india()
         if message.from_user.language_code == 'ru':  
-            text = strings.dc_india_ru.format(load_ru, capacity_ru, load_East_ru, capacity_East_ru, tsCache)
+            text = strings.dc_india_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_india_en.format(load, capacity, load_East, capacity_East, tsCache)
+            text = strings.dc_india_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -565,12 +565,12 @@ def dc_china(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru = api_dc.china()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.china()
         if message.from_user.language_code == 'ru':
-            text = strings.dc_china_ru.format(load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru, tsCache)
+            text = strings.dc_china_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
             markup = markup_DC_ru
         else:
-            text = strings.dc_china_en.format(load_Shanghai, capacity_Shanghai, load_Tianjin, capacity_Tianjin, load_Guangzhou, capacity_Guangzhou, tsCache)
+            text = strings.dc_china_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
             markup = markup_DC
         bot.send_message(message.chat.id, text, reply_markup=markup)
     else:
@@ -582,7 +582,7 @@ def dc_emirates(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, load_ru, capacity_ru = api_dc.emirates()
+        capacity, load, capacity_ru, load_ru = api_dc.emirates()
         if message.from_user.language_code == 'ru':
             text = strings.dc_emirates_ru.format(load_ru, capacity_ru, tsCache)
             markup = markup_DC_ru
@@ -599,7 +599,7 @@ def dc_singapore(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
-        capacity, load, load_ru, capacity_ru = api_dc.singapore()
+        capacity, load, capacity_ru, load_ru = api_dc.singapore()
         if message.from_user.language_code == 'ru':
             text = strings.dc_singapore_ru.format(load_ru, capacity_ru, tsCache)
             markup = markup_DC_ru
@@ -616,7 +616,7 @@ def dc_hong_kong(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server']
     if wsCache == 'Normal':
-        capacity, load, load_ru, capacity_ru = api_dc.hong_kong()
+        capacity, load, capacity_ru, load_ru = api_dc.hong_kong()
         if message.from_user.language_code == 'ru':
             text = strings.dc_hong_kong_ru.format(load_ru, capacity_ru, tsCache)
             markup = markup_DC_ru
