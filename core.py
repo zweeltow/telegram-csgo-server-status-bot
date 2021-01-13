@@ -18,8 +18,8 @@ gc = CSGOGameCoordinator()
 def info_updater():
     while True:
         try:
-            gc_status = gc.get_status()[0]
-            webapi_status = gc.get_status()[1]
+            gc_status = gc.get_status()
+            webapi_status = api.check_status()
             sessionsLogon = api.get_status()[1]
             player_count = api.get_players()
             time_server = api.get_status()[4]
@@ -92,7 +92,7 @@ def info_updater():
             if unique != uqCache:
                 file_manager.updateJsonUQ(config.CACHE_FILE_PATH, unique)
 
-            time.sleep(90)
+            time.sleep(60)
 
         except AttributeError:
             error_message = traceback.format_exc()
