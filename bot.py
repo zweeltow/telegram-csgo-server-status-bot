@@ -1,890 +1,937 @@
-import requests
+# -*- coding: utf-8 -*-
+
+import logging
+import time
+import json
+
+import telebot
+from telebot import types
+
 import config
+import strings
+
+from apps.timer import TimerDrop
+from apps.valve_api import ValveServersDataCentersAPI
+from apps import file_manager
 
 
-API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
-API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
-API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
+bot = telebot.TeleBot(config.BOT_TOKEN)
+telebot.logger.setLevel(logging.DEBUG) # setup logger
+me = config.OWNER # short way to contact the developer
+
+api_dc = ValveServersDataCentersAPI()
+timer_drop = TimerDrop()
+
+
+"""Setup keyboard"""
+# English
+markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+status = types.KeyboardButton('Status')
+matchmaking = types.KeyboardButton('Matchmaking')
+devcount = types.KeyboardButton('Online devs')
+timer = types.KeyboardButton('Cap reset')
+dc = types.KeyboardButton('Data centers')
+markup_en.add(status, matchmaking, devcount, timer, dc)
+
+# DC
+markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+europe = types.KeyboardButton('Europe')
+asia = types.KeyboardButton('Asia')
+south_africa = types.KeyboardButton('South Africa')
+south_america = types.KeyboardButton('South America')
+australia = types.KeyboardButton('Australia')
+usa =  types.KeyboardButton('USA')
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC.add(asia, australia, europe, south_africa, south_america, usa, back_button)
+
+# DC Asia
+markup_DC_Asia = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+india = types.KeyboardButton('India')
+emirates = types.KeyboardButton('Emirates')
+china = types.KeyboardButton('China')
+singapore = types.KeyboardButton('Singapore')
+hong_kong = types.KeyboardButton('Hong Kong')
+japan = types.KeyboardButton('Japan')
+markup_DC_Asia.add(china, emirates, hong_kong, india, japan, singapore)
+
+# DC Europe
+markup_DC_EU = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+eu_West = types.KeyboardButton('West')
+eu_East = types.KeyboardButton('East')
+eu_North = types.KeyboardButton('Nоrth')
+markup_DC_EU.add(eu_East, eu_North, eu_West)
+
+# DC USA
+markup_DC_USA = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+usa_Northwest = types.KeyboardButton('North')
+usa_Southwest = types.KeyboardButton('South')
+markup_DC_USA.add(usa_Northwest, usa_Southwest)
+
+# DC Back
+markup_DC_Back = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+back_button = types.KeyboardButton('⏪ Back')
+markup_DC_Back.add(back_button)
+
+# Russian
+markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+status_ru = types.KeyboardButton('Статус')
+matchmaking_ru = types.KeyboardButton('Матчмейкинг')
+devcount_ru = types.KeyboardButton('Разработчиков в игре')
+timer_ru = types.KeyboardButton('Сброс ограничений')
+dc_ru = types.KeyboardButton('Дата-центры')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
+
+# DC RU
+markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+Europe_ru = types.KeyboardButton('Европа')
+Asia_ru = types.KeyboardButton('Азия')
+Africa_ru = types.KeyboardButton('Южная Африка')
+South_America_ru = types.KeyboardButton('Южная Америка')
+Australia_ru = types.KeyboardButton('Австралия') 
+USA_ru =  types.KeyboardButton('США')
+Back_button_ru = types.KeyboardButton('⏪ Назад')
+markup_DC_ru.add(Australia_ru, Asia_ru, Europe_ru, USA_ru, South_America_ru, Africa_ru, Back_button_ru)
+
+# DC Europe Russian
+markup_DC_EU_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+eu_West_ru = types.KeyboardButton('Запад')
+eu_East_ru = types.KeyboardButton('Восток')
+eu_North_ru = types.KeyboardButton('Север')
+markup_DC_EU_ru.add(eu_East_ru, eu_West_ru, eu_North_ru)
+
+# DC Asia Russian
+markup_DC_Asia_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+india_ru = types.KeyboardButton('Индия')
+emirates_ru = types.KeyboardButton('Эмираты')
+china_ru = types.KeyboardButton('Китай')
+singapore_ru = types.KeyboardButton('Сингапур')
+hong_kong_ru = types.KeyboardButton('Гонконг')
+japan_ru = types.KeyboardButton('Япония')
+markup_DC_Asia_ru.add(hong_kong_ru, india_ru, china_ru, singapore_ru, emirates_ru, japan_ru)
+
+# DC USA Russian
+markup_DC_USA_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+usa_Northwest_ru = types.KeyboardButton('Сeвер')
+usa_Southwest_ru = types.KeyboardButton('Юг')
+markup_DC_USA_ru.add(usa_Northwest_ru, usa_Southwest_ru)
+
+"""Delete Keyboard"""
+markup_del = types.ReplyKeyboardRemove(False)
+
+
+def log(message):
+    """The bot send messages to log channel"""
+    bot.send_message(config.LOGCHANNEL, message)
+
+#    if message.from_user.last_name == None:
+#        text = f'[<a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>] {message.from_user.first_name} "{message.from_user.username}": {message.text}'
+#    else:
+#        text = log_message = f'[<a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>] {message.from_user.first_name} "{message.from_user.username}" {message.from_user.last_name}: {message.text}'
     
+#    bot.send_message(config.OWNER, text, disable_web_page_preview=None, 
+#                     reply_to_message_id=None, reply_markup=None, parse_mode='html', disable_notification=True)
 
-def get_response():
-    response = requests.get(API_server_status)
-    response = response.json()
-    result = response['result']
-    return result
 
-class ValveServersAPI:
+def log_inline(inline_query):
+    # bot.send_message(config.OWNER, f'[<a href="tg://user?id={inline_query.from_user.id}">{inline_query.from_user.id}</a>] {inline_query.from_user.first_name} "{inline_query.from_user.username}" {inline_query.from_user.last_name} used <b>inline</b>', parse_mode='html', disable_notification=True)
+    bot.send_message(config.LOGCHANNEL, inline_query)
 
-    def get_status(self): 
-        try:
-            result = get_response()
 
-            matchmaking = result['matchmaking']
-            
-            scheduler = matchmaking['scheduler']
-            sessionsLogon = result['services']['SessionsLogon']
-            time_server = result['app']['time']
-
-            online_servers = matchmaking['online_servers']
-            online_players = matchmaking['online_players']
-            searching_players = matchmaking['searching_players']        
-            search_seconds_avg = matchmaking['search_seconds_avg']
-
-            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
-        except:
-            scheduler = 'N/A'
-            sessionsLogon = 'N/A'
-            online_servers = 'N/A'
-            online_players = 'N/A'
-            time_server = 'N/A'
-            search_seconds_avg = 'N/A'
-            searching_players = 'N/A'
-            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
-            
-    def get_players(self):
-        try:
-            response = requests.get(API_csgo_players)
-            data = response.json()
-            player_count = data['response']['player_count']
-
-            return player_count
-        except:
-            player_count = 'N/A'
-            return player_count
-            
-    def get_devs(self):
-        try:
-            response = requests.get(API_dev_players)
-            data = response.json()
-            dev_player_count = data['response']['player_count']
-
-            return dev_player_count
-        except:
-            dev_player_count = 'N/A'
-            return dev_player_count
-            
-    def check_status(self):
-        try:
-            response = requests.get(API_server_status)
-            if response.status_code == 200:
-                webapi_status = 'Normal'
-            else:
-                webapi_status = 'N/A'
-            return webapi_status
-        except requests.ConnectionError:
-            webapi_status = 'N/A'
-            return webapi_status
+def send_about_problem_valve_api(message):
+    """Answer of bot if Valve's API don't answer"""
     
-class ValveServersDataCentersAPI:
+    if message.from_user.language_code == "ru":
+        text = strings.wrongAPI_ru
+        markup = markup_ru       
+    else:
+        text = strings.wrongAPI_en
+        markup = markup_en   
 
-#
-#   Australia
-#
-
-    def australia(self):
-        """
-        Australia (Sydney)"""
-        try:
-            result = get_response()        
-            datacenters = result['datacenters']
-
-            Australia = datacenters['Australia']
-            capacity = Australia['capacity']
-            load = Australia['load']
-            
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
-            return capacity, load, capacity_ru, load_ru
-            
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
-
-#
-#   South Africa
-#
-
-    def africa_South(self):
-        """
-        South Africa (Johannesburg)"""
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            South_Africa = datacenters['South Africa']
-            capacity = South_Africa['capacity']
-            load = South_Africa['load']
-                    
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
-
-            return capacity, load, capacity_ru, load_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+    bot.send_message(message.chat.id, text, reply_markup=markup)
     
-#
-#   South America
-#
-
-    def sa(self):
-        """
-        Brazil (Sao Paulo), 
-        Chile, (Santiago), 
-        Peru (Lima)"""
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            Brazil = datacenters['Brazil']
-            capacity_Brazil = Brazil['capacity']
-            load_Brazil = Brazil['load']
-
-            Chile = datacenters['Chile']
-            capacity_Chile = Chile['capacity']
-            load_Chile = Chile['load']
-
-            Peru = datacenters['Peru']
-            capacity_Peru = Peru['capacity']
-            load_Peru = Peru['load']
-
-            if capacity_Brazil == 'full':
-                capacity_Brazil_ru = 'полная'
-            elif capacity_Brazil == 'offline':
-                capacity_Brazil_ru = 'офлайн'
-            else:
-                capacity_Brazil_ru = capacity_Brazil        
-                
-            if capacity_Chile == 'full':
-                capacity_Chile_ru = 'полная'
-            elif capacity_Chile == 'offline':
-                capacity_Chile_ru = 'офлайн'
-            else:
-                capacity_Chile_ru = capacity_Chile
-                        
-            if capacity_Peru == 'full':
-                capacity_Peru_ru = 'полная'
-            elif capacity_Peru == 'offline':
-                capacity_Peru_ru = 'офлайн'
-            else:
-                capacity_Peru_ru = capacity_Peru
-                
-            if load_Brazil == 'idle':
-                load_Brazil_ru = 'никакая'
-            elif load_Brazil == 'low':
-                load_Brazil_ru = 'низкая'
-            elif load_Brazil == 'medium':
-                load_Brazil_ru = 'средняя'
-            elif load_Brazil == 'high':
-                load_Brazil_ru = 'высокая'
-            else:
-                load_Brazil_ru = load_Brazil
-                
-            if load_Chile == 'idle':
-                load_Chile_ru = 'никакая'
-            elif load_Chile == 'low':
-                load_Chile_ru = 'низкая'
-            elif load_Chile == 'medium':
-                load_Chile_ru = 'средняя'
-            elif load_Chile == 'high':
-                load_Chile_ru = 'высокая'
-            else:
-                load_Chile_ru = load_Chile
-                
-            if load_Peru == 'idle':
-                load_Peru_ru = 'никакая'
-            elif load_Peru == 'low':
-                load_Peru_ru = 'низкая'
-            elif load_Peru == 'medium':
-                load_Peru_ru = 'средняя'
-            elif load_Peru == 'high':
-                load_Peru_ru = 'высокая'
-            else:
-                load_Peru_ru = load_Peru
-
-
-            return capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru
-        except:
-            capacity_Chile = 'N/A'
-            capacity_Peru = 'N/A'
-            capacity_Brazil = 'N/A'
-            load_Chile = 'N/A'
-            load_Peru = 'N/A'
-            load_Brazil = 'N/A'
-            load_Brazil_ru = 'N/A'
-            capacity_Brazil_ru = 'N/A'
-            load_Chile_ru = 'N/A'
-            capacity_Chile_ru = 'N/A'
-            load_Peru_ru = 'N/A'
-            capacity_Peru_ru = 'N/A'
-            return capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru
-
-#
-#   USA
-#
-
-    def usa_North(self):
-        """
-        US Northcentral (Chicago)
-        US Northeast (Sterling)
-        US Northwest (Moses Lake)"""
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            US_Northcentral = datacenters['US Northcentral']
-            capacity_US_Northcentral = US_Northcentral['capacity']
-            load_US_Northcentral = US_Northcentral['load']
-
-            US_Northeast = datacenters['US Northeast']
-            capacity_US_Northeast = US_Northeast['capacity']
-            load_US_Northeast = US_Northeast['load']
-
-            US_Northwest = datacenters['US Northwest']
-            capacity_US_Northwest = US_Northwest['capacity']
-            load_US_Northwest = US_Northwest['load']
-
-            if capacity_US_Northcentral == 'full':
-                capacity_US_Northcentral_ru = 'полная'
-            elif capacity_US_Northcentral == 'offline':
-                capacity_US_Northcentral_ru = 'офлайн'
-            else:
-                capacity_US_Northcentral_ru = capacity_US_Northcentral        
-                
-            if capacity_US_Northeast == 'full':
-                capacity_US_Northeast_ru = 'полная'
-            elif capacity_US_Northeast == 'offline':
-                capacity_US_Northeast_ru = 'офлайн'
-            else:
-                capacity_US_Northeast_ru = capacity_US_Northeast
-                        
-            if capacity_US_Northwest == 'full':
-                capacity_US_Northwest_ru = 'полная'
-            elif capacity_US_Northwest == 'offline':
-                capacity_US_Northwest_ru = 'офлайн'
-            else:
-                capacity_US_Northwest_ru = capacity_US_Northwest
-                
-            if load_US_Northcentral == 'idle':
-                load_US_Northcentral_ru = 'никакая'
-            elif load_US_Northcentral == 'low':
-                load_US_Northcentral_ru = 'низкая'
-            elif load_US_Northcentral == 'medium':
-                load_US_Northcentral_ru = 'средняя'
-            elif load_US_Northcentral == 'high':
-                load_US_Northcentral_ru = 'высокая'
-            else:
-                load_US_Northcentral_ru = load_US_Northcentral
-                
-            if load_US_Northeast == 'idle':
-                load_US_Northeast_ru = 'никакая'
-            elif load_US_Northeast == 'low':
-                load_US_Northeast_ru = 'низкая'
-            elif load_US_Northeast == 'medium':
-                load_US_Northeast_ru = 'средняя'
-            elif load_US_Northeast == 'high':
-                load_US_Northeast_ru = 'высокая'
-            else:
-                load_US_Northeast_ru = load_US_Northeast  
-                
-            if load_US_Northwest == 'idle':
-                load_US_Northwest_ru = 'никакая'
-            elif load_US_Northwest == 'low':
-                load_US_Northwest_ru = 'низкая'
-            elif load_US_Northwest == 'medium':
-                load_US_Northwest_ru = 'средняя'
-            elif load_US_Northwest == 'high':
-                load_US_Northwest_ru = 'высокая'
-            else:
-                load_US_Northwest_ru = load_US_Northwest
-
-            return capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru
-        except:
-            capacity_US_Northcentral = 'N/A'
-            capacity_US_Northeast = 'N/A'
-            capacity_US_Northwest = 'N/A'
-            load_US_Northcentral = 'N/A'
-            load_US_Northeast = 'N/A'
-            load_US_Northwest = 'N/A'
-            load_US_Northcentral_ru = 'N/A'
-            capacity_US_Northcentral_ru = 'N/A'
-            load_US_Northeast_ru = 'N/A'
-            capacity_US_Northeast_ru = 'N/A'
-            load_US_Northwest_ru = 'N/A'
-            capacity_US_Northwest_ru = 'N/A'
-            return capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru
-
-    def usa_South(self):
-        """
-        US Southwest (Los Angeles)
-        US Southeast (Atlanta)"""
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            US_Southwest = datacenters['US Southwest']
-            capacity_US_Southwest = US_Southwest['capacity']
-            load_US_Southwest = US_Southwest['load']
-
-            US_Southeast = datacenters['US Southeast']
-            capacity_US_Southeast = US_Southeast['capacity']
-            load_US_Southeast = US_Southeast['load']
-
-            if capacity_US_Southeast == 'full':
-                capacity_US_Southeast_ru = 'полная'
-            elif capacity_US_Southeast == 'offline':
-                capacity_US_Southeast_ru = 'офлайн'
-            else:
-                capacity_US_Southeast_ru = capacity_US_Southeast        
-                
-            if capacity_US_Southwest == 'full':
-                capacity_US_Southwest_ru = 'полная'
-            elif capacity_US_Southwest == 'offline':
-                capacity_US_Southwest_ru = 'офлайн'
-            else:
-                capacity_US_Southwest_ru = capacity_US_Southwest
-                
-            if load_US_Southeast == 'idle':
-                load_US_Southeast_ru = 'никакая'
-            elif load_US_Southeast == 'low':
-                load_US_Southeast_ru = 'низкая'
-            elif load_US_Southeast == 'medium':
-                load_US_Southeast_ru = 'средняя'
-            elif load_US_Southeast == 'high':
-                load_US_Southeast_ru = 'высокая'
-            else:
-                load_US_Southeast_ru = load_US_Southeast
-                
-            if load_US_Southwest == 'idle':
-                load_US_Southwest_ru = 'никакая'
-            elif load_US_Southwest == 'low':
-                load_US_Southwest_ru = 'низкая'
-            elif load_US_Southwest == 'medium':
-                load_US_Southwest_ru = 'средняя'
-            elif load_US_Southwest == 'high':
-                load_US_Southwest_ru = 'высокая'
-            else:
-                load_US_Southwest_ru = load_US_Southwest  
-            
-            return capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru
-        except:
-            capacity_US_Southeast = 'N/A'
-            capacity_US_Southwest = 'N/A'
-            load_US_Southeast = 'N/A'
-            load_US_Southwest = 'N/A'
-            load_US_Southwest_ru = 'N/A'
-            capacity_US_Southwest_ru = 'N/A'
-            load_US_Southeast_ru = 'N/A'
-            capacity_US_Southeast_ru = 'N/A'
-            return capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru
-
-#
-#   Europe
-#
-
-    def eu_West(self):
-        """
-        EU West (Luxembourg)    
-        Spain (Mardid)"""    
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            EU_West = datacenters['EU West']
-            capacity = EU_West['capacity']
-            load = EU_West['load']
-
-            Spain = datacenters['Spain']
-            capacity_Spain = Spain['capacity']
-            load_Spain = Spain['load']
-            
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if capacity_Spain == 'full':
-                capacity_Spain_ru = 'полная'
-            elif capacity_Spain == 'offline':
-                capacity_Spain_ru = 'офлайн'
-            else:
-                capacity_Spain_ru = capacity_Spain
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
-                        
-            if load_Spain == 'idle':
-                load_Spain_ru = 'никакая'
-            elif load_Spain == 'low':
-                load_Spain_ru = 'низкая'
-            elif load_Spain == 'medium':
-                load_Spain_ru = 'средняя'
-            elif load_Spain == 'high':
-                load_Spain_ru = 'высокая'
-            else:
-                load_Spain_ru = load_Spain
-                
-            return capacity, load, capacity_Spain, load_Spain, capacity_ru, load_ru, capacity_Spain_ru, load_Spain_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_Spain = 'N/A'
-            load_Spain = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            capacity_Spain_ru = 'N/A'
-            return capacity, load, capacity_Spain, load_Spain, capacity_ru, load_ru, capacity_Spain_ru, load_Spain_ru
+    
+def send_about_problem_bot(message):
+    """If anything goes wrong"""
+    if message.from_user.language_code == "ru":
+        text = strings.wrongBOT_ru
+        markup = markup_ru
+    else:
+        text = strings.wrongBOT_en
+        markup = markup_en  
         
-    def eu_East(self):
-        """
-        EU East (Vienna)
-        Poland (Warsaw)"""
+    bot.send_message(message.chat.id, text, reply_markup=markup)
+
+
+
+
+def get_status():
+    """Get the status of CS:GO servers"""
+    
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    gcCache = cacheFile['game_coordinator']
+    slCache = cacheFile['sessionsLogon']
+    pcCache = cacheFile['online_player_count']
+    tsCache = cacheFile['time_server']
+    p24Cache = cacheFile['peak_24_hours']
+    paCache = cacheFile['peak_all_time']
+    uqCache = cacheFile['unique_monthly']
+    
+    if gcCache == 'Normal':
+        if slCache == 'normal':
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_ru = strings.statusNormal_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+        elif not slCache == 'normal':
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_ru = strings.statusNormalSL_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+    else:
+            status_text_en = strings.statusWrong_en.format(tsCache)
+            status_text_ru = strings.statusWrong_ru.format(tsCache)
+
+    return status_text_en, status_text_ru
+
+
+def get_matchmaking():
+    """Get information about online servers, active players and more about matchmaking servers"""
+    
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    tsCache = cacheFile['time_server']
+    sCache = cacheFile['scheduler']
+    scCache = cacheFile['online_server_count']
+    apCache = cacheFile['active_player_count']
+    ssCache = cacheFile['search_seconds_avg']
+    spCache = cacheFile['searching_players']
+    
+    if sCache == 'normal':
+        mm_text_en = strings.mmNormal_en.format(scCache, apCache, spCache, ssCache, tsCache)
+        mm_text_ru = strings.mmNormal_ru.format(scCache, apCache, spCache, ssCache, tsCache)
+    elif not sCache == 'normal':
+        mm_text_en = strings.mmWrong_en.format(tsCache)
+        mm_text_ru = strings.mmWrong_ru.format(tsCache)
+
+    return mm_text_en, mm_text_ru
+
+
+def get_devcount():
+    """Get the count of online devs"""
+    
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    tsCache = cacheFile['time_server']
+    dcCache = cacheFile['dev_player_count']
+
+    devcount_text_en = strings.devCount_en.format(dcCache, tsCache)
+    devcount_text_ru = strings.devCount_ru.format(dcCache, tsCache)
+
+    return devcount_text_en, devcount_text_ru
+
+
+def get_timer():
+    """Get the time left until exp and drop cap reset"""
+    delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+
+    timer_text_en = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
+    timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
+
+    return timer_text_en, timer_text_ru
+    
+    
+    
+
+def send_status(message):
+    """Send the status of CS:GO servers"""
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            result = get_response()
-            datacenters = result['datacenters']
+            status_text_en, status_text_ru = get_status()
 
-            EU_East = datacenters['EU East']
-            capacity = EU_East['capacity']
-            load = EU_East['load']
-
-            Poland = datacenters['Poland']
-            capacity_Poland = Poland['capacity']
-            load_Poland = Poland['load']
-
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
+            if message.from_user.language_code == 'ru':
+                text = status_text_ru
+                markup = markup_ru
             else:
-                capacity_ru = capacity
-                
-            if capacity_Poland == 'full':
-                capacity_Poland_ru = 'полная'
-            elif capacity_Poland == 'offline':
-                capacity_Poland_ru = 'офлайн'
-            else:
-                capacity_Poland_ru = capacity_Poland
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+                text = status_text_en
+                markup = markup_en
 
-            if load_Poland == 'idle':
-                load_Poland_ru = 'никакая'
-            elif load_Poland == 'low':
-                load_Poland_ru = 'низкая'
-            elif load_Poland == 'medium':
-                load_Poland_ru = 'средняя'
-            elif load_Poland == 'high':
-                load_Poland_ru = 'высокая'
-            else:
-                load_Poland_ru = load_Poland
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
-            return capacity, capacity_Poland, load, load_Poland, capacity_ru, capacity_Poland_ru, load_ru, load_Poland_ru 
-        except:
-            capacity = 'N/A'
-            capacity_Poland = 'N/A'
-            load = 'N/A'
-            load_Poland = 'N/A'
-            capacity_ru = 'N/A'
-            capacity_Poland_ru = 'N/A'
-            load_ru = 'N/A'
-            load_Poland_ru  = 'N/A'
-            return capacity, capacity_Poland, load, load_Poland, capacity_ru, capacity_Poland_ru, load_ru, load_Poland_ru 
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
+        send_about_problem_valve_api(message)
 
-    def eu_North(self):
-        """
-        EU North (Stockholm)"""
+
+def send_matchmaking(message):
+    """Send information about online servers, active players and more about matchmaking servers"""
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            result = get_response()
-            datacenters = result['datacenters']
+            mm_text_en, mm_text_ru = get_matchmaking()
 
-            EU_North = datacenters['EU North']
-            capacity = EU_North['capacity']
-            load = EU_North['load']
-
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
+            if message.from_user.language_code == 'ru':
+                text = mm_text_ru
+                markup = markup_ru
             else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+                text = mm_text_en
+                markup = markup_en
 
-            return capacity, load, capacity_ru, load_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru            
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html")
 
-#
-#    Asia   
-#
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
+        send_about_problem_valve_api(message)        
 
-    def india(self):
-        '''
-        India (Mumbai)
-        India East (Chennai)'''
+
+def send_devcount(message):
+    """Send the count of online devs"""
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            result = get_response()
-            datacenters = result['datacenters']
+            devcount_text_en, devcount_text_ru = get_devcount()
 
-            India = datacenters['India']
-            capacity = India['capacity']
-            load = India['load']
+            if message.from_user.language_code == 'ru':
+                    text = devcount_text_ru
+                    markup = markup_ru
+            else:    
+                    text = devcount_text_en
+                    markup = markup_en
 
-            India_East = datacenters['India East']
-            capacity_East = India_East['capacity']
-            load_East = India_East['load']
+            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
 
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if capacity_East == 'full':
-                capacity_East_ru = 'полная'
-            elif capacity_East == 'offline':
-                capacity_East_ru = 'офлайн'
-            else:
-                capacity_East_ru = capacity_East
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
+        send_about_problem_valve_api(message)
 
-            if load_East == 'idle':
-                load_East_ru = 'никакая'
-            elif load_East == 'low':
-                load_East_ru = 'низкая'
-            elif load_East == 'medium':
-                load_East_ru = 'средняя'
-            elif load_East == 'high':
-                load_East_ru = 'высокая'
-            else:
-                load_East_ru = load_East
 
-            return capacity, capacity_East, load, load_East, load_ru, capacity_ru, load_East_ru, capacity_East_ru
-        except:
-            capacity = 'N/A'
-            capacity_East = 'N/A'
-            load = 'N/A'
-            load_East = 'N/A'
-            load_ru = 'N/A'
-            capacity_ru = 'N/A'
-            load_East_ru = 'N/A'
-            capacity_East_ru = 'N/A'
-            return capacity, capacity_East, load, load_East, load_ru, capacity_ru, load_East_ru, capacity_East_ru
+def send_timer(message):
+    """Send the time left until exp and drop cap reset"""
+    try:
+        timer_text_en, timer_text_ru = get_timer()
 
-    def japan(self):
-        '''
-        Japan (Tokyo)'''
+        if message.from_user.language_code == 'ru':
+                text = timer_text_ru
+                markup = markup_ru
+        else:
+                text = timer_text_en
+                markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
+        send_about_problem_bot(message)
+        
+
+def dc(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            Japan = datacenters['Japan']
-            capacity = Japan['capacity']
-            load = Japan['load']
+            if message.from_user.language_code == 'ru':
+                text = '📶 Выберите интересующий регион, чтобы получить информацию о дата-центрах:'
+                markup = markup_DC_ru
+            else:
+                text = '📶 Select the region you are interested in, to get information about the data centers:'
+                markup = markup_DC
             
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+            bot.send_message(message.chat.id, text, reply_markup=markup)
 
-            return capacity, load, load_ru, capacity_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+            send_about_problem_bot(message)
+    else:
+        send_about_problem_valve_api(message)
 
-    def emirates(self):
-        '''
-        Emirates (Dubai)'''
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
 
-            Emirates = datacenters['Emirates']
-            capacity = Emirates['capacity']
-            load = Emirates['load']
+def dc_africa(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']    
+    if wsCache == 'Normal':
+        capacity, load, capacity_ru, load_ru = api_dc.africa_South()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_africa_ru.format(load_ru, capacity_ru, tsCache)
+        else:
+            text = strings.dc_africa_en.format(load, capacity, tsCache)
             
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+        bot.send_message(message.chat.id, text)
+    else:
+        send_about_problem_valve_api(message)
+    
 
-            return capacity, load, load_ru, capacity_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+def dc_australia(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']  
+    if wsCache == 'Normal':
+        capacity, load, capacity_ru, load_ru = api_dc.australia()     
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_australia_ru.format(load_ru, capacity_ru, tsCache)
+        else:
+            text = strings.dc_australia_en.format(load, capacity, tsCache)           
+        bot.send_message(message.chat.id, text)
+    else:
+        send_about_problem_valve_api(message)
+    
 
-    def china(self):
-        '''
-        China Shanghai
-        China Tianjin
-        China Guangzhou'''
+def dc_europe(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите регион...'
+            markup = markup_DC_EU_ru            
+        else:
+            text = '📍 Specify the region...'
+            markup = markup_DC_EU
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_eu_north(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load, capacity_ru, load_ru = api_dc.eu_North()        
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_north_eu_ru.format(load_ru, capacity_ru, tsCache)
+            markup = markup_DC_ru 
+        else:
+            text = strings.dc_north_eu_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_eu_west(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load, capacity_Spain, load_Spain, capacity_ru, load_ru, capacity_Spain_ru, load_Spain_ru = api_dc.eu_West()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_west_eu_ru.format(load_ru, capacity_ru, load_Spain_ru, capacity_Spain_ru, tsCache)
+            markup = markup_DC_ru 
+        else:
+            text = strings.dc_west_eu_en.format(load, capacity, load_Spain, capacity_Spain, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+    
+
+def dc_eu_east(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, capacity_Poland, load, load_Poland, capacity_ru, capacity_Poland_ru, load_ru, load_Poland_ru = api_dc.eu_East()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_east_eu_ru.format(load_ru, capacity_ru, load_Poland_ru, capacity_Poland_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_east_eu_en.format(load, capacity, load_Poland, capacity_Poland, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_asia(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите страну...'
+            markup = markup_DC_Asia_ru
+        else:
+            text = '📍 Specify the country...'
+            markup = markup_DC_Asia
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_usa(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
+        if message.from_user.language_code == 'ru':
+            text = '📍 Укажите регион...'
+            markup = markup_DC_USA_ru
+        else:
+            text = '📍 Specify the region...'
+            markup = markup_DC_USA
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_usa_north(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_US_Northcentral, capacity_US_Northeast, capacity_US_Northwest, load_US_Northcentral, load_US_Northeast, load_US_Northwest, load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru = api_dc.usa_North()
+        if message.from_user.language_code == 'ru':        
+            text = strings.dc_north_us_ru.format(load_US_Northcentral_ru, capacity_US_Northcentral_ru, load_US_Northeast_ru, capacity_US_Northeast_ru, load_US_Northwest_ru, capacity_US_Northwest_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_north_us_en.format(load_US_Northcentral, capacity_US_Northcentral, load_US_Northeast, capacity_US_Northeast, load_US_Northwest, capacity_US_Northwest, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_usa_south(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_US_Southeast, capacity_US_Southwest, load_US_Southeast, load_US_Southwest, load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru = api_dc.usa_South()
+        if message.from_user.language_code == 'ru':        
+            text = strings.dc_south_us_ru.format(load_US_Southwest_ru, capacity_US_Southwest_ru, load_US_Southeast_ru, capacity_US_Southeast_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_south_us_en.format(load_US_Southwest, capacity_US_Southwest, load_US_Southeast, capacity_US_Southeast, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_south_america(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_Chile, capacity_Peru, capacity_Brazil, load_Chile, load_Peru, load_Brazil, load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru = api_dc.sa()
+        if message.from_user.language_code == 'ru':  
+            text = strings.dc_south_america_ru.format(load_Brazil_ru, capacity_Brazil_ru, load_Chile_ru, capacity_Chile_ru, load_Peru_ru, capacity_Peru_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_south_america_en.format(load_Brazil, capacity_Brazil, load_Chile, capacity_Chile, load_Peru, capacity_Peru, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_india(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, capacity_East, load, load_East, load_ru, capacity_ru, load_East_ru, capacity_East_ru = api_dc.india()
+        if message.from_user.language_code == 'ru':  
+            text = strings.dc_india_ru.format(load_ru, capacity_ru, load_East_ru, capacity_East_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_india_en.format(load, capacity, load_East, capacity_East, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_japan(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load, capacity_ru, load_ru = api_dc.japan()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_japan_ru.format(load_ru, capacity_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_japan_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_china(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru = api_dc.china()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_china_ru.format(load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_china_en.format(load_Shanghai, capacity_Shanghai, load_Tianjin, capacity_Tianjin, load_Guangzhou, capacity_Guangzhou, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_emirates(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server'] 
+    if wsCache == 'Normal':
+        capacity, load, load_ru, capacity_ru = api_dc.emirates()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_emirates_ru.format(load_ru, capacity_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_emirates_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_singapore(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
+    if wsCache == 'Normal':
+        capacity, load, load_ru, capacity_ru = api_dc.singapore()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_singapore_ru.format(load_ru, capacity_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_singapore_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+
+
+def dc_hong_kong(message):
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    tsCache = cacheFile['time_server']
+    if wsCache == 'Normal':
+        capacity, load, load_ru, capacity_ru = api_dc.hong_kong()
+        if message.from_user.language_code == 'ru':
+            text = strings.dc_hong_kong_ru.format(load_ru, capacity_ru, tsCache)
+            markup = markup_DC_ru
+        else:
+            text = strings.dc_hong_kong_en.format(load, capacity, tsCache)
+            markup = markup_DC
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    else:
+        send_about_problem_valve_api(message)
+ 
+
+def back(message):
+    if message.from_user.language_code == 'ru':
+        markup = markup_ru
+    else:
+        markup = markup_en
+
+    bot.send_message(message.chat.id, '👌', reply_markup=markup)
+
+
+@bot.inline_handler(lambda query: True)
+def send_inline(inline_query):
+    """Inline mode"""
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    wsCache = cacheFile['valve_webapi']
+    if wsCache == 'Normal':
         try:
-            result = get_response()
-            datacenters = result['datacenters']
+            status_text_en, status_text_ru = get_status()
+            mm_text_en, mm_text_ru = get_matchmaking()
+            devcount_text_en, devcount_text_ru = get_devcount()
+            timer_text_en, timer_text_ru = get_timer()
 
-            China_Shanghai = datacenters['China Shanghai']
-            capacity_Shanghai = China_Shanghai['capacity']
-            load_Shanghai = China_Shanghai['load']
+            try:
+                if inline_query.from_user.language_code == 'ru':
+                    status_r = status_text_ru
+                    mm_r = mm_text_ru
+                    dev_r = devcount_text_ru
+                    timer_r = timer_text_ru
 
-            China_Tianjin = datacenters['China Tianjin']
-            capacity_Tianjin = China_Tianjin['capacity']
-            load_Tianjin = China_Tianjin['load']
-
-            China_Guangzhou = datacenters['China Guangzhou']
-            capacity_Guangzhou = China_Guangzhou['capacity']
-            load_Guangzhou = China_Guangzhou['load']
-
-            if capacity_Shanghai == 'full':
-                capacity_Shanghai_ru = 'полная'
-            elif capacity_Shanghai == 'offline':
-                capacity_Shanghai_ru = 'офлайн'
-            else:
-                capacity_Shanghai_ru = capacity_Shanghai        
+                else:
+                    status_r = status_text_en
+                    mm_r = mm_text_en
+                    dev_r = devcount_text_en
+                    timer_r = timer_text_en
                 
-            if capacity_Tianjin == 'full':
-                capacity_Tianjin_ru = 'полная'
-            elif capacity_Tianjin == 'offline':
-                capacity_Tianjin_ru = 'офлайн'
-            else:
-                capacity_Tianjin_ru = capacity_Tianjin
-                        
-            if capacity_Guangzhou == 'full':
-                capacity_Guangzhou_ru = 'полная'
-            elif capacity_Guangzhou == 'offline':
-                capacity_Guangzhou_ru = 'офлайн'
-            else:
-                capacity_Guangzhou_ru = capacity_Guangzhou
-                
-            if load_Shanghai == 'idle':
-                load_Shanghai_ru = 'никакая'
-            elif load_Shanghai == 'low':
-                load_Shanghai_ru = 'низкая'
-            elif load_Shanghai == 'medium':
-                load_Shanghai_ru = 'средняя'
-            elif load_Shanghai == 'high':
-                load_Shanghai_ru = 'высокая'
-            else:
-                load_Shanghai_ru = load_Shanghai
-                
-            if load_Tianjin == 'idle':
-                load_Tianjin_ru = 'никакая'
-            elif load_Tianjin == 'low':
-                load_Tianjin_ru = 'низкая'
-            elif load_Tianjin == 'medium':
-                load_Tianjin_ru = 'средняя'
-            elif load_Tianjin == 'high':
-                load_Tianjin_ru = 'высокая'
-            else:
-                load_Tianjin_ru = load_Tianjin
-                
-            if load_Guangzhou == 'idle':
-                load_Guangzhou_ru = 'никакая'
-            elif load_Guangzhou == 'low':
-                load_Guangzhou_ru = 'низкая'
-            elif load_Guangzhou == 'medium':
-                load_Guangzhou_ru = 'средняя'
-            elif load_Guangzhou == 'high':
-                load_Guangzhou_ru = 'высокая'
-            else:
-                load_Guangzhou_ru = load_Guangzhou
+                # text part
+                if inline_query.from_user.language_code == 'ru': 
+                    title_status = 'Статус'
+                    title_mm = 'Матчмейкинг'
+                    title_dev = 'Бета-версия'
+                    title_timer = 'Сброс ограничений'
 
-            return capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru
-        except:
-            capacity_Shanghai = 'N/A'
-            capacity_Tianjin = 'N/A'
-            capacity_Guangzhou = 'N/A'
-            load_Shanghai = 'N/A'
-            load_Tianjin = 'N/A'
-            load_Guangzhou = 'N/A'
-            load_Shanghai_ru = 'N/A'
-            capacity_Shanghai_ru = 'N/A'
-            load_Tianjin_ru = 'N/A'
-            capacity_Tianjin_ru = 'N/A'
-            load_Guangzhou_ru = 'N/A'
-            capacity_Guangzhou_ru = 'N/A'
-            return capacity_Shanghai, capacity_Tianjin, capacity_Guangzhou, load_Shanghai, load_Tianjin, load_Guangzhou, load_Shanghai_ru, capacity_Shanghai_ru, load_Tianjin_ru, capacity_Tianjin_ru, load_Guangzhou_ru, capacity_Guangzhou_ru
+                    description_status = 'Проверить доступность серверов'
+                    description_mm = 'Показать количество активных игроков'
+                    description_dev = 'Показать количество онлайн разработчиков'
+                    description_timer = 'Время до сброса ограничений опыта и дропа'
+                    
+                else:
+                    title_status = 'Status'
+                    title_mm = 'Matchmaking'
+                    title_dev = 'Beta version'
+                    title_timer = 'Drop cap reset'
 
-    def singapore(self):
-        '''
-        Singapore'''
+                    description_status = 'Check the availability of the servers'
+                    description_mm = 'Show the count of active players'
+                    description_dev = 'Show the count of in-game developers'
+                    description_timer = 'Time left until experience and drop cap reset'
+
+                r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), thumb_url='https://telegra.ph/file/57ba2b279c53d69d72481.jpg', description=description_status)
+                r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), thumb_url='https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', description=description_mm)
+                r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
+                r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
+
+                log_inline(inline_query)
+
+            except Exception as e:
+                bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
+                print(e)
+
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+    else:
         try:
-            result = get_response()
-            datacenters = result['datacenters']
+            timer_text_en, timer_text_ru = get_timer()
 
-            Singapore = datacenters['Singapore']
-            capacity = Singapore['capacity']
-            load = Singapore['load']
+            try:
+                if inline_query.from_user.language_code == 'ru':
+                    wrong_r = strings.wrongAPI_ru
+                    timer_r = timer_text_ru
+
+                else:
+                    wrong_r = strings.wrongAPI_en
+                    timer_r = timer_text_en
+                
+                # text part
+                if inline_query.from_user.language_code == 'ru': 
+                    title_un = 'Нет данных'
+                    title_timer = 'Сброс ограничений'
+
+                    description_un = 'Не получилось связаться с API Valve'
+                    description_timer = 'Время до сброса ограничений опыта и дропа'
+                    
+                else:
+                    title_un = 'No data'
+                    title_timer = 'Drop cap reset'
+
+                    description_un = 'Unable to call Valve API'
+                    description_timer = 'Time left until experience and drop cap reset'
+
+                r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
+                r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+
+                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=5)
+                log_inline(inline_query)
+
+            except Exception as e:
+                bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
+                print(e)
+                
+        except Exception as e:
+            bot.send_message(me, f'❗️{e}')
+
+
+@bot.message_handler(commands=['start'])
+def welcome(message):
+    """First bot's message"""
+    log(message)
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdStart_ru.format(message.from_user.first_name)
+            markup = markup_ru
+        else:
+            text = strings.cmdStart_en.format(message.from_user.first_name)
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+
+    else:
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
+
+
+@bot.message_handler(commands=['feedback'])
+def leave_feedback(message):
+    """Send feedback"""
+    log(message)
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdFeedback_ru 
+        else:
+            text = strings.cmdFeedback_en
+
+        bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup_del)
+        bot.register_next_step_handler(message, get_feedback)
+    else:
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
+
+  
+def get_feedback(message):
+    """Get feedback from users"""
+    if message.text == '/cancel':
+        log(message)
+        if message.from_user.language_code == 'ru':
+            markup = markup_ru
+        else:
+            markup = markup_en
+        bot.send_message(message.chat.id, '👍', reply_markup=markup)
+
+    else:
+        bot.send_message(config.OWNER, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
+        bot.forward_message(config.OWNER, message.chat.id, message.message_id)
+        
+        if not config.TEST_MODE:
+            bot.send_message(config.AQ, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
+            bot.forward_message(config.AQ, message.chat.id, message.message_id)
+
+        if message.from_user.language_code == 'ru':
+            text = 'Отлично! Ваше сообщение отправлено.'
+            markup = markup_ru
+        else:
+            text = 'Awesome! Your message has been sent.'
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id,reply_markup=markup)
+
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    """/help message"""
+    log(message)
+    if message.chat.type == "private":
+        if message.from_user.language_code == 'ru':
+            text = strings.cmdHelp_ru
+            markup = markup_ru
+        else:
+            text = strings.cmdHelp_en
+            markup = markup_en
+
+        bot.send_message(message.chat.id, text, parse_mode='html', reply_markup=markup, disable_web_page_preview=True)
+    else:
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+        except:
+            pass
+
+
+@bot.message_handler(commands=['delkey'])
+def delete_keyboard(message):
+    bot.delete_message(message.chat.id, message.message_id)
+    bot.send_message(message.chat.id, "👍", reply_markup=markup_del)
+    time.sleep(10)
+    bot.delete_message(message.chat.id, message.message_id+1)
+
+
+@bot.message_handler(content_types=['text'])
+def answer(message):
+    """Answer of the bot"""
+    log(message)
+    try:
+        if message.chat.type == "private":
+            bot.send_chat_action(message.chat.id, 'typing')
+
+            if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
+                send_status(message)
+
+            elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
+                send_matchmaking(message)
             
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
+            elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
+                send_devcount(message)
+    
+            elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
+                send_timer(message)
+
+            elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры' or message.text.lower() == '/dc':
+                dc(message)
+
+            elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
+                dc_africa(message)
+
+            elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
+                dc_australia(message)
+
+            elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
+                dc_europe(message)
+
+            elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
+                dc_asia(message)
+
+            elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
+                dc_usa(message)
+
+            elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
+                dc_south_america(message)
+
+            elif message.text.lower() == 'north' or message.text.lower() == 'сeвер' or message.text.lower() == '/usa_north':
+                dc_usa_north(message)
+
+            elif message.text.lower() == 'south' or message.text.lower() == 'юг' or message.text.lower() == '/usa_south':
+                dc_usa_south(message)
+
+            elif message.text.lower() == 'nоrth' or message.text.lower() == 'север' or message.text.lower() == '/eu_north':
+                dc_eu_north(message)
+
+            elif message.text.lower() == 'west' or message.text.lower() == 'запад' or message.text.lower() == '/eu_west':
+                dc_eu_west(message)
+
+            elif message.text.lower() == 'east' or message.text.lower() == 'восток' or message.text.lower() == '/eu_east':
+                dc_eu_east(message)
+
+            elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
+                dc_india(message)
+
+            elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
+                dc_japan(message)
+
+            elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
+                dc_china(message)
+
+            elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
+                dc_emirates(message)
+
+            elif message.text.lower() == 'singapore' or message.text.lower() == 'сингапур' or message.text.lower() == '/singapore':
+                dc_singapore(message)
+
+            elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
+                dc_hong_kong(message)
+
+            elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+                back(message)
+
+
             else:
-                capacity_ru = capacity
+                if message.from_user.language_code == 'ru':
+                    text = strings.unknownRequest_ru
+                    markup = markup_ru
+                else: 
+                    text = strings.unknownRequest_en
+                    markup = markup_en
+
+                bot.send_message(message.chat.id, text, reply_markup=markup)
                 
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
+        else:
+            if message.from_user.id == 777000:
+                if message.forward_from_chat.id == config.CSGOBETACHANNEL and "Обновлены файлы локализации" in message.text:
+                    bot.send_sticker(config.CSGOBETACHAT, "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ", reply_to_message_id=message.message_id)
+    
+    except Exception as e:
+        bot.send_message(me, f'❗️{e}')
 
-            return capacity, load, load_ru, capacity_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
-
-    def hong_kong(self):
-        '''
-        Hong Kong'''
-        try:
-            result = get_response()
-            datacenters = result['datacenters']
-
-            Hong_Kong = datacenters['Hong Kong']
-            capacity = Hong_Kong['capacity']
-            load = Hong_Kong['load']
-            
-            if capacity == 'full':
-                capacity_ru = 'полная'
-            elif capacity == 'offline':
-                capacity_ru = 'офлайн'
-            else:
-                capacity_ru = capacity
-                
-            if load == 'idle':
-                load_ru = 'никакая'
-            elif load == 'low':
-                load_ru = 'низкая'
-            elif load == 'medium':
-                load_ru = 'средняя'
-            elif load == 'high':
-                load_ru = 'высокая'
-            else:
-                load_ru = load
-
-            return capacity, load, load_ru, capacity_ru
-        except:
-            capacity = 'N/A'
-            load = 'N/A'
-            capacity_ru = 'N/A'
-            load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+# Polling
+bot.polling(True)
