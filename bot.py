@@ -514,7 +514,7 @@ def dc_south_america(message):
     wsCache = cacheFile['valve_webapi']
     tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
-        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_secondary, capacity_tertiary_ru, load_tertiary_ru = api_dc.sa()
+        capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.sa()
         if message.from_user.language_code == 'ru':  
             text = strings.dc_south_america_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
             markup = markup_DC_ru
