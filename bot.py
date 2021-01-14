@@ -943,7 +943,7 @@ def inline_dc(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall Australia
+# General Australia
 @bot.inline_handler(lambda query: query.query.lower() in strings.australian_tags)
 def inline_dc_australia(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -970,7 +970,7 @@ def inline_dc_australia(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall Africa
+# General Africa
 @bot.inline_handler(lambda query: query.query.lower() in strings.african_tags)
 def inline_dc_africa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -997,7 +997,7 @@ def inline_dc_africa(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall South America
+# General South America
 @bot.inline_handler(lambda query: query.query.lower() in strings.south_american_tags)
 def inline_dc_south_america(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1024,7 +1024,7 @@ def inline_dc_south_america(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall Europe
+# General Europe
 @bot.inline_handler(lambda query: query.query.lower() in strings.european_tags)
 def inline_dc_europe(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1064,7 +1064,7 @@ def inline_dc_europe(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# North Europe
+# Detailed North Europe
 @bot.inline_handler(lambda query: query.query.lower() in strings.north_european_tags)
 def inline_dc_eu_north(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1092,7 +1092,7 @@ def inline_dc_eu_north(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# East Europe
+# Detailed East Europe
 @bot.inline_handler(lambda query: query.query.lower() in strings.east_european_tags)
 def inline_dc_eu_east(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1120,7 +1120,7 @@ def inline_dc_eu_east(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# West Europe
+# Detailed West Europe
 @bot.inline_handler(lambda query: query.query.lower() in strings.west_european_tags)
 def inline_dc_eu_west(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1148,7 +1148,7 @@ def inline_dc_eu_west(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall USA
+# General USA
 @bot.inline_handler(lambda query: query.query.lower() in strings.american_tags)
 def inline_dc_usa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1181,7 +1181,7 @@ def inline_dc_usa(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Northern USA
+# Detailed Northern USA
 @bot.inline_handler(lambda query: query.query.lower() in strings.northern_usa_tags)
 def inline_dc_northern_usa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1208,7 +1208,7 @@ def inline_dc_northern_usa(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Southern USA
+# Detailed Southern USA
 @bot.inline_handler(lambda query: query.query.lower() in strings.southern_usa_tags)
 def inline_dc_southern_usa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1235,7 +1235,7 @@ def inline_dc_southern_usa(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Overall Asia
+# General Asia
 @bot.inline_handler(lambda query: query.query.lower() in strings.asian_tags)
 def inline_dc_asia(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1293,7 +1293,7 @@ def inline_dc_asia(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# China
+# Detailed China
 @bot.inline_handler(lambda query: query.query.lower() in strings.chinese_tags)
 def inline_dc_china(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1320,7 +1320,7 @@ def inline_dc_china(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Emirates
+# Detailed Emirates
 @bot.inline_handler(lambda query: query.query.lower() in strings.emirati_tags)
 def inline_dc_emirates(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1348,7 +1348,7 @@ def inline_dc_emirates(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Hong Kong
+# Detailed Hong Kong
 @bot.inline_handler(lambda query: query.query.lower() in strings.hong_kongese_tags)
 def inline_dc_hong_kong(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1375,7 +1375,7 @@ def inline_dc_hong_kong(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# India
+# Detailed India
 @bot.inline_handler(lambda query: query.query.lower() in strings.indian_tags)
 def inline_dc_india(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1402,7 +1402,7 @@ def inline_dc_india(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Japan
+# Detailed Japan
 @bot.inline_handler(lambda query: query.query.lower() in strings.japanese_tags)
 def inline_dc_japan(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -1429,7 +1429,7 @@ def inline_dc_japan(inline_query):
     else:
         send_about_problem_valve_api_inline(inline_query)
 
-# Singapore
+# Detailed Singapore
 @bot.inline_handler(lambda query: query.query.lower() in strings.singaporean_tags)
 def inline_dc_singapore(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
