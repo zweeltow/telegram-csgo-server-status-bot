@@ -1182,7 +1182,7 @@ def inline_dc_usa(inline_query):
         send_about_problem_valve_api_inline(inline_query)
 
 # Northern USA
-@bot.inline_handler(lambda query: query.query.lower() in strings.north_american_tags)
+@bot.inline_handler(lambda query: query.query.lower() in strings.northern_usa_tags)
 def inline_dc_northern_usa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
@@ -1209,7 +1209,7 @@ def inline_dc_northern_usa(inline_query):
         send_about_problem_valve_api_inline(inline_query)
 
 # Southern USA
-@bot.inline_handler(lambda query: query.query.lower() in strings.south_american_tags)
+@bot.inline_handler(lambda query: query.query.lower() in strings.southern_usa_tags)
 def inline_dc_southern_usa(inline_query):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
@@ -1556,70 +1556,70 @@ def answer(message):
         if message.chat.type == 'private':
             bot.send_chat_action(message.chat.id, 'typing')
 
-            if message.text.lower() == 'status' or message.text.lower() == 'статус' or message.text.lower() == '/status':
+            if message.text.lower() in strings.status_tags:
                 send_status(message)
 
-            elif message.text.lower() == 'matchmaking' or message.text.lower() == 'матчмейкинг' or message.text.lower() == '/mm':
+            elif message.text.lower() in strings.matchmaking_tags:
                 send_matchmaking(message)
             
-            elif message.text.lower() == 'online devs' or message.text.lower() == 'разработчиков в игре' or message.text.lower() == '/devcount':
+            elif message.text.lower() in strings.dev_count_tags:
                 send_devcount(message)
     
-            elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений' or message.text.lower() == '/timer':
+            elif message.text.lower() in strings.cap_reset_tags:
                 send_timer(message)
 
-            elif message.text.lower() == 'data centers' or message.text.lower() == 'дата-центры' or message.text.lower() == '/dc':
+            elif message.text.lower() in strings.dc_tags:
                 dc(message)
 
-            elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка' or message.text.lower() == '/south_africa':
+            elif message.text.lower() in strings.african_tags:
                 send_dc_africa(message)
 
-            elif message.text.lower() == 'australia' or message.text.lower() == 'австралия' or message.text.lower() == '/australia':
+            elif message.text.lower() in strings.australian_tags:
                 send_dc_australia(message)
 
-            elif message.text.lower() == 'europe' or message.text.lower() == 'европа' or message.text.lower() == '/europe':
+            elif message.text.lower() in strings.european_tags:
                 dc_europe(message)
 
-            elif message.text.lower() == 'asia' or message.text.lower() == 'азия' or message.text.lower() == '/asia':
+            elif message.text.lower() in strings.asian_tags:
                 dc_asia(message)
 
-            elif message.text.lower() == 'usa' or message.text.lower() == 'сша' or message.text.lower() == '/usa':
+            elif message.text.lower() in strings.american_tags:
                 dc_usa(message)
 
-            elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка' or message.text.lower() == '/south_america':
+            elif message.text.lower() in strings.south_american_tags:
                 send_dc_south_america(message)
 
-            elif message.text.lower() == 'north' or message.text.lower() == 'сeвер' or message.text.lower() == '/usa_north':
+            elif message.text.lower() in strings.northern_usa_tags:
                 send_dc_usa_north(message)
 
-            elif message.text.lower() == 'south' or message.text.lower() == 'юг' or message.text.lower() == '/usa_south':
+            elif message.text.lower() in strings.southern_usa_tags:
                 send_dc_usa_south(message)
 
-            elif message.text.lower() == 'nоrth' or message.text.lower() == 'север' or message.text.lower() == '/eu_north':
+            elif message.text.lower() in strings.north_european_tags:
                 send_dc_eu_north(message)
 
-            elif message.text.lower() == 'west' or message.text.lower() == 'запад' or message.text.lower() == '/eu_west':
+            elif message.text.lower() in strings.west_european_tags:
                 send_dc_eu_west(message)
 
-            elif message.text.lower() == 'east' or message.text.lower() == 'восток' or message.text.lower() == '/eu_east':
+            elif message.text.lower() in strings.east_european_tags:
                 send_dc_eu_east(message)
 
-            elif message.text.lower() == 'india' or message.text.lower() == 'индия' or message.text.lower() == '/india':
+            elif message.text.lower() in strings.indian_tags:
                 send_dc_india(message)
 
-            elif message.text.lower() == 'japan' or message.text.lower() == 'япония' or message.text.lower() == '/japan':
+            elif message.text.lower() in strings.japanese_tags:
                 send_dc_japan(message)
 
-            elif message.text.lower() == 'china' or message.text.lower() == 'китай' or message.text.lower() == '/china':
+            elif message.text.lower() in strings.chinese_tags:
                 send_dc_china(message)
 
-            elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты' or message.text.lower() == '/emirates':
+            elif message.text.lower() in strings.emirati_tags:
                 send_dc_emirates(message)
 
-            elif message.text.lower() == 'singapore' or message.text.lower() == 'сингапур' or message.text.lower() == '/singapore':
+            elif message.text.lower() in strings.singaporean_tags:
                 send_dc_singapore(message)
 
-            elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг' or message.text.lower() == '/hong_kong':
+            elif message.text.lower() in strings.hong_kongese_tags:
                 send_dc_hong_kong(message)
 
             elif message.text == '⏪ Back' or message.text == '⏪ Назад':
