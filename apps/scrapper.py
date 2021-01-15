@@ -5,7 +5,7 @@ from apps import file_manager
 
 import config
 
-url_db = 'https://steamdb.info/app/730/graphs/'
+url_st = 'https://store.steampowered.com/stats/'
 url_cs = 'https://blog.counter-strike.net'
 url_ss = 'https://crowbar.steamstat.us/gravity.json'
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'}
@@ -14,26 +14,20 @@ headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko
 class PeakOnline:
     def get_peak(self):
         try:
-            soup = BeautifulSoup(requests.get(url_db, headers=headers).content, 'html.parser')
+            soup = BeautifulSoup(requests.get(url_st, headers=headers).content, 'html.parser')
 
-            peak = soup.find_all("strong")
-
-            peak24 = str(peak[1])
-            peak_all = str(peak[2])
-
-            peak24 = peak24.replace('<strong>', '')
-            peak24 = peak24.replace('</strong>', '')
+            string = soup.find(string="Counter-Strike: Global Offensive")
+            tr = string.find_parent("tr")
+            span = tr.find_all("span")
+            peak24 = str(span[1])
+            peak24 = peak24.replace('<span class="currentServers">', '')
+            peak24 = peak24.replace('</span>', '')
             peak24 = peak24.replace(',', '')
-
-            peak_all = peak_all.replace('<strong>', '')
-            peak_all = peak_all.replace('</strong>', '')
-            peak_all = peak_all.replace(',', '')
-
-            return peak24, peak_all
+            peak24 = int(peak24)
+            return peak24
         except:
             peak24 = 'N/A'
-            peak_all = 'N/A'
-            return peak24, peak_all
+            return peak24
 
 
 class Monthly:
@@ -43,7 +37,7 @@ class Monthly:
 
             unique = soup.find("div", {"class": "monthly"}).string
             unique = unique.replace(',', '')
-
+            unique = int(unique)
             return unique
         except:
             unique = 'N/A'
