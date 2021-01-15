@@ -41,8 +41,7 @@ def check_for_updates(client):
             bIDCache = cacheFile['build_ID']
 
             if currentBuild != bIDCache:
-                print('New update found! Sending alerts...')
-                file_manager.updateJsonID(config.CACHE_FILE_PATH, currentBuild)
+                file_manager.updateJson(config.CACHE_FILE_PATH, currentBuild, bIDCache)
                 send_alert(currentBuild)
 
             time.sleep(10)
