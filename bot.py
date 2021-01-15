@@ -143,11 +143,11 @@ def get_status():
     uqCache = cacheFile['unique_monthly']
     if gcCache == 'Normal':
         if slCache == 'normal':
-            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
-            status_text_ru = strings.statusNormal_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
+            status_text_ru = strings.statusNormal_ru.format(pcCache, p24Cache, paCache, uqCache, tsCache)
         elif not slCache == 'normal':
-            status_text_en = strings.statusNormal_en.format(slCache, pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
-            status_text_ru = strings.statusNormalSL_ru.format(pcCache, int(p24Cache), int(paCache), int(uqCache), tsCache)
+            status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
+            status_text_ru = strings.statusNormalSL_ru.format(pcCache, p24Cache, paCache, uqCache, tsCache)
     else:
         status_text_en = strings.statusWrong_en.format(tsCache)
         status_text_ru = strings.statusWrong_ru.format(tsCache)
