@@ -29,8 +29,7 @@ def info_updater():
             search_seconds_avg = api.get_status()[5]
             searching_players = api.get_status()[6]
             dev_player_count = api.get_devs()
-            peak24 = peak_count.get_peak()[0]
-            peak_all = peak_count.get_peak()[1]
+            peak24 = peak_count.get_peak()
             unique = month_unique.get_unique()
             
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
@@ -86,8 +85,8 @@ def info_updater():
             if peak24 != p24Cache:
                 file_manager.updateJsonP24(config.CACHE_FILE_PATH, peak24)
                 
-            if peak_all != paCache:
-                file_manager.updateJsonPA(config.CACHE_FILE_PATH, peak_all)
+            if player_count > paCache:
+                file_manager.updateJsonPA(config.CACHE_FILE_PATH, player_count)
                 
             if unique != uqCache:
                 file_manager.updateJsonUQ(config.CACHE_FILE_PATH, unique)
