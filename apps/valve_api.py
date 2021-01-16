@@ -13,80 +13,35 @@ def get_response():
     return result
 
 def translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw):
-    capacity_ru = ''
-    load_ru = ''
+    capacity_ru = load_ru = capacity_secondary_ru = load_secondary_ru = capacity_tertiary_ru = load_tertiary_ru = ''
     capacity = capacity_raw
-    load = load_raw
-    
-    if capacity == 'full':
-        capacity_ru = 'полная'
-    elif capacity == 'offline':
-        capacity_ru = 'офлайн'
-    else:
-        capacity_ru = capacity
-        
-    if load == 'idle':
-        load_ru = 'никакая'
-    elif load == 'low':
-        load_ru = 'низкая'
-    elif load == 'medium':
-        load_ru = 'средняя'
-    elif load == 'high':
-        load_ru = 'высокая'
-    elif load == 'full':
-        load_ru = 'полная'
-    else:
-        load_ru = load
-    
-    capacity_secondary_ru = ''
-    load_secondary_ru = ''
     capacity_secondary = capacity_secondary_raw
-    load_secondary = load_secondary_raw
-    
-    if capacity_secondary == 'full':
-        capacity_secondary_ru = 'полная'
-    elif capacity_secondary == 'offline':
-        capacity_secondary_ru = 'офлайн'
-    else:
-        capacity_secondary_ru = capacity_secondary
-
-    if load_secondary == 'idle':
-        load_secondary_ru = 'никакая'
-    elif load_secondary == 'low':
-        load_secondary_ru = 'низкая'
-    elif load_secondary == 'medium':
-        load_secondary_ru = 'средняя'
-    elif load_secondary == 'high':
-        load_secondary_ru = 'высокая'
-    elif load_secondary == 'full':
-        load_secondary_ru = 'полная'
-    else:
-        load_secondary_ru = load_secondary 
-        
-    capacity_tertiary_ru = ''
-    load_tertiary_ru = ''
     capacity_tertiary = capacity_tertiary_raw
+    load = load_raw
+    load_secondary = load_secondary_raw
     load_tertiary = load_tertiary_raw
-    
-    if capacity_tertiary == 'full':
-        capacity_tertiary_ru = 'полная'
-    elif capacity_tertiary == 'offline':
-        capacity_tertiary_ru = 'офлайн'
-    else:
-        capacity_tertiary_ru = capacity_tertiary
 
-    if load_tertiary == 'idle':
-        load_tertiary_ru = 'никакая'
-    elif load_tertiary == 'low':
-        load_tertiary_ru = 'низкая'
-    elif load_tertiary == 'medium':
-        load_tertiary_ru = 'средняя'
-    elif load_tertiary == 'high':
-        load_tertiary_ru = 'высокая'
-    elif load_tertiary == 'full':
-        load_tertiary_ru = 'полная'
-    else:
-        load_tertiary_ru = load_tertiary
+    capacity_list_en = ['full', 'offline']
+    load_list_en = ['idle', 'low', 'medium', 'high', 'full']
+
+    capacity_list_ru = ['полная', 'офлайн']
+    load_list_ru = ['никакая', 'низкая', 'средняя', 'высокая', 'полная']
+
+    for en, ru in zip(capacity_list_en, capacity_list_ru):
+        if capacity in en:
+            capacity_ru = ru
+        if capacity_secondary in en:
+            capacity_secondary_ru = ru
+        if capacity_tertiary in en:
+            capacity_tertiary_ru = ru
+
+    for en, ru in zip(load_list_en, load_list_ru):
+        if load in en:
+            load_ru = ru
+        if load_secondary in en:
+            load_secondary_ru = ru
+        if load_tertiary in en:
+            load_tertiary_ru = ru
 
     return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
