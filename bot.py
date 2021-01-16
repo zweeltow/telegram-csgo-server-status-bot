@@ -377,7 +377,7 @@ def dc_asia(message):
 def get_dc_africa():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.australia()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.africa_South()     
     africa_text_ru = strings.dc_africa_ru.format(load_ru, capacity_ru, tsCache)
     africa_text_en = strings.dc_africa_en.format(load, capacity, tsCache)           
     return africa_text_en, africa_text_ru
