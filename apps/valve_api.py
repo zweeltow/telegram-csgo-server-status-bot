@@ -12,150 +12,36 @@ def get_response():
     result = response['result']
     return result
 
-def translate_ru(capacity_raw, load_raw):
-    capacity_ru = ''
-    load_ru = ''
+def translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw):
+    capacity_ru = load_ru = capacity_secondary_ru = load_secondary_ru = capacity_tertiary_ru = load_tertiary_ru = ''
     capacity = capacity_raw
-    load = load_raw
-    
-    if capacity == 'full':
-        capacity_ru = 'полная'
-    elif capacity == 'offline':
-        capacity_ru = 'офлайн'
-    else:
-        capacity_ru = capacity
-        
-    if load == 'idle':
-        load_ru = 'никакая'
-    elif load == 'low':
-        load_ru = 'низкая'
-    elif load == 'medium':
-        load_ru = 'средняя'
-    elif load == 'high':
-        load_ru = 'высокая'
-    else:
-        load_ru = load
-    
-    return capacity, load, capacity_ru, load_ru
-    
-def translate_double_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw):
-    capacity_ru = ''
-    load_ru = ''
-    capacity = capacity_raw
-    load = load_raw
-    
-    if capacity == 'full':
-        capacity_ru = 'полная'
-    elif capacity == 'offline':
-        capacity_ru = 'офлайн'
-    else:
-        capacity_ru = capacity
-        
-    if load == 'idle':
-        load_ru = 'никакая'
-    elif load == 'low':
-        load_ru = 'низкая'
-    elif load == 'medium':
-        load_ru = 'средняя'
-    elif load == 'high':
-        load_ru = 'высокая'
-    else:
-        load_ru = load
-    
-    capacity_secondary_ru = ''
-    load_secondary_ru = ''
     capacity_secondary = capacity_secondary_raw
-    load_secondary = load_secondary_raw
-    
-    if capacity_secondary == 'full':
-        capacity_secondary_ru = 'полная'
-    elif capacity_secondary == 'offline':
-        capacity_secondary_ru = 'офлайн'
-    else:
-        capacity_secondary_ru = capacity_secondary
-
-    if load_secondary == 'idle':
-        load_secondary_ru = 'никакая'
-    elif load_secondary == 'low':
-        load_secondary_ru = 'низкая'
-    elif load_secondary == 'medium':
-        load_secondary_ru = 'средняя'
-    elif load_secondary == 'high':
-        load_secondary_ru = 'высокая'
-    else:
-        load_secondary_ru = load_secondary
-
-    return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
-    
-def translate_triple_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw):
-    capacity_ru = ''
-    load_ru = ''
-    capacity = capacity_raw
-    load = load_raw
-    
-    if capacity == 'full':
-        capacity_ru = 'полная'
-    elif capacity == 'offline':
-        capacity_ru = 'офлайн'
-    else:
-        capacity_ru = capacity
-        
-    if load == 'idle':
-        load_ru = 'никакая'
-    elif load == 'low':
-        load_ru = 'низкая'
-    elif load == 'medium':
-        load_ru = 'средняя'
-    elif load == 'high':
-        load_ru = 'высокая'
-    else:
-        load_ru = load
-    
-    capacity_secondary_ru = ''
-    load_secondary_ru = ''
-    capacity_secondary = capacity_secondary_raw
-    load_secondary = load_secondary_raw
-    
-    if capacity_secondary == 'full':
-        capacity_secondary_ru = 'полная'
-    elif capacity_secondary == 'offline':
-        capacity_secondary_ru = 'офлайн'
-    else:
-        capacity_secondary_ru = capacity_secondary
-
-    if load_secondary == 'idle':
-        load_secondary_ru = 'никакая'
-    elif load_secondary == 'low':
-        load_secondary_ru = 'низкая'
-    elif load_secondary == 'medium':
-        load_secondary_ru = 'средняя'
-    elif load_secondary == 'high':
-        load_secondary_ru = 'высокая'
-    else:
-        load_secondary_ru = load_secondary 
-        
-    capacity_tertiary_ru = ''
-    load_tertiary_ru = ''
     capacity_tertiary = capacity_tertiary_raw
+    load = load_raw
+    load_secondary = load_secondary_raw
     load_tertiary = load_tertiary_raw
-    
-    if capacity_tertiary == 'full':
-        capacity_tertiary_ru = 'полная'
-    elif capacity_tertiary == 'offline':
-        capacity_tertiary_ru = 'офлайн'
-    else:
-        capacity_tertiary_ru = capacity_tertiary
 
-    if load_tertiary == 'idle':
-        load_tertiary_ru = 'никакая'
-    elif load_tertiary == 'low':
-        load_tertiary_ru = 'низкая'
-    elif load_tertiary == 'medium':
-        load_tertiary_ru = 'средняя'
-    elif load_tertiary == 'high':
-        load_tertiary_ru = 'высокая'
-    else:
-        load_tertiary_ru = load_tertiary
+    capacity_list_en = ['full', 'offline']
+    load_list_en = ['idle', 'low', 'medium', 'high', 'full']
+
+    capacity_list_ru = ['полная', 'офлайн']
+    load_list_ru = ['никакая', 'низкая', 'средняя', 'высокая', 'полная']
+
+    for en, ru in zip(capacity_list_en, capacity_list_ru):
+        if capacity in en:
+            capacity_ru = ru
+        if capacity_secondary in en:
+            capacity_secondary_ru = ru
+        if capacity_tertiary in en:
+            capacity_tertiary_ru = ru
+
+    for en, ru in zip(load_list_en, load_list_ru):
+        if load in en:
+            load_ru = ru
+        if load_secondary in en:
+            load_secondary_ru = ru
+        if load_tertiary in en:
+            load_tertiary_ru = ru
 
     return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
@@ -223,39 +109,42 @@ class ValveServersAPI:
     
 class ValveServersDataCentersAPI:
 
-#
-#   Australia
-#
+    #
+    #   Australia
+    #
     """Australia (Sydney)"""
     def australia(self):
         try:
             result = get_response()
             capacity_raw = result['datacenters']['Australia']['capacity']
             load_raw = result['datacenters']['Australia']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
-#
-#   South Africa
-#
+ 
+    #
+    #   South Africa
+    #
     """South Africa (Johannesburg)"""
     def africa_South(self):
         try:
             result = get_response()
             capacity_raw = result['datacenters']['South Africa']['capacity']
             load_raw = result['datacenters']['South Africa']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
     
-#
-#   South America
-#
+    #
+    #   South America
+    #
     """Brazil (Sao Paulo) && Chile, (Santiago) && Peru (Lima)"""
     def sa(self):
         try:
@@ -266,15 +155,15 @@ class ValveServersDataCentersAPI:
             load_secondary_raw = result['datacenters']['Chile']['load']
             capacity_tertiary_raw = result['datacenters']['Peru']['capacity']
             load_tertiary_raw = result['datacenters']['Peru']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_triple_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
             return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
             capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
             return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
-#
-#   USA
-#
+    #
+    #   USA
+    #
     """US Northcentral (Chicago) && US Northeast (Sterling) && US Northwest (Moses Lake)"""
     def usa_North(self):
         try:
@@ -285,7 +174,7 @@ class ValveServersDataCentersAPI:
             load_secondary_raw = result['datacenters']['US Northeast']['load']
             capacity_tertiary_raw = result['datacenters']['US Northwest']['capacity']
             load_tertiary_raw = result['datacenters']['US Northwest']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_triple_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
             return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
             capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
@@ -299,15 +188,16 @@ class ValveServersDataCentersAPI:
             load_raw = result['datacenters']['US Southwest']['load']
             capacity_secondary_raw = result['datacenters']['US Southeast']['capacity']
             load_secondary_raw = result['datacenters']['US Southeast']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = translate_double_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw)
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
-#
-#   Europe
-#
+    #
+    #   Europe
+    #
     """EU West (Luxembourg) && Spain (Mardid)"""   
     def eu_West(self):
         try:
@@ -316,11 +206,12 @@ class ValveServersDataCentersAPI:
             load_raw = result['datacenters']['EU West']['load']
             capacity_secondary_raw = result['datacenters']['Spain']['capacity']
             load_secondary_raw = result['datacenters']['Spain']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = translate_double_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw)
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         
     """EU East (Vienna) && Poland (Warsaw)"""
     def eu_East(self):
@@ -330,11 +221,12 @@ class ValveServersDataCentersAPI:
             load_raw = result['datacenters']['EU East']['load']
             capacity_secondary_raw = result['datacenters']['Poland']['capacity']
             load_secondary_raw = result['datacenters']['Poland']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = translate_double_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw)
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru 
+            capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru 
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
     
     """EU North (Stockholm)"""
     def eu_North(self):
@@ -342,15 +234,16 @@ class ValveServersDataCentersAPI:
             result = get_response()
             capacity_raw = result['datacenters']['EU North']['capacity']
             load_raw = result['datacenters']['EU North']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru            
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
-#
-#    Asia   
-#
+    #
+    #    Asia   
+    #
     """India (Mumbai) && India East (Chennai)"""
     def india(self):
         try:
@@ -359,11 +252,12 @@ class ValveServersDataCentersAPI:
             load_raw = result['datacenters']['India']['load']
             capacity_secondary_raw = result['datacenters']['India East']['capacity']
             load_secondary_raw = result['datacenters']['India East']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru = translate_double_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw)
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load, capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
     
     """Japan (Tokyo)"""
     def japan(self):
@@ -372,11 +266,12 @@ class ValveServersDataCentersAPI:
             result = get_response()
             capacity_raw = result['datacenters']['Japan']['capacity']
             load_raw = result['datacenters']['Japan']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
             
     """Emirates (Dubai)"""
     def emirates(self):
@@ -384,11 +279,12 @@ class ValveServersDataCentersAPI:
             result = get_response()
             capacity_raw = result['datacenters']['Emirates']['capacity']
             load_raw = result['datacenters']['Emirates']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
 
     """China Shanghai && China Tianjin && China Guangzhou"""
     def china(self):
@@ -400,7 +296,7 @@ class ValveServersDataCentersAPI:
             load_secondary_raw = result['datacenters']['China Tianjin']['load']
             capacity_tertiary_raw = result['datacenters']['China Guangzhou']['capacity']
             load_tertiary_raw = result['datacenters']['China Guangzhou']['load']
-            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_triple_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
             return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
             capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
@@ -412,11 +308,12 @@ class ValveServersDataCentersAPI:
             result = get_response()
             capacity_raw = result['datacenters']['Singapore']['capacity']
             load_raw = result['datacenters']['Singapore']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
             
     """Hong Kong"""
     def hong_kong(self):
@@ -424,8 +321,9 @@ class ValveServersDataCentersAPI:
             result = get_response()
             capacity_raw = result['datacenters']['Hong Kong']['capacity']
             load_raw = result['datacenters']['Hong Kong']['load']
-            capacity, load, capacity_ru, load_ru = translate_ru(capacity_raw, load_raw)
-            return capacity, load, capacity_ru, load_ru
+            capacity_secondary_raw = load_secondary_raw = capacity_tertiary_raw = load_tertiary_raw = 'N/A'
+            capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_raw, capacity_tertiary_raw, load_tertiary_raw)
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru
         except:
-            capacity = load = capacity_ru = load_ru = 'N/A'
-            return capacity, load, capacity_ru, load_ru
+            capacity = load = capacity_ru = load_ru = capacity_secondary = load_secondary = capacity_secondary_ru = load_secondary_ru = capacity_tertiary = load_tertiary = capacity_tertiary_ru = load_tertiary_ru = 'N/A'
+            return capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru

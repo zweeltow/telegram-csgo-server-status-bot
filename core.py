@@ -18,79 +18,26 @@ gc = CSGOGameCoordinator()
 def info_updater():
     while True:
         try:
-            gc_status = gc.get_status()
-            webapi_status = api.check_status()
-            sessionsLogon = api.get_status()[1]
-            player_count = api.get_players()
-            time_server = api.get_status()[4]
-            scheduler = api.get_status()[0]
-            server_count = api.get_status()[2]
-            online_players = api.get_status()[3]
-            search_seconds_avg = api.get_status()[5]
-            searching_players = api.get_status()[6]
-            dev_player_count = api.get_devs()
-            peak24 = peak_count.get_peak()[0]
-            peak_all = peak_count.get_peak()[1]
-            unique = month_unique.get_unique()
-            
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-            
-            gcCache = cacheFile['game_coordinator']
-            wsCache = cacheFile['valve_webapi']
-            slCache = cacheFile['sessionsLogon']
-            pcCache = cacheFile['online_player_count']
-            tsCache = cacheFile['time_server']
-            sCache = cacheFile['scheduler']
-            scCache = cacheFile['online_server_count']
-            apCache = cacheFile['active_player_count']
-            ssCache = cacheFile['search_seconds_avg']
-            spCache = cacheFile['searching_players']
-            dcCache = cacheFile['dev_player_count']
-            p24Cache = cacheFile['peak_24_hours']
-            paCache = cacheFile['peak_all_time']
-            uqCache = cacheFile['unique_monthly']
 
-            if gc_status != gcCache:
-                file_manager.updateJsonGC(config.CACHE_FILE_PATH, gc_status)
-              
-            if webapi_status != wsCache:
-                file_manager.updateJsonWS(config.CACHE_FILE_PATH, webapi_status)
-                
-            if sessionsLogon != slCache:
-                file_manager.updateJsonSL(config.CACHE_FILE_PATH, sessionsLogon)
-                
-            if player_count != pcCache:
-                file_manager.updateJsonPC(config.CACHE_FILE_PATH, player_count)
-                
-            if time_server != tsCache:
-                file_manager.updateJsonTS(config.CACHE_FILE_PATH, time_server)
-                
-            if scheduler != sCache:
-                file_manager.updateJsonS(config.CACHE_FILE_PATH, scheduler)
-            
-            if server_count != scCache:
-                file_manager.updateJsonSC(config.CACHE_FILE_PATH, server_count)
-                
-            if online_players != apCache:
-                file_manager.updateJsonAP(config.CACHE_FILE_PATH, online_players)
-                
-            if search_seconds_avg != ssCache:
-                file_manager.updateJsonSS(config.CACHE_FILE_PATH, search_seconds_avg)
-                
-            if searching_players != spCache:
-                file_manager.updateJsonSP(config.CACHE_FILE_PATH, searching_players)
-               
-            if dev_player_count != dcCache:
-                file_manager.updateJsonDC(config.CACHE_FILE_PATH, dev_player_count)
-                
-            if peak24 != p24Cache:
-                file_manager.updateJsonP24(config.CACHE_FILE_PATH, peak24)
-                
-            if peak_all != paCache:
-                file_manager.updateJsonPA(config.CACHE_FILE_PATH, peak_all)
-                
-            if unique != uqCache:
-                file_manager.updateJsonUQ(config.CACHE_FILE_PATH, unique)
+            value_list = [ cacheFile['build_ID'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[0],
+            api.get_status()[2], api.get_status()[3], api.get_status()[5], api.get_status()[6], api.get_devs(), peak_count.get_peak(), cacheFile['peak_all_time'], month_unique.get_unique() ]
+
+            cache_value_list = [ cacheFile['build_ID'], cacheFile['game_coordinator'], cacheFile['valve_webapi'], cacheFile['sessionsLogon'], cacheFile['online_player_count'],
+            cacheFile['time_server'], cacheFile['scheduler'], cacheFile['online_server_count'], cacheFile['active_player_count'], cacheFile['search_seconds_avg'],
+            cacheFile['searching_players'], cacheFile['dev_player_count'], cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly'] ]
+
+            cache_keys = file_manager.readJson(config.CACHE_FILE_PATH).items()
+            cache_key_list = []
+            for key, value in cache_keys:
+                cache_key_list.append(key)
+
+            for val, cache_val, cache_key in zip(value_list, cache_value_list, cache_key_list):
+                if val != cache_val:
+                    file_manager.updateJson(config.CACHE_FILE_PATH, val, cache_key)
+
+            if api.get_players() > cacheFile['peak_all_time']:
+                file_manager.updateJson(config.CACHE_FILE_PATH, api.get_players(), cache_key_list[13])
 
             time.sleep(60)
 
