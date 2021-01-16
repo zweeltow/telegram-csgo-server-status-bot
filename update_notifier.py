@@ -2,6 +2,8 @@
 
 from steam.client import SteamClient
 import json
+import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 import traceback
@@ -12,6 +14,10 @@ import config
 import strings
 from apps import file_manager
 
+url_db = 'https://steamdb.info/app/730/patchnotes/'
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'}
+
+soup = BeautifulSoup(requests.get(url_db, headers=headers).content, 'html.parser')
 
 def setup():
     client = SteamClient()
@@ -30,24 +36,33 @@ def setup():
 def check_for_updates(client):
     while True:
         try:
-            delta = client.get_product_info(apps=[730], timeout=15)
+            tbody = soup.find("tbody", {"id": "js-builds"})
+            tr = tbody.find("tr")
+            td = tr.find_all("td")
+            td = td[3]
+            a = td.find("a").string
+            version = str(a)
+            if 'version' in version:
+                version = a.replace('version ', '')
+            else:
+                version = 'N/A'
+
+
             currentBuild = 0
 
-            for key, values in delta.items():
+            for key, values in client.get_product_info(apps=[730], timeout=15).items():
                 for k, val in values.items():
                     currentBuild = val['depots']['branches']['public']['buildid']
 
-            cache_keys = file_manager.readJson(config.CACHE_FILE_PATH).items()
-            cache_key_list = []
-            for key, value in cache_keys:
-                cache_key_list.append(key)
-            
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-            bIDCache = cacheFile['build_ID']
+            cache_key_list = []
+            for key, value in cacheFile.items():
+                cache_key_list.append(key)
 
-            if currentBuild != bIDCache:
+            if currentBuild != cacheFile['build_ID'] and version != cacheFile['version']:
                 file_manager.updateJson(config.CACHE_FILE_PATH, currentBuild, cache_key_list[0])
-                send_alert(currentBuild)
+                file_manager.updateJson(config.CACHE_FILE_PATH, version, cache_key_list[1])
+                send_alert(currentBuild, version)
 
             time.sleep(10)
 
@@ -60,15 +75,10 @@ def check_for_updates(client):
             setup()
 
 
-def send_alert(currentBuild):
+def send_alert(currentBuild, version):
     bot = telebot.TeleBot(config.BOT_TOKEN)
-    text = strings.notiNewBuild_ru.format(currentBuild)
-    if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.AQ]
-    else:
-        chat_list = [config.OWNER]
-    for chatID in chat_list:
-        bot.send_message(chatID, text, parse_mode='Markdown')
+    text = strings.notiNewBuild_ru.format(version, currentBuild)
+    bot.send_message(config.CSGOBETACHAT, text, parse_mode='Markdown')
 
 
 if __name__ == '__main__':
