@@ -19,22 +19,20 @@ def info_updater():
     while True:
         try:
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+            delta = cacheFile.items()
+
+            cache_key_list = []
+            cache_value_list = []
+            for key, value in delta:
+                cache_key_list.append(key)
+                cache_value_list.append(value)
 
             value_list = [ cacheFile['build_ID'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[0],
             api.get_status()[2], api.get_status()[3], api.get_status()[5], api.get_status()[6], api.get_devs(), peak_count.get_peak(), cacheFile['peak_all_time'], month_unique.get_unique() ]
 
-            cache_value_list = [ cacheFile['build_ID'], cacheFile['game_coordinator'], cacheFile['valve_webapi'], cacheFile['sessionsLogon'], cacheFile['online_player_count'],
-            cacheFile['time_server'], cacheFile['scheduler'], cacheFile['online_server_count'], cacheFile['active_player_count'], cacheFile['search_seconds_avg'],
-            cacheFile['searching_players'], cacheFile['dev_player_count'], cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly'] ]
-
-            cache_keys = file_manager.readJson(config.CACHE_FILE_PATH).items()
-            cache_key_list = []
-            for key, value in cache_keys:
-                cache_key_list.append(key)
-
-            for val, cache_val, cache_key in zip(value_list, cache_value_list, cache_key_list):
-                if val != cache_val:
-                    file_manager.updateJson(config.CACHE_FILE_PATH, val, cache_key)
+            for val, c_val, c_key in zip(value_list, cache_value_list, cache_key_list):
+                if val != c_val:
+                    file_manager.updateJson(config.CACHE_FILE_PATH, val, c_key)
 
             if api.get_players() > cacheFile['peak_all_time']:
                 file_manager.updateJson(config.CACHE_FILE_PATH, api.get_players(), cache_key_list[13])
