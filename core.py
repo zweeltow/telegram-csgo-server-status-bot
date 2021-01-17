@@ -22,16 +22,16 @@ def info_updater():
 
             cache_key_list = []
             cache_value_list = []
-            for key, value in cacheFile.items():
-                cache_key_list.append(key)
-                cache_value_list.append(value)
+            for keys, valuev in cacheFile.items():
+                cache_key_list.append(keys)
+                cache_value_list.append(values)
 
-            value_list = [ cacheFile['build_ID'], cacheFile['version'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[0],
+            value_list = [ cacheFile['build_ID'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[0],
             api.get_status()[2], api.get_status()[3], api.get_status()[5], api.get_status()[6], api.get_devs(), peak_count.get_peak(), cacheFile['peak_all_time'], month_unique.get_unique() ]
 
-            for val, c_val, c_key in zip(value_list, cache_value_list, cache_key_list):
-                if val != c_val:
-                    file_manager.updateJson(config.CACHE_FILE_PATH, val, c_key)
+            for values, cache_values, cache_keys in zip(value_list, cache_value_list, cache_key_list):
+                if values != cache_values:
+                    file_manager.updateJson(config.CACHE_FILE_PATH, values, cache_keys)
 
             if api.get_players() > cacheFile['peak_all_time']:
                 file_manager.updateJson(config.CACHE_FILE_PATH, api.get_players(), cache_key_list[14])
