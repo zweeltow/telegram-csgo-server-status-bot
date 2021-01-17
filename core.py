@@ -22,7 +22,7 @@ def info_updater():
 
             cache_key_list = []
             cache_value_list = []
-            for keys, valuev in cacheFile.items():
+            for keys, values in cacheFile.items():
                 cache_key_list.append(keys)
                 cache_value_list.append(values)
 
