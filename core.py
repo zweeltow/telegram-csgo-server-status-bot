@@ -34,7 +34,7 @@ def info_updater():
                     file_manager.updateJson(config.CACHE_FILE_PATH, values, cache_keys)
 
             if api.get_players() > cacheFile['peak_all_time']:
-                file_manager.updateJson(config.CACHE_FILE_PATH, api.get_players(), cache_key_list[14])
+                file_manager.updateJson(config.CACHE_FILE_PATH, api.get_players(), cache_key_list[13])
 
             time.sleep(60)
 
