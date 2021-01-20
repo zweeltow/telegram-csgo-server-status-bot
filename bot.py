@@ -310,11 +310,11 @@ def send_about_problem_valve_api_inline(inline_query):
 def send_about_maintenance_inline(inline_query):
         try:
             if inline_query.from_user.language_code == 'ru':
-                maintenance_r = strings.maintenance_en
+                maintenance_r = strings.maintenance_ru
                 title_maintenance = 'Нет данных'
                 maintenance = 'Еженедельное тех. обслуживание.'
             else:
-                maintenance_r = strings.maintenance_ru
+                maintenance_r = strings.maintenance_en
                 title_maintenance = 'No data'
                 maintenance = 'Weekly maintenance'
             r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content = types.InputTextMessageContent(maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=maintenance)
