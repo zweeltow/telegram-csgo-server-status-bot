@@ -10,7 +10,7 @@ from telebot import types
 import config
 import strings
 
-from apps.timer import TimerDrop
+from apps.timer import DropReset
 from apps.valve_api import ValveServersDataCentersAPI
 from apps import file_manager
 
@@ -18,7 +18,7 @@ bot = telebot.TeleBot(config.BOT_TOKEN)
 telebot.logger.setLevel(logging.DEBUG)
 
 api_dc = ValveServersDataCentersAPI()
-timer_drop = TimerDrop()
+timer_drop = DropReset()
 
 
 ### Keyboard setup ###
@@ -181,7 +181,7 @@ def get_devcount():
 
 def get_timer():
     '''Get drop cap reset time'''
-    delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_delta()
+    delta_days, delta_hours, delta_mins, delta_secs = timer_drop.get_time()
     timer_text_en = strings.timer_en.format(delta_days, delta_hours, delta_mins, delta_secs)
     timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
     return timer_text_en, timer_text_ru
@@ -207,6 +207,8 @@ def send_status(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -227,6 +229,8 @@ def send_matchmaking(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)        
 
@@ -247,6 +251,8 @@ def send_devcount(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -275,6 +281,16 @@ def send_about_problem_valve_api(message):
         markup = markup_en   
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
+def send_about_maintenance(message):
+    '''In case weekly server update (on Tuesdays)'''
+    if message.from_user.language_code == 'ru':
+        text = strings.maintenance_ru
+        markup = markup_ru       
+    else:
+        text = strings.maintenance_en
+        markup = markup_en   
+    bot.send_message(message.chat.id, text, reply_markup=markup)
+
 def send_about_problem_valve_api_inline(inline_query):
         try:
             if inline_query.from_user.language_code == 'ru':
@@ -286,6 +302,22 @@ def send_about_problem_valve_api_inline(inline_query):
                 title_un = 'No data'
                 description_un = 'Unable to call Valve API'
             r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
+            bot.answer_inline_query(inline_query.id, [r], cache_time=5)
+            log_inline(inline_query)
+        except Exception as e:
+            bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+
+def send_about_maintenance_inline(inline_query):
+        try:
+            if inline_query.from_user.language_code == 'ru':
+                maintenance_r = strings.maintenance_ru
+                title_maintenance = 'Нет данных'
+                maintenance = 'Еженедельное тех. обслуживание.'
+            else:
+                maintenance_r = strings.maintenance_en
+                title_maintenance = 'No data'
+                maintenance = 'Weekly maintenance'
+            r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content = types.InputTextMessageContent(maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=maintenance)
             bot.answer_inline_query(inline_query.id, [r], cache_time=5)
             log_inline(inline_query)
         except Exception as e:
@@ -320,6 +352,8 @@ def dc(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -341,6 +375,8 @@ def dc_europe(message):
             text = '📍 Specify the region...'
             markup = markup_DC_EU
         bot.send_message(message.chat.id, text, reply_markup=markup)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -355,6 +391,8 @@ def dc_usa(message):
             text = '📍 Specify the region...'
             markup = markup_DC_USA
         bot.send_message(message.chat.id, text, reply_markup=markup)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -369,6 +407,8 @@ def dc_asia(message):
             text = '📍 Specify the country...'
             markup = markup_DC_Asia
         bot.send_message(message.chat.id, text, reply_markup=markup)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -398,6 +438,8 @@ def send_dc_africa(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -427,6 +469,8 @@ def send_dc_australia(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -456,6 +500,8 @@ def send_dc_eu_north(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -483,6 +529,8 @@ def send_dc_eu_west(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -510,6 +558,8 @@ def send_dc_eu_east(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)   
 
@@ -539,6 +589,8 @@ def send_dc_usa_north(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -567,6 +619,8 @@ def send_dc_usa_south(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -596,6 +650,8 @@ def send_dc_south_america(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -625,6 +681,8 @@ def send_dc_india(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -652,6 +710,8 @@ def send_dc_japan(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -679,6 +739,8 @@ def send_dc_china(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message) 
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -706,6 +768,8 @@ def send_dc_emirates(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -733,6 +797,8 @@ def send_dc_singapore(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -760,6 +826,8 @@ def send_dc_hong_kong(message):
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance(message)
     else:
         send_about_problem_valve_api(message)
 
@@ -817,6 +885,32 @@ def default_inline(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        try:
+            timer_text_en, timer_text_ru = get_timer()
+            try:
+                if inline_query.from_user.language_code == 'ru':
+                    maintenance_r = strings.maintenance_ru
+                    timer_r = timer_text_ru
+                    title_maintenance = 'Нет данных'
+                    title_timer = 'Сброс ограничений'
+                    description_mntn = 'Еженедельное тех. обслуживание серверов'
+                    description_timer = 'Время до сброса ограничений опыта и дропа'
+                else:
+                    maintenance_r = strings.maintenance_en
+                    timer_r = timer_text_en
+                    title_maintenance = 'No data'
+                    title_timer = 'Drop cap reset'
+                    description_mntn = 'Weekly server maintenance'
+                    description_timer = 'Time left until experience and drop cap reset'
+                r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content = types.InputTextMessageContent(maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=description_mntn)
+                r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=5)
+                log_inline(inline_query)
+            except Exception as e:
+                bot.send_message(config.LOGCHANNEL, f'❗️Error: {e}\n\n↩️ inline_query')
+        except Exception as e:
+            bot.send_message(config.LOGCHANNEL, f'❗️Error: {e}\n\n↩️ inline_query')
     else:
         try:
             timer_text_en, timer_text_ru = get_timer()
@@ -840,7 +934,7 @@ def default_inline(inline_query):
                 bot.answer_inline_query(inline_query.id, [r, r2], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
-                bot.send_message(config.OWNER, f'❗️Error: {e}\n\n↩️ inline_query')
+                bot.send_message(config.LOGCHANNEL, f'❗️Error: {e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
 
@@ -940,6 +1034,10 @@ def inline_dc(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -967,6 +1065,8 @@ def inline_dc_australia(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -994,6 +1094,8 @@ def inline_dc_africa(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1021,6 +1123,8 @@ def inline_dc_south_america(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1061,6 +1165,8 @@ def inline_dc_europe(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1089,6 +1195,8 @@ def inline_dc_eu_north(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1117,6 +1225,8 @@ def inline_dc_eu_east(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1145,6 +1255,8 @@ def inline_dc_eu_west(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1178,6 +1290,8 @@ def inline_dc_usa(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1205,6 +1319,8 @@ def inline_dc_northern_usa(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1232,6 +1348,8 @@ def inline_dc_southern_usa(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1290,6 +1408,8 @@ def inline_dc_asia(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1317,6 +1437,8 @@ def inline_dc_china(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1345,6 +1467,8 @@ def inline_dc_emirates(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1372,6 +1496,8 @@ def inline_dc_hong_kong(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1399,6 +1525,8 @@ def inline_dc_india(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1426,6 +1554,8 @@ def inline_dc_japan(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 
@@ -1454,6 +1584,8 @@ def inline_dc_singapore(inline_query):
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
+    elif wsCache == 'Maintenance':
+        send_about_maintenance_inline(inline_query)
     else:
         send_about_problem_valve_api_inline(inline_query)
 

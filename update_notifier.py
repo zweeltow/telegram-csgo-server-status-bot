@@ -30,21 +30,18 @@ def setup():
 def check_for_updates(client):
     while True:
         try:
-            delta = client.get_product_info(apps=[730], timeout=15)
             currentBuild = 0
-
-            for key, values in delta.items():
-                for k, val in values.items():
-                    currentBuild = val['depots']['branches']['public']['buildid']
-
-            cache_keys = file_manager.readJson(config.CACHE_FILE_PATH).items()
-            cache_key_list = []
-            for key, value in cache_keys:
-                cache_key_list.append(key)
-            
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+            cache_key_list = []
             bIDCache = cacheFile['build_ID']
 
+            for keys, values in client.get_product_info(apps=[730], timeout=15).items():
+                for k, v in values.items():
+                    currentBuild = v['depots']['branches']['public']['buildid']
+
+            for keys, values in cacheFile.items():
+                cache_key_list.append(keys)
+            
             if currentBuild != bIDCache:
                 file_manager.updateJson(config.CACHE_FILE_PATH, currentBuild, cache_key_list[0])
                 send_alert(currentBuild)

@@ -1,9 +1,9 @@
 import datetime
 import time
 
-class TimerDrop:
+class DropReset:
 
-    def get_delta(self):
+    def get_time(self):
         wanted_day = 'wednesday'
         wanted_time = 00
 

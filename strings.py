@@ -59,6 +59,12 @@ wrongAPI_en = "💀 Issues with Valve's API, please try again later."
 # Russian
 wrongAPI_ru = '💀 Проблемы с API Valve, пожалуйста, попробуйте позже.'
 
+'''Text for Maintenance'''
+# English
+maintenance_en = "🛠️ Valve servers are down for the weekly maintenance, please try again later."
+# Russian
+maintenance_ru = '🛠️ Сервера Valve отключены для еженедельного тех. обслуживания, пожалуйста, попробуйте позже.'
+
 
 '''Text if something is wrong'''
 # English
