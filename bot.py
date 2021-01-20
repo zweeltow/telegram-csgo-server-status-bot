@@ -1639,8 +1639,8 @@ def get_feedback(message):
         bot.send_message(message.chat.id, '👍', reply_markup=markup)
 
     else:
-        bot.send_message(config.LOGCHANNEL, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
-        bot.forward_message(config.LOGCHANNEL, message.chat.id, message.message_id)
+        bot.send_message(config.OWNER, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
+        bot.forward_message(config.OWNER, message.chat.id, message.message_id)
         
         if not config.TEST_MODE:
             bot.send_message(config.AQ, f'🆔 <a href="tg://user?id={message.from_user.id}">{message.from_user.id}</a>:', parse_mode='html', disable_notification=True)
