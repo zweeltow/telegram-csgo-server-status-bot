@@ -1,5 +1,6 @@
 import requests
 import config
+import datetime
 
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
@@ -100,6 +101,8 @@ class ValveServersAPI:
             response = requests.get(API_server_status)
             if response.status_code == 200:
                 webapi_status = 'Normal'
+            elif response.status_code != 200 and datetime.datetime.today().weekday() == 1:
+                webapi_status = 'Maintenance'
             else:
                 webapi_status = 'N/A'
             return webapi_status
