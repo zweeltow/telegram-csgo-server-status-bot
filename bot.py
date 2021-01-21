@@ -31,7 +31,8 @@ matchmaking = types.KeyboardButton('Matchmaking')
 devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
-markup_en.add(status, matchmaking, devcount, timer, dc)
+gv = types.KeyboardButton('Game version')
+markup_en.add(status, matchmaking, devcount, timer, dc, gv)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -75,7 +76,8 @@ matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
+gv_ru = types.KeyboardButton('Версия игры')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru, gv_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -186,6 +188,18 @@ def get_timer():
     timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
     return timer_text_en, timer_text_ru
 
+def get_gameversion():
+    '''Get the version of the game'''
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    cvCache = cacheFile['client_version']
+    svCache = cacheFile['server_version']
+    pvCache = cacheFile['patch_version']
+    vdCache = cacheFile['version_date']
+    vtCache = cacheFile['version_time']
+    gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache, vtCache)
+    gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdCache, vtCache)
+    return gameversion_text_en, gameversion_text_ru
+
 
 ### Send information ###   
 
@@ -265,6 +279,21 @@ def send_timer(message):
                 markup = markup_ru
         else:
                 text = timer_text_en
+                markup = markup_en
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def send_gameversion(message):
+    '''Send the version of the game'''
+    try:
+        gameversion_text_en, gameversion_text_ru = get_gameversion()
+        if message.from_user.language_code == 'ru':
+                text = gameversion_text_ru
+                markup = markup_ru
+        else:
+                text = gameversion_text_en
                 markup = markup_en
         bot.send_message(message.chat.id, text, reply_markup=markup) 
     except Exception as e:
@@ -417,7 +446,7 @@ def dc_asia(message):
 def get_dc_africa():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.africa_South()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.africa_South()     
     africa_text_ru = strings.dc_africa_ru.format(load_ru, capacity_ru, tsCache)
     africa_text_en = strings.dc_africa_en.format(load, capacity, tsCache)           
     return africa_text_en, africa_text_ru
@@ -448,7 +477,7 @@ def send_dc_africa(message):
 def get_dc_australia():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.australia()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.australia()     
     australia_text_ru = strings.dc_australia_ru.format(load_ru, capacity_ru, tsCache)
     australia_text_en = strings.dc_australia_en.format(load, capacity, tsCache)           
     return australia_text_en, australia_text_ru
@@ -479,7 +508,7 @@ def send_dc_australia(message):
 def get_dc_eu_north():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.eu_North()        
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.eu_North()        
     eu_north_text_ru = strings.dc_north_eu_ru.format(load_ru, capacity_ru, tsCache)
     eu_north_text_en = strings.dc_north_eu_en.format(load, capacity, tsCache)
     return eu_north_text_en, eu_north_text_ru
@@ -508,7 +537,7 @@ def send_dc_eu_north(message):
 def get_dc_eu_west():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.eu_West()
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.eu_West()
     eu_west_text_ru = strings.dc_west_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
     eu_west_text_en = strings.dc_west_eu_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
     return eu_west_text_en, eu_west_text_ru
@@ -537,7 +566,7 @@ def send_dc_eu_west(message):
 def get_dc_eu_east():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.eu_East()
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.eu_East()
     eu_east_text_ru = strings.dc_east_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
     eu_east_text_en = strings.dc_east_eu_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
     return eu_east_text_en, eu_east_text_ru
@@ -568,7 +597,7 @@ def send_dc_eu_east(message):
 def get_dc_usa_north():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.usa_North()   
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.usa_North()   
     usa_north_text_ru = strings.dc_north_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
     usa_north_text_en = strings.dc_north_us_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
     return usa_north_text_en, usa_north_text_ru
@@ -597,7 +626,7 @@ def send_dc_usa_north(message):
 def get_dc_usa_south():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.usa_South()      
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.usa_South()      
     usa_south_text_ru = strings.dc_south_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
     usa_south_text_en = strings.dc_south_us_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
     return usa_south_text_en, usa_south_text_ru
@@ -629,9 +658,9 @@ def send_dc_usa_south(message):
 def get_dc_south_america():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.sa()
-    south_america_text_ru = strings.dc_south_america_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
-    south_america_text_en = strings.dc_south_america_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.america_South()
+    south_america_text_ru = strings.dc_south_america_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, load_quaternary_ru, capacity_quaternary_ru, tsCache)
+    south_america_text_en = strings.dc_south_america_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, load_quaternary, capacity_quaternary, tsCache)
     return south_america_text_en, south_america_text_ru
 
 def send_dc_south_america(message):
@@ -660,7 +689,7 @@ def send_dc_south_america(message):
 def get_dc_india():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.india()
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.india()
     india_text_ru = strings.dc_india_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsCache)
     india_text_en = strings.dc_india_en.format(load, capacity, load_secondary, capacity_secondary, tsCache)
     return india_text_en, india_text_ru
@@ -689,7 +718,7 @@ def send_dc_india(message):
 def get_dc_japan():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.japan()
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.japan()
     japan_text_ru = strings.dc_japan_ru.format(load_ru, capacity_ru, tsCache)
     japan_text_en = strings.dc_japan_en.format(load, capacity, tsCache)
     return japan_text_en, japan_text_ru
@@ -718,7 +747,7 @@ def send_dc_japan(message):
 def get_dc_china():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server'] 
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.china()
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.china()
     china_text_ru = strings.dc_china_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsCache)
     china_text_en = strings.dc_china_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
     return china_text_en, china_text_ru
@@ -747,7 +776,7 @@ def send_dc_china(message):
 def get_dc_emirates():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.emirates()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.emirates()     
     emirates_text_ru = strings.dc_emirates_ru.format(load_ru, capacity_ru, tsCache)
     emirates_text_en = strings.dc_emirates_en.format(load, capacity, tsCache)           
     return emirates_text_en, emirates_text_ru
@@ -776,7 +805,7 @@ def send_dc_emirates(message):
 def get_dc_singapore():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.singapore()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.singapore()     
     singapore_text_ru = strings.dc_singapore_ru.format(load_ru, capacity_ru, tsCache)
     singapore_text_en = strings.dc_singapore_en.format(load, capacity, tsCache)           
     return singapore_text_en, singapore_text_ru
@@ -805,7 +834,7 @@ def send_dc_singapore(message):
 def get_dc_hong_kong():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     tsCache = cacheFile['time_server']  
-    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru = api_dc.hong_kong()     
+    capacity, load, capacity_ru, load_ru, capacity_secondary, load_secondary, capacity_secondary_ru, load_secondary_ru, capacity_tertiary, load_tertiary, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary, load_quaternary, capacity_quaternary_ru, load_quaternary_ru = api_dc.hong_kong()     
     hong_kong_text_ru = strings.dc_hong_kong_ru.format(load_ru, capacity_ru, tsCache)
     hong_kong_text_en = strings.dc_hong_kong_en.format(load, capacity, tsCache)           
     return hong_kong_text_en, hong_kong_text_ru
@@ -1699,6 +1728,9 @@ def answer(message):
     
             elif message.text.lower() in strings.cap_reset_tags:
                 send_timer(message)
+
+            elif message.text.lower() in strings.gameversion_tags:
+                send_gameversion(message)
 
             elif message.text.lower() in strings.dc_tags:
                 dc(message)
