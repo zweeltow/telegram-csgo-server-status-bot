@@ -48,9 +48,9 @@ mmWrong_ru = '❌ С планировщиком матчмейкинга что-
 '''Text for Game Version'''
 gameversion_tags = ['game version', 'версия игры', '/gamever']
 # English
-gameversion_en = '⚙️ Current game version: {}\n\n• Client version: {}\n• Server version: {}\n\nLatest update: {} {}'
+gameversion_en = '⚙️ Current game version: <code>{}</code>\n\n• Client version: {}\n• Server version: {}\n\nLatest update: {} {}'
 # Russian
-gameversion_ru = '⚙️ Текущая версия игры: {}\n\n• Клиентская версия: {}\n• Серверная версия: {}\n\nПоследнее обновление: {} {}'
+gameversion_ru = '⚙️ Текущая версия игры: <code>{}</code>\n\n• Клиентская версия: {}\n• Серверная версия: {}\n\nПоследнее обновление: {} {}'
 
 '''Text for Wrong Request'''
 # English
