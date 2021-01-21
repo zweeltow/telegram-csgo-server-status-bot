@@ -975,7 +975,7 @@ def default_inline(inline_query):
                     description_gv = 'Check the latest game version'
                 r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
                 r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
-                r3 = types.InlineQueryResultArticle('3', title_gv, input_message_content = types.InputTextMessageContent(gv_r), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
+                r3 = types.InlineQueryResultArticle('3', title_gv, input_message_content = types.InputTextMessageContent(gv_r, parse_mode="html"), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
                 bot.answer_inline_query(inline_query.id, [r, r2, r3], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
