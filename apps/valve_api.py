@@ -5,7 +5,7 @@ import datetime
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
 API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
-    
+
 
 def get_response():
     response = requests.get(API_server_status)
@@ -24,13 +24,10 @@ def translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_
     load_tertiary = load_tertiary_raw
     load_quaternary = load_quaternary_raw
 
-    capacity_list_en = ['high', 'full', 'offline']
-    load_list_en = ['idle', 'low', 'medium', 'high', 'full']
+    raw_list_en = ['offline', 'idle', 'low', 'medium', 'high', 'full']
+    raw_list_ru = ['офлайн', 'никакая', 'низкая', 'средняя', 'высокая', 'полная']
 
-    capacity_list_ru = ['высокая', 'полная', 'офлайн']
-    load_list_ru = ['никакая', 'низкая', 'средняя', 'высокая', 'полная']
-
-    for en, ru in zip(capacity_list_en, capacity_list_ru):
+    for en, ru in zip(raw_list_en, raw_list_ru):
         if capacity in en:
             capacity_ru = ru
         if capacity_secondary in en:
@@ -39,8 +36,7 @@ def translate_ru(capacity_raw, load_raw, capacity_secondary_raw, load_secondary_
             capacity_tertiary_ru = ru
         if capacity_quaternary in en:
             capacity_quaternary_ru = ru
-
-    for en, ru in zip(load_list_en, load_list_ru):
+            
         if load in en:
             load_ru = ru
         if load_secondary in en:
