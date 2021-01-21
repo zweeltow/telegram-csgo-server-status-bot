@@ -45,6 +45,12 @@ mmWrong_en = '❌ Something went wrong with the matchmaking scheduler.\n\nLatest
 mmNormal_ru = '✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {:,}\n• Активных игроков: {:,}\n• Игроков в поиске: {:,}\n• Среднее время поиска: {} с.\n\nОбновлено: {} (UTC−8, летом UTC−7)'
 mmWrong_ru = '❌ С планировщиком матчмейкинга что-то не так.\n\nLatest update: {} (UTC-8, summer UTC-7)'
 
+'''Text for Game Version'''
+gameversion_tags = ['game version', 'версия игры', '/gamever']
+# English
+gameversion_en = '⚙️ Current game version: {}\n\n• Client version: {}\n• Server version: {}\n\nLatest update: {} {}'
+# Russian
+gameversion_ru = '⚙️ Текущая версия игры: {}\n\n• Клиентская версия: {}\n• Серверная версия: {}\n\nПоследнее обновление: {} {}'
 
 '''Text for Wrong Request'''
 # English
