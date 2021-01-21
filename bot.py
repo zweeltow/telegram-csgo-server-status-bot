@@ -877,38 +877,46 @@ def default_inline(inline_query):
             mm_text_en, mm_text_ru = get_matchmaking()
             devcount_text_en, devcount_text_ru = get_devcount()
             timer_text_en, timer_text_ru = get_timer()
+            gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
                     status_r = status_text_ru
                     mm_r = mm_text_ru
                     dev_r = devcount_text_ru
                     timer_r = timer_text_ru
+                    gv_r = gameversion_text_ru
                     title_status = 'Статус'
                     title_mm = 'Матчмейкинг'
                     title_dev = 'Бета-версия'
                     title_timer = 'Сброс ограничений'
+                    title_gv = 'Версия игры'
                     description_status = 'Проверить доступность серверов'
                     description_mm = 'Показать количество активных игроков'
                     description_dev = 'Показать количество онлайн разработчиков'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
+                    description_gv = 'Проверить последнюю версию игры'
                 else:
                     status_r = status_text_en
                     mm_r = mm_text_en
                     dev_r = devcount_text_en
                     timer_r = timer_text_en
+                    gv_r = gameversion_text_en
                     title_status = 'Status'
                     title_mm = 'Matchmaking'
                     title_dev = 'Beta version'
                     title_timer = 'Drop cap reset'
+                    title_gv = 'Game version'
                     description_status = 'Check the availability of the servers'
                     description_mm = 'Show the count of active players'
                     description_dev = 'Show the count of in-game developers'
                     description_timer = 'Time left until experience and drop cap reset'
+                    description_gv = 'Check the latest game version'
                 r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), thumb_url='https://telegra.ph/file/57ba2b279c53d69d72481.jpg', description=description_status)
                 r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), thumb_url='https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', description=description_mm)
                 r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
                 r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
-                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
+                r5 = types.InlineQueryResultArticle('4', title_gv, input_message_content = types.InputTextMessageContent(gv_r), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4, r5], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
@@ -943,24 +951,32 @@ def default_inline(inline_query):
     else:
         try:
             timer_text_en, timer_text_ru = get_timer()
+            gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
                     wrong_r = strings.wrongAPI_ru
                     timer_r = timer_text_ru
+                    gv_r = gameversion_text_ru
                     title_un = 'Нет данных'
                     title_timer = 'Сброс ограничений'
+                    title_gv = 'Версия игры'
                     description_un = 'Не получилось связаться с API Valve'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
+                    description_gv = 'Проверить последнюю версию игры'
                 else:
                     wrong_r = strings.wrongAPI_en
                     timer_r = timer_text_en
+                    gv_r = gameversion_text_en
                     title_un = 'No data'
                     title_timer = 'Drop cap reset'
+                    title_gv = 'Game version'
                     description_un = 'Unable to call Valve API'
                     description_timer = 'Time left until experience and drop cap reset'
+                    description_gv = 'Check the latest game version'
                 r = types.InlineQueryResultArticle('1', title_un, input_message_content = types.InputTextMessageContent(wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
                 r2 = types.InlineQueryResultArticle('2', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
-                bot.answer_inline_query(inline_query.id, [r, r2], cache_time=5)
+                r3 = types.InlineQueryResultArticle('2', title_gv, input_message_content = types.InputTextMessageContent(gv_r), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
                 bot.send_message(config.LOGCHANNEL, f'❗️Error: {e}\n\n↩️ inline_query')
