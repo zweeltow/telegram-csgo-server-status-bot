@@ -31,7 +31,8 @@ matchmaking = types.KeyboardButton('Matchmaking')
 devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
-markup_en.add(status, matchmaking, devcount, timer, dc)
+gv = types.KeyboardButton('Game version')
+markup_en.add(status, matchmaking, devcount, timer, dc, gv)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -75,7 +76,8 @@ matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru)
+gv_ru = types.KeyboardButton('Версия игры')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru, gv_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -186,6 +188,18 @@ def get_timer():
     timer_text_ru = strings.timer_ru.format(delta_days, delta_hours, delta_mins, delta_secs)
     return timer_text_en, timer_text_ru
 
+def get_gameversion():
+    '''Get the version of the game'''
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    cvCache = cacheFile['client_version']
+    svCache = cacheFile['server_version']
+    pvCache = cacheFile['patch_version']
+    vdCache = cacheFile['version_date']
+    vtCache = cacheFile['version_time']
+    gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache, vtCache)
+    gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdCache, vtCache)
+    return gameversion_text_en, gameversion_text_ru
+
 
 ### Send information ###   
 
@@ -265,6 +279,21 @@ def send_timer(message):
                 markup = markup_ru
         else:
                 text = timer_text_en
+                markup = markup_en
+        bot.send_message(message.chat.id, text, reply_markup=markup) 
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def send_gameversion(message):
+    '''Send the version of the game'''
+    try:
+        gameversion_text_en, gameversion_text_ru = get_gameversion()
+        if message.from_user.language_code == 'ru':
+                text = gameversion_text_ru
+                markup = markup_ru
+        else:
+                text = gameversion_text_en
                 markup = markup_en
         bot.send_message(message.chat.id, text, reply_markup=markup) 
     except Exception as e:
@@ -1699,6 +1728,9 @@ def answer(message):
     
             elif message.text.lower() in strings.cap_reset_tags:
                 send_timer(message)
+
+            elif message.text.lower() in strings.gameversion_tags:
+                send_gameversion(message)
 
             elif message.text.lower() in strings.dc_tags:
                 dc(message)
