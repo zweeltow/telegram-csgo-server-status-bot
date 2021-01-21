@@ -295,7 +295,7 @@ def send_gameversion(message):
         else:
                 text = gameversion_text_en
                 markup = markup_en
-        bot.send_message(message.chat.id, text, reply_markup=markup) 
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
     except Exception as e:
         bot.send_message(config.LOGCHANNEL, f'❗️{e}')
         send_about_problem_bot(message)
