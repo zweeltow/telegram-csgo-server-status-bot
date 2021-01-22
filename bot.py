@@ -32,7 +32,7 @@ devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
-markup_en.add(status, matchmaking, devcount, timer, dc, gv)
+markup_en.add(status, matchmaking, dс, devcount, timer, gv)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -77,7 +77,7 @@ devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru, gv_ru)
+markup_ru.add(status_ru, matchmaking_ru, dc_ru, devcount_ru, timer_ru, gv_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
