@@ -1063,7 +1063,7 @@ def inline_dc(inline_query):
                     r_india = india_text_en
                     r_japan = japan_text_en
                     r_singapore = singapore_text_en
-                    r_south_america = 'south_america_text_en'
+                    r_south_america = south_america_text_en
                     description = 'Check the status'
                 r = types.InlineQueryResultArticle('1', title_eu_north, input_message_content = types.InputTextMessageContent(r_eu_north), thumb_url='https://telegra.ph/file/4d269cb98aadaae391024.jpg', description=description)
                 r2 = types.InlineQueryResultArticle('2', title_eu_east, input_message_content = types.InputTextMessageContent(r_eu_east), thumb_url='https://telegra.ph/file/4d269cb98aadaae391024.jpg', description=description)
