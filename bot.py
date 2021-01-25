@@ -32,7 +32,7 @@ devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
-markup_en.add(status, matchmaking, devcount, timer, dc, gv)
+markup_en.add(status, matchmaking, dс, devcount, timer, gv)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -77,7 +77,7 @@ devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru, timer_ru, dc_ru, gv_ru)
+markup_ru.add(status_ru, matchmaking_ru, dc_ru, devcount_ru, timer_ru, gv_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -1003,6 +1003,7 @@ def inline_dc(inline_query):
             singapore_text_en, singapore_text_ru = get_dc_singapore()
             australia_text_en, australia_text_ru = get_dc_australia()
             africa_text_en, africa_text_ru = get_dc_africa()
+            south_america_text_en, south_america_text_ru = get_dc_south_america()
             try:
                 if inline_query.from_user.language_code == 'ru':
                     title_china = 'Китайские ДЦ'
@@ -1018,6 +1019,7 @@ def inline_dc(inline_query):
                     title_usa_south = 'ДЦ южной части США'
                     title_australia = 'Австралийский ДЦ'
                     title_africa = 'Африканский ДЦ'
+                    title_south_america = 'Южноамериканские ДЦ' 
                     r_africa = africa_text_ru
                     r_australia = australia_text_ru
                     r_usa_north = usa_north_text_ru
@@ -1031,6 +1033,7 @@ def inline_dc(inline_query):
                     r_india = india_text_ru
                     r_japan = japan_text_ru
                     r_singapore = singapore_text_ru
+                    r_south_america = south_america_text_ru
                     description = 'Проверить состояние'
                 else:
                     title_usa_north = 'Northern USA DC'
@@ -1046,6 +1049,7 @@ def inline_dc(inline_query):
                     title_singapore = 'Singaporean DC'
                     title_australia = 'Australian DC'
                     title_africa = 'African DC'
+                    title_south_america = 'South American DC'
                     r_africa = africa_text_en
                     r_australia = australia_text_en
                     r_usa_north = usa_north_text_en
@@ -1059,6 +1063,7 @@ def inline_dc(inline_query):
                     r_india = india_text_en
                     r_japan = japan_text_en
                     r_singapore = singapore_text_en
+                    r_south_america = south_america_text_en
                     description = 'Check the status'
                 r = types.InlineQueryResultArticle('1', title_eu_north, input_message_content = types.InputTextMessageContent(r_eu_north), thumb_url='https://telegra.ph/file/4d269cb98aadaae391024.jpg', description=description)
                 r2 = types.InlineQueryResultArticle('2', title_eu_east, input_message_content = types.InputTextMessageContent(r_eu_east), thumb_url='https://telegra.ph/file/4d269cb98aadaae391024.jpg', description=description)
@@ -1073,14 +1078,13 @@ def inline_dc(inline_query):
                 r11 = types.InlineQueryResultArticle('11', title_usa_north, input_message_content = types.InputTextMessageContent(r_usa_north), thumb_url='https://telegra.ph/file/06119c30872031d1047d0.jpg', description=description)
                 r12 = types.InlineQueryResultArticle('12', title_usa_south, input_message_content = types.InputTextMessageContent(r_usa_south), thumb_url='https://telegra.ph/file/06119c30872031d1047d0.jpg', description=description)                
                 r13 = types.InlineQueryResultArticle('13', title_australia, input_message_content = types.InputTextMessageContent(r_australia), thumb_url='https://telegra.ph/file/5dc6beef1556ea852284c.jpg', description=description)
-                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13], cache_time=5)
+                r14 = types.InlineQueryResultArticle('14', title_south_america, input_message_content = types.InputTextMessageContent(r_south_america), thumb_url='https://telegra.ph/file/60f8226ea5d72815bef57.jpg', description=description)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
-    elif wsCache == 'Maintenance':
-        send_about_maintenance_inline(inline_query)
     elif wsCache == 'Maintenance':
         send_about_maintenance_inline(inline_query)
     else:

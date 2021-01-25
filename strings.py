@@ -12,8 +12,8 @@ cmdFeedback_ru = '💬 Пожалуйста, расскажите о Ваших 
 '''Text for Status'''
 status_tags = ['status', 'статус', '/status']
 # English
-statusNormal_en = '✅ Server status is normal:\n\n• Connection is {}\n• Online players: {:,}\n• 24-hour peak: {:,}\n• All-time peak: {:,}\n• Monthly unique players: {:,}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-statusWrong_en = '❌ Something went wrong with the servers.\n\nLatest update: {} (UTC-8, summer UTC-7)'
+statusNormal_en = '✅ Server status is normal:\n\n• Connection is {}\n• Online players: {:,}\n• 24-hour peak: {:,}\n• All-time peak: {:,}\n• Monthly unique players: {:,}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+statusWrong_en = '❌ Something went wrong with the servers.\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 # Russian
 statusNormal_ru = '✅ Сервера в нормальном состоянии:\n\n• Соединение в норме\n• Онлайн игроков: {:,}\n• 24-часовой пик: {:,}\n• Рекордный пик: {:,}\n• Ежемесячные уникальные игроки: {:,}\n\nОбновлено: {} (UTC−8, летом UTC−7)'
 statusNormalSL_ru = '✅ Сервера в нормальном состоянии:\n\n• С соединением что-то не так\n• Онлайн игроков: {:,}\n• 24-часовой пик: {:,}\n• Рекордный пик: {:,}\n• Ежемесячные уникальные игроки: {:,}\n\nОбновлено: {} (UTC−8, летом UTC−7)'
@@ -23,7 +23,7 @@ statusWrong_ru = '❌ С серверами что-то не так.\n\nОбно
 '''Text for Dev count'''
 dev_count_tags = ['online devs', 'разработчиков в игре', '/devcount']
 # English
-devCount_en = '🧑‍💻 Current online developers in the beta-version: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
+devCount_en = '🧑‍💻 Current online developers in the beta-version: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 # Russian
 devCount_ru = '🧑‍💻 Текущий онлайн разработчиков в бета-версии: {}\n\nОбновлено: {} (UTC−8, летом UTC−7)'
 
@@ -39,11 +39,11 @@ timer_ru = '⏳ Время до сброса ограничений опыта �
 '''Text for Matchmaking'''
 matchmaking_tags = ['matchmaking', 'матчмейкинг', '/mm']
 # English
-mmNormal_en = '✅ Matchmaking scheduler status is normal:\n\n• Online servers: {:,}\n• Active players: {:,}\n• Searching players: {:,}\n• Average search seconds: {}s\n\nLatest update: {} (UTC-8, summer UTC-7)'
-mmWrong_en = '❌ Something went wrong with the matchmaking scheduler.\n\nLatest update: {} (UTC-8, summer UTC-7)'
+mmNormal_en = '✅ Matchmaking scheduler status is normal:\n\n• Online servers: {:,}\n• Active players: {:,}\n• Searching players: {:,}\n• Average search seconds: {}s\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+mmWrong_en = '❌ Something went wrong with the matchmaking scheduler.\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 # Russian
 mmNormal_ru = '✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {:,}\n• Активных игроков: {:,}\n• Игроков в поиске: {:,}\n• Среднее время поиска: {} с.\n\nОбновлено: {} (UTC−8, летом UTC−7)'
-mmWrong_ru = '❌ С планировщиком матчмейкинга что-то не так.\n\nLatest update: {} (UTC-8, summer UTC-7)'
+mmWrong_ru = '❌ С планировщиком матчмейкинга что-то не так.\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 
 '''Text for Game Version'''
 gameversion_tags = ['game version', 'версия игры', '/gamever']
@@ -86,20 +86,20 @@ notiNewBuild_ru = '🆕 Обнаружено новое обновление Cou
 
 '''Text for DC'''
 # English
-dc_africa_en = '🇿🇦 South Africaʼs DC status:\n\n• Location: Johannesburg\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_australia_en = '🇦🇺 Australiaʼs DC status:\n\n• Location: Sydney\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_north_eu_en = '🇸🇪 Swedenʼs DC status:\n\n• Location: Stockholm\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_west_eu_en = '🇱🇺 Luxembourgʼs DC status:\n\n• Location: Luxembourg\n• Load: {}\n• Capacity: {}\n\n🇪🇸 Spainʼs DC status:\n\n• Location: Mardid\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_east_eu_en = '🇦🇹 Austriaʼs DC status:\n\n• Location: Vienna\n• Load: {}\n• Capacity: {}\n\n🇵🇱 Polandʼs DC status:\n\n• Location: Warsaw\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_north_us_en = '🇺🇸 Northcentral DC status:\n\n• Location: Chicago\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Northeast DC status:\n\n• Location: Sterling\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Northwest DC status:\n\n• Location: Moses Lake\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_south_us_en = '🇺🇸 Southwest DC status:\n\n• Location: Los Angeles\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Southeast DC status:\n\n• Location: Atlanta\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_south_america_en = '🇧🇷 Brazilʼs DC status:\n\n• Location: Sao Paulo\n• Load: {}\n• Capacity: {}\n\n🇨🇱 Chileʼs DC status:\n\n• Location: Santiago\n• Load: {}\n• Capacity: {}\n\n🇵🇪 Peruʼs DC status:\n\n• Location: Lima\n• Load: {}\n• Capacity: {}\n\n🇦🇷 Argentinaʼs DC Status:\n\n• Location: Buenos Aires\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_india_en = '🇮🇳 Indiaʼs DC status:\n\n• Location: Mumbai\n• Load: {}\n• Capacity: {}\n\n• Location: Chennai\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_japan_en = '🇯🇵 Japanʼs DC status:\n\n• Location: Tokyo\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_china_en = '🇨🇳 Chinaʼs DC status: \n\n• Location: Shanghai\n• Load: {}\n• Capacity: {}\n\n• Location: Tianjin\n• Load: {}\n• Capacity: {}\n\n• Location: Guangzhou\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_emirates_en = '🇦🇪 Emiratesʼ DC status:\n\n• Location: Dubai\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_singapore_en = '🇸🇬 Singaporeʼs DC status:\n\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
-dc_hong_kong_en = '🇭🇰 Hong Kongʼs DC status:\n\n• Load: {}\n• Capacity: {}\n\nLatest update: {} (UTC-8, summer UTC-7)'
+dc_africa_en = '🇿🇦 South Africaʼs DC status:\n\n• Location: Johannesburg\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_australia_en = '🇦🇺 Australiaʼs DC status:\n\n• Location: Sydney\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_north_eu_en = '🇸🇪 Swedenʼs DC status:\n\n• Location: Stockholm\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_west_eu_en = '🇱🇺 Luxembourgʼs DC status:\n\n• Location: Luxembourg\n• Load: {}\n• Capacity: {}\n\n🇪🇸 Spainʼs DC status:\n\n• Location: Mardid\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_east_eu_en = '🇦🇹 Austriaʼs DC status:\n\n• Location: Vienna\n• Load: {}\n• Capacity: {}\n\n🇵🇱 Polandʼs DC status:\n\n• Location: Warsaw\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_north_us_en = '🇺🇸 Northcentral DC status:\n\n• Location: Chicago\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Northeast DC status:\n\n• Location: Sterling\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Northwest DC status:\n\n• Location: Moses Lake\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_south_us_en = '🇺🇸 Southwest DC status:\n\n• Location: Los Angeles\n• Load: {}\n• Capacity: {}\n\n🇺🇸 Southeast DC status:\n\n• Location: Atlanta\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_south_america_en = '🇧🇷 Brazilʼs DC status:\n\n• Location: Sao Paulo\n• Load: {}\n• Capacity: {}\n\n🇨🇱 Chileʼs DC status:\n\n• Location: Santiago\n• Load: {}\n• Capacity: {}\n\n🇵🇪 Peruʼs DC status:\n\n• Location: Lima\n• Load: {}\n• Capacity: {}\n\n🇦🇷 Argentinaʼs DC Status:\n\n• Location: Buenos Aires\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_india_en = '🇮🇳 Indiaʼs DC status:\n\n• Location: Mumbai\n• Load: {}\n• Capacity: {}\n\n• Location: Chennai\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_japan_en = '🇯🇵 Japanʼs DC status:\n\n• Location: Tokyo\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_china_en = '🇨🇳 Chinaʼs DC status: \n\n• Location: Shanghai\n• Load: {}\n• Capacity: {}\n\n• Location: Tianjin\n• Load: {}\n• Capacity: {}\n\n• Location: Guangzhou\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_emirates_en = '🇦🇪 Emiratesʼ DC status:\n\n• Location: Dubai\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_singapore_en = '🇸🇬 Singaporeʼs DC status:\n\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+dc_hong_kong_en = '🇭🇰 Hong Kongʼs DC status:\n\n• Load: {}\n• Capacity: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 # Russian
 dc_africa_ru = '🇿🇦 Состояние дата-центра Южной Африки:\n\n• Расположение: Йоханнесбург\n• Загруженность: {}\n• Доступность: {}\n\nОбновлено: {} (UTC-8, summer UTC-7)'
 dc_australia_ru = '🇦🇺 Состояние дата-центра Австралии:\n\n• Расположение: Сидней\n• Загруженность: {}\n• Доступность: {}\n\nОбновлено: {} (UTC-8, summer UTC-7)'
