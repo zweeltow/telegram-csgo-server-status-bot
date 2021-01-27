@@ -32,7 +32,7 @@ devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
-markup_en.add(status, matchmaking, dс, devcount, timer, gv)
+markup_en.add(status, matchmaking, dc, devcount, timer, gv)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -136,13 +136,8 @@ def log_inline(inline_query):
 def get_status():
     '''Get the status of CS:GO servers'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    gcCache = cacheFile['game_coordinator']
-    slCache = cacheFile['sessionsLogon']
-    pcCache = cacheFile['online_player_count']
-    tsCache = cacheFile['time_server']
-    p24Cache = cacheFile['peak_24_hours']
-    paCache = cacheFile['peak_all_time']
-    uqCache = cacheFile['unique_monthly']
+    gcCache, slCache, tsCache = cacheFile['game_coordinator'], cacheFile['sessionsLogon'], cacheFile['time_server']
+    pcCache, p24Cache, paCache, uqCache = cacheFile['online_player_count'], cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly']
     if gcCache == 'Normal':
         if slCache == 'normal':
             status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
@@ -158,12 +153,9 @@ def get_status():
 def get_matchmaking():
     '''Get the status of CS:GO matchmaking scheduler'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    tsCache = cacheFile['time_server']
-    sCache = cacheFile['scheduler']
-    scCache = cacheFile['online_server_count']
-    apCache = cacheFile['active_player_count']
-    ssCache = cacheFile['search_seconds_avg']
-    spCache = cacheFile['searching_players']
+    tsCache, sCache = cacheFile['time_server'], cacheFile['scheduler']
+    scCache, apCache = cacheFile['online_server_count'], cacheFile['active_player_count']
+    ssCache, spCache = cacheFile['search_seconds_avg'], cacheFile['searching_players']
     if sCache == 'normal':
         mm_text_en = strings.mmNormal_en.format(scCache, apCache, spCache, ssCache, tsCache)
         mm_text_ru = strings.mmNormal_ru.format(scCache, apCache, spCache, ssCache, tsCache)
@@ -175,8 +167,7 @@ def get_matchmaking():
 def get_devcount():
     '''Get the count of online devs'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    tsCache = cacheFile['time_server']
-    dcCache = cacheFile['dev_player_count']
+    tsCache, dcCache = cacheFile['time_server'], cacheFile['dev_player_count']
     devcount_text_en = strings.devCount_en.format(dcCache, tsCache)
     devcount_text_ru = strings.devCount_ru.format(dcCache, tsCache)
     return devcount_text_en, devcount_text_ru
@@ -191,11 +182,8 @@ def get_timer():
 def get_gameversion():
     '''Get the version of the game'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    cvCache = cacheFile['client_version']
-    svCache = cacheFile['server_version']
-    pvCache = cacheFile['patch_version']
-    vdCache = cacheFile['version_date']
-    vtCache = cacheFile['version_time']
+    cvCache, svCache, pvCache = cacheFile['client_version'], cacheFile['server_version'], cacheFile['patch_version']
+    vdCache, vtCache = cacheFile['version_date'], cacheFile['version_time']
     gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache, vtCache)
     gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdCache, vtCache)
     return gameversion_text_en, gameversion_text_ru
@@ -634,7 +622,6 @@ def get_dc_usa_south():
 def send_dc_usa_south(message):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
-    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
         try:
             usa_south_text_en, usa_south_text_ru = get_dc_usa_south()
@@ -880,32 +867,16 @@ def default_inline(inline_query):
             gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    status_r = status_text_ru
-                    mm_r = mm_text_ru
-                    dev_r = devcount_text_ru
-                    timer_r = timer_text_ru
-                    gv_r = gameversion_text_ru
-                    title_status = 'Статус'
-                    title_mm = 'Матчмейкинг'
-                    title_dev = 'Бета-версия'
-                    title_timer = 'Сброс ограничений'
-                    title_gv = 'Версия игры'
+                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_ru, mm_text_ru, devcount_text_ru, timer_text_ru, gameversion_text_ru
+                    title_status, title_mm, title_dev, title_timer, title_gv = 'Статус', 'Матчмейкинг', 'Бета-версия', 'Сброс ограничений', 'Версия игры'
                     description_status = 'Проверить доступность серверов'
                     description_mm = 'Показать количество активных игроков'
                     description_dev = 'Показать количество онлайн разработчиков'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                     description_gv = 'Проверить последнюю версию игры'
                 else:
-                    status_r = status_text_en
-                    mm_r = mm_text_en
-                    dev_r = devcount_text_en
-                    timer_r = timer_text_en
-                    gv_r = gameversion_text_en
-                    title_status = 'Status'
-                    title_mm = 'Matchmaking'
-                    title_dev = 'Beta version'
-                    title_timer = 'Drop cap reset'
-                    title_gv = 'Game version'
+                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_en, mm_text_en, devcount_text_en, timer_text_en, gameversion_text_en
+                    title_status, title_mm, title_dev, title_timer, title_gv = 'Status', 'Matchmaking', 'Beta version', 'Drop cap reset', 'Game version'
                     description_status = 'Check the availability of the servers'
                     description_mm = 'Show the count of active players'
                     description_dev = 'Show the count of in-game developers'
@@ -927,17 +898,13 @@ def default_inline(inline_query):
             timer_text_en, timer_text_ru = get_timer()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    maintenance_r = strings.maintenance_ru
-                    timer_r = timer_text_ru
-                    title_maintenance = 'Нет данных'
-                    title_timer = 'Сброс ограничений'
+                    maintenance_r, timer_r = strings.maintenance_ru, timer_text_ru
+                    title_maintenance, title_timer = 'Нет данных', 'Сброс ограничений'
                     description_mntn = 'Еженедельное тех. обслуживание серверов'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                 else:
-                    maintenance_r = strings.maintenance_en
-                    timer_r = timer_text_en
-                    title_maintenance = 'No data'
-                    title_timer = 'Drop cap reset'
+                    maintenance_r, timer_r = strings.maintenance_en, timer_text_en
+                    title_maintenance, title_timer = 'No data', 'Drop cap reset'
                     description_mntn = 'Weekly server maintenance'
                     description_timer = 'Time left until experience and drop cap reset'
                 r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content = types.InputTextMessageContent(maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=description_mntn)
@@ -954,22 +921,14 @@ def default_inline(inline_query):
             gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    wrong_r = strings.wrongAPI_ru
-                    timer_r = timer_text_ru
-                    gv_r = gameversion_text_ru
-                    title_un = 'Нет данных'
-                    title_timer = 'Сброс ограничений'
-                    title_gv = 'Версия игры'
+                    wrong_r, timer_r, gv_r = strings.wrongAPI_ru, timer_text_ru, gameversion_text_ru
+                    title_un, title_timer, title_gv = 'Нет данных', 'Сброс ограничений', 'Версия игры'
                     description_un = 'Не получилось связаться с API Valve'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                     description_gv = 'Проверить последнюю версию игры'
                 else:
-                    wrong_r = strings.wrongAPI_en
-                    timer_r = timer_text_en
-                    gv_r = gameversion_text_en
-                    title_un = 'No data'
-                    title_timer = 'Drop cap reset'
-                    title_gv = 'Game version'
+                    wrong_r, timer_r, gv_r = strings.wrongAPI_en, timer_text_en, gameversion_text_en
+                    title_un, title_timer, title_gv = 'No data', 'Drop cap reset', 'Game version'
                     description_un = 'Unable to call Valve API'
                     description_timer = 'Time left until experience and drop cap reset'
                     description_gv = 'Check the latest game version'
@@ -1002,7 +961,7 @@ def inline_dc(inline_query):
             japan_text_en, japan_text_ru = get_dc_japan()
             singapore_text_en, singapore_text_ru = get_dc_singapore()
             australia_text_en, australia_text_ru = get_dc_australia()
-            africa_text_en, africa_text_ru = get_dc_africa()
+            africa_text_en, africa_text_ru = get_dc_africa()            
             south_america_text_en, south_america_text_ru = get_dc_south_america()
             try:
                 if inline_query.from_user.language_code == 'ru':
