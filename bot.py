@@ -25,14 +25,17 @@ timer_drop = DropReset()
 
 
 # English
-markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+markup_en = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
 status = types.KeyboardButton('Status')
 matchmaking = types.KeyboardButton('Matchmaking')
 devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
-markup_en.add(status, matchmaking, dc, devcount, timer, gv)
+guns = types.KeyboardButton('Gun database')
+markup_en.add(status, matchmaking, devcount)
+markup_en.add(gv, timer, guns)
+markup_en.add(dc)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -68,6 +71,70 @@ markup_DC_USA = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 usa_Northwest = types.KeyboardButton('Nоrth')
 usa_Southwest = types.KeyboardButton('South')
 markup_DC_USA.add(usa_Northwest, usa_Southwest, back_button_alt)
+
+# Guns
+markup_guns = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+pistols = types.KeyboardButton('Pistols')
+smgs = types.KeyboardButton('SMGs')
+rifles = types.KeyboardButton('Rifles')
+heavy = types.KeyboardButton('Heavy')
+back_button = types.KeyboardButton('⏪ Back')
+back_button_alt_2 = types.KeyboardButton('⏪ Bасk')
+markup_guns.add(pistols, smgs, rifles, heavy, back_button)
+
+# Pistols
+markup_pistols = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+usps = types.KeyboardButton('USP-S')
+p2000 = types.KeyboardButton('P2000')
+glock = types.KeyboardButton('Glock-18')
+dualies = types.KeyboardButton('Dual Berettas')
+p250 = types.KeyboardButton('P250')
+cz75 = types.KeyboardButton('CZ75-Auto')
+five_seven = types.KeyboardButton('Five-SeveN')
+tec = types.KeyboardButton('Tec-9')
+deagle = types.KeyboardButton('Desert Eagle')
+r8 = types.KeyboardButton('R8 Revolver')
+markup_pistols.add(usps, p2000, glock, dualies, p250, cz75, five_seven, tec, deagle, r8)
+markup_pistols.add(back_button_alt_2)
+
+# SMGs
+markup_smgs = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+mp9 = types.KeyboardButton('MP9')
+mac10 = types.KeyboardButton('MAC-10')
+mp7 = types.KeyboardButton('MP7')
+mp5 = types.KeyboardButton('MP5-SD')
+ump = types.KeyboardButton('UMP-45')
+p90 = types.KeyboardButton('P90')
+pp = types.KeyboardButton('PP-Bizon')
+markup_smgs.add(mp9, mac10, mp7, mp5, ump, p90, pp)
+markup_smgs.add(back_button_alt_2)
+
+# Rifles
+markup_rifles = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+famas = types.KeyboardButton('Famas')
+galil = types.KeyboardButton('Galil AR')
+m4a4 = types.KeyboardButton('M4A4')
+m4a1 = types.KeyboardButton('M4A1-S')
+ak = types.KeyboardButton('AK-47')
+aug = types.KeyboardButton('AUG')
+sg = types.KeyboardButton('SG 553')
+ssg = types.KeyboardButton('SSG 08')
+awp = types.KeyboardButton('AWP')
+scar = types.KeyboardButton('SCAR-20')
+g3sg1 = types.KeyboardButton('G3SG1')
+markup_rifles.add(famas, galil, m4a4, m4a1, ak, aug, sg, ssg, awp, scar, g3sg1)
+markup_rifles.add(back_button_alt_2)
+
+# Heavy
+markup_heavy = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+nova = types.KeyboardButton('Nova')
+xm1014 = types.KeyboardButton('XM1014')
+mag7 = types.KeyboardButton('MAG-7')
+sawedoff = types.KeyboardButton('Sawed-Off')
+m249 = types.KeyboardButton('M249')
+negev = types.KeyboardButton('Negev')
+markup_heavy.add(nova, xm1014, mag7, sawedoff, m249, negev)
+markup_heavy.add(back_button_alt_2)
 
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
@@ -113,6 +180,16 @@ markup_DC_USA_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 usa_Northwest_ru = types.KeyboardButton('Сeвер')
 usa_Southwest_ru = types.KeyboardButton('Юг')
 markup_DC_USA_ru.add(usa_Northwest_ru, usa_Southwest_ru, Back_button_ru_alt)
+
+# Guns Russian
+markup_guns_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+pistols = types.KeyboardButton('Пистолеты')
+smgs = types.KeyboardButton('Пистолеты-пулемёты')
+rifles = types.KeyboardButton('Винтовки')
+heavy = types.KeyboardButton('Тяжёлое оружие')
+Back_button_ru = types.KeyboardButton('⏪ Назад')
+back_button_alt_2_ru = types.KeyboardButton('⏪ Haзад')
+markup_guns_ru.add(pistols, smgs, rifles, heavy, Back_button_ru)
 
 # Delete keyboard
 markup_del = types.ReplyKeyboardRemove(False)
@@ -351,6 +428,121 @@ def send_about_problem_bot(message):
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
 
+### Guns archive ###
+
+
+def get_gun_info(temp_id):
+    '''Get archived data about guns'''
+    cacheFile = file_manager.readJson(config.GUNS_CACHE_FILE_PATH)
+    raw_data = list(filter(lambda x:x["id"] == temp_id, cacheFile['data']))
+    data = raw_data[0]
+    key_list = []
+    value_list = []
+    for key, value in data.items():
+        key_list.append(key)
+        value_list.append(value)
+    name, price = value_list[1], value_list[2]
+    origin, origin_ru = value_list[3], ''
+    clip_size, reserve_ammo = value_list[4], value_list[5]
+    fire_rate, kill_reward, movement_speed = value_list[6], value_list[10], value_list[8]
+    armor_penetration, accurate_range_stand, accurate_range_crouch = value_list[9], value_list[11], value_list[12]
+    draw_time, reload_clip_ready, reload_fire_ready = value_list[13], value_list[14], value_list[15]
+    unarmored_damage_head, unarmored_damage_chest_and_arm, unarmored_damage_stomach, unarmored_damage_leg = value_list[16], value_list[17], value_list[18], value_list[19]
+    armored_damage_head, armored_damage_chest_and_arm, armored_damage_stomach, armored_damage_leg = value_list[20], value_list[21], value_list[22], value_list[23]
+    for en, ru in zip(strings.origin_list_en, strings.origin_list_ru):
+        if origin in en:
+            origin_ru = ru
+    gun_data_text_en = strings.gun_data_en.format(name, origin, price, clip_size, reserve_ammo, fire_rate, kill_reward, movement_speed,
+                                    armor_penetration, accurate_range_stand, accurate_range_crouch, draw_time, reload_clip_ready, reload_fire_ready,
+                                    armored_damage_head, unarmored_damage_head, armored_damage_chest_and_arm, unarmored_damage_chest_and_arm,
+                                    armored_damage_stomach, unarmored_damage_stomach, armored_damage_leg, unarmored_damage_leg)
+    gun_data_text_ru = strings.gun_data_ru.format(name, origin_ru, price, clip_size, reserve_ammo, fire_rate, kill_reward, movement_speed,
+                                    armor_penetration, accurate_range_stand, accurate_range_crouch, draw_time, reload_clip_ready, reload_fire_ready,
+                                    armored_damage_head, unarmored_damage_head, armored_damage_chest_and_arm, unarmored_damage_chest_and_arm,
+                                    armored_damage_stomach, unarmored_damage_stomach, armored_damage_leg, unarmored_damage_leg)
+    return gun_data_text_en, gun_data_text_ru
+
+def send_gun_info(message, temp_id):
+    '''Send archived data about guns'''
+    try:
+        gun_data_text_en, gun_data_text_ru = get_gun_info(temp_id)
+        if message.from_user.language_code == 'ru':
+                text = gun_data_text_ru
+                markup = markup_guns_ru
+        else:
+                text = gun_data_text_en
+                markup = markup_guns
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def guns(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '#️⃣ Выберите категорию, которая Вас интересует:'
+            markup = markup_guns_ru
+        else:
+            text = '#️⃣ Select the category, that you are interested in:'
+            markup = markup_guns
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def pistols(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите пистолет..'
+            markup = markup_pistols
+        else:
+            text = '🔫 Choose the pistol..'
+            markup = markup_pistols
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def smgs(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите пистолет-пулемёт..'
+            markup = markup_smgs
+        else:
+            text = '🔫 Choose the SMG..'
+            markup = markup_smgs
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def rifles(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите винтовку..'
+            markup = markup_rifles
+        else:
+            text = '🔫 Choose the rifle..'
+            markup = markup_rifles
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def heavy(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите тяжёлое оружие..'
+            markup = markup_heavy
+        else:
+            text = '🔫 Choose the heavy gun..'
+            markup = markup_heavy
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+
 ### Data-centers ###
 
 
@@ -360,10 +552,10 @@ def dc(message):
     if wsCache == 'Normal':
         try:
             if message.from_user.language_code == 'ru':
-                text = '📶 Выберите интересующий регион, чтобы получить информацию о дата-центрах:'
+                text = '📶 Выберите регион, который Вам интересен, чтобы получить информацию о дата-центрах:'
                 markup = markup_DC_ru
             else:
-                text = '📶 Select the region you are interested in, to get information about the data centers:'
+                text = '📶 Select the region, that you are interested in, to get information about the data centers:'
                 markup = markup_DC
             bot.send_message(message.chat.id, text, reply_markup=markup)
         except Exception as e:
@@ -1688,6 +1880,10 @@ def delete_keyboard(message):
     time.sleep(10)
     bot.delete_message(message.chat.id, message.message_id+1)
 
+def chuj(message):
+    for gName, gId in zip(strings.gun_name_list, strings.gun_id_list):
+        send_gun_info(gName, gId)
+        
 @bot.message_handler(content_types=['text'])
 def answer(message):
     '''Answer of the bot'''
@@ -1710,6 +1906,21 @@ def answer(message):
 
             elif message.text.lower() in strings.gameversion_tags:
                 send_gameversion(message)
+
+            elif message.text.lower() in strings.gun_tags:
+                guns(message)
+
+            elif message.text.lower() == 'pistols':
+                pistols(message)
+
+            elif message.text.lower() == 'smgs':
+                smgs(message)
+
+            elif message.text.lower() == 'rifles':
+                rifles(message)
+
+            elif message.text.lower() == 'heavy':
+                heavy(message)
 
             elif message.text.lower() in strings.dc_tags:
                 dc(message)
@@ -1765,11 +1976,19 @@ def answer(message):
             elif message.text.lower() in strings.hong_kongese_tags:
                 send_dc_hong_kong(message)
 
+            elif message.text.lower() in strings.gun_name_list:
+                for gName, gId in zip(strings.gun_name_list, strings.gun_id_list):
+                    if message.text.lower() == gName:
+                        send_gun_info(message, gId)
+
             elif message.text == '⏪ Back' or message.text == '⏪ Назад':
                 back(message)
 
             elif message.text == '⏪ Bаck' or message.text == '⏪ Нaзад':
                 dc(message)
+                
+            elif message.text == '⏪ Bасk' or message.text == '⏪ Haзад':
+                guns(message)
 
 
             else:
