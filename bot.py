@@ -73,7 +73,7 @@ usa_Southwest = types.KeyboardButton('South')
 markup_DC_USA.add(usa_Northwest, usa_Southwest, back_button_alt)
 
 # Guns
-markup_guns = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+markup_guns = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 pistols = types.KeyboardButton('Pistols')
 smgs = types.KeyboardButton('SMGs')
 rifles = types.KeyboardButton('Rifles')
@@ -97,6 +97,21 @@ r8 = types.KeyboardButton('R8 Revolver')
 markup_pistols.add(usps, p2000, glock, dualies, p250, cz75, five_seven, tec, deagle, r8)
 markup_pistols.add(back_button_alt_2)
 
+# Pistols Russian
+markup_pistols_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+usps = types.KeyboardButton('USP-S')
+p2000 = types.KeyboardButton('P2000')
+glock = types.KeyboardButton('Glock-18')
+dualies = types.KeyboardButton('Dual Berettas')
+p250 = types.KeyboardButton('P250')
+cz75 = types.KeyboardButton('CZ75-Auto')
+five_seven = types.KeyboardButton('Five-SeveN')
+tec = types.KeyboardButton('Tec-9')
+deagle = types.KeyboardButton('Desert Eagle')
+r8 = types.KeyboardButton('Револьвер R8')
+markup_pistols_ru.add(usps, p2000, glock, dualies, p250, cz75, five_seven, tec, deagle, r8)
+markup_pistols_ru.add(back_button_alt_2_ru)
+
 # SMGs
 markup_smgs = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
 mp9 = types.KeyboardButton('MP9')
@@ -108,6 +123,18 @@ p90 = types.KeyboardButton('P90')
 pp = types.KeyboardButton('PP-Bizon')
 markup_smgs.add(mp9, mac10, mp7, mp5, ump, p90, pp)
 markup_smgs.add(back_button_alt_2)
+
+# SMGs Russian
+markup_smgs_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+mp9 = types.KeyboardButton('MP9')
+mac10 = types.KeyboardButton('MAC-10')
+mp7 = types.KeyboardButton('MP7')
+mp5 = types.KeyboardButton('MP5-SD')
+ump = types.KeyboardButton('UMP-45')
+p90 = types.KeyboardButton('P90')
+pp = types.KeyboardButton('ПП-19 Бизон')
+markup_smgs_ru.add(mp9, mac10, mp7, mp5, ump, p90, pp)
+markup_smgs_ru.add(back_button_alt_2_ru)
 
 # Rifles
 markup_rifles = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
@@ -125,6 +152,22 @@ g3sg1 = types.KeyboardButton('G3SG1')
 markup_rifles.add(famas, galil, m4a4, m4a1, ak, aug, sg, ssg, awp, scar, g3sg1)
 markup_rifles.add(back_button_alt_2)
 
+# Rifles Russian
+markup_rifles_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+famas = types.KeyboardButton('Famas')
+galil = types.KeyboardButton('Автомат Галиль')
+m4a4 = types.KeyboardButton('M4A4')
+m4a1 = types.KeyboardButton('M4A1-S')
+ak = types.KeyboardButton('AK-47')
+aug = types.KeyboardButton('AUG')
+sg = types.KeyboardButton('SG 553')
+ssg = types.KeyboardButton('SSG 08')
+awp = types.KeyboardButton('AWP')
+scar = types.KeyboardButton('SCAR-20')
+g3sg1 = types.KeyboardButton('G3SG1')
+markup_rifles_ru.add(famas, galil, m4a4, m4a1, ak, aug, sg, ssg, awp, scar, g3sg1)
+markup_rifles_ru.add(back_button_alt_2_ru)
+
 # Heavy
 markup_heavy = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
 nova = types.KeyboardButton('Nova')
@@ -135,6 +178,17 @@ m249 = types.KeyboardButton('M249')
 negev = types.KeyboardButton('Negev')
 markup_heavy.add(nova, xm1014, mag7, sawedoff, m249, negev)
 markup_heavy.add(back_button_alt_2)
+
+# Heavy Russian
+markup_heavy_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+nova = types.KeyboardButton('Nova')
+xm1014 = types.KeyboardButton('XM1014')
+mag7 = types.KeyboardButton('MAG-7')
+sawedoff = types.KeyboardButton('Sawed-Off')
+m249 = types.KeyboardButton('M249')
+negev = types.KeyboardButton('Негев')
+markup_heavy_ru.add(nova, xm1014, mag7, sawedoff, m249, negev)
+markup_heavy_ru.add(back_button_alt_2_ru)
 
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -185,7 +239,7 @@ usa_Southwest_ru = types.KeyboardButton('Юг')
 markup_DC_USA_ru.add(usa_Northwest_ru, usa_Southwest_ru, Back_button_ru_alt)
 
 # Guns Russian
-markup_guns_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+markup_guns_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 pistols = types.KeyboardButton('Пистолеты')
 smgs = types.KeyboardButton('Пистолеты-пулемёты')
 rifles = types.KeyboardButton('Винтовки')
@@ -497,7 +551,7 @@ def pistols(message):
     try:
         if message.from_user.language_code == 'ru':
             text = '🔫 Выберите пистолет..'
-            markup = markup_pistols
+            markup = markup_pistols_ru
         else:
             text = '🔫 Choose the pistol..'
             markup = markup_pistols
@@ -510,7 +564,7 @@ def smgs(message):
     try:
         if message.from_user.language_code == 'ru':
             text = '🔫 Выберите пистолет-пулемёт..'
-            markup = markup_smgs
+            markup = markup_smgs_ru
         else:
             text = '🔫 Choose the SMG..'
             markup = markup_smgs
@@ -523,7 +577,7 @@ def rifles(message):
     try:
         if message.from_user.language_code == 'ru':
             text = '🔫 Выберите винтовку..'
-            markup = markup_rifles
+            markup = markup_rifles_ru
         else:
             text = '🔫 Choose the rifle..'
             markup = markup_rifles
@@ -536,7 +590,7 @@ def heavy(message):
     try:
         if message.from_user.language_code == 'ru':
             text = '🔫 Выберите тяжёлое оружие..'
-            markup = markup_heavy
+            markup = markup_heavy_ru
         else:
             text = '🔫 Choose the heavy gun..'
             markup = markup_heavy
