@@ -174,3 +174,20 @@ japanese_tags = ['japan', 'tokyo',
 singaporean_tags = ['singapore', 
                     'сингапур',
                     '/singapore']
+
+"""Text for Archive data"""
+#Russian
+gun_data_ru = '🗂 Детальная информация про {}:\n\n• Стоимость: {}$\n• Происхождение: {}\n• Обойма: {}/{}\n• Скорострельность: {} в/м.\n• Награда за убийство: {}$\n• Мобильность: {} ед.\n\n• Бронепробиваемость: {}%\n• Дальность поражения (стоя / сидя): {} / {} м.\n\n• Время, за которое достаётся оружие: {} с.\n• Перезарядка: {} / {} с.\n(готовность обоймы / готовность к стрельбе)\n\n💢 Информация об уроне:\n(противник в броне / без брони)\n\n• Голова: {} / {}\n• Грудь и руки: {} / {}\n• Живот: {} / {}\n• Ноги: {} / {}'
+origin_list_ru = ['Германия', 'Австрия', 'Италия', 'Швейцария', 'Чехия', 'Бельгия', 'Швеция', 'Израль',
+                'Соединённые Штаты', 'Россия', 'Франция', 'Соединённое Королевство', 'Южная Африка']
+#English
+gun_data_en = '🗂 Detailed information about {}:\n\n• Cost: ${}\n• Origin: {}\n• Clip size: {}/{}\n• Fire rate: {} RPM\n• Kill reward: ${}\n• Movement speed: {} units\n\n• Armor penetration: {}%\n• Range accuracy (stand / crouch): {}m / {}m\n\n• Draw time: {}s\n• Reload time: {}s / {}s\n(clip ready / fire ready)\n\n💢 Damage information:\n(enemy with armor / without armor)\n\n• Head: {} / {}\n• Chest and arms: {} / {}\n• Stomach: {} / {}\n• Legs: {} / {}'
+origin_list_en = ['Germany', 'Austria', 'Italy', 'Switzerland', 'Czech Republic', 'Belgium', 'Sweden', 'Israel',
+                'United States', 'Russia', 'France', 'United Kingdom', 'South Africa']
+###
+gun_name_list = ['usp-s', 'p2000', 'glock-18', 'dual berettas', 'p250', 'cz75-auto', 'five-seven', 'tec-9', 'desert eagle', 'r8 revolver',
+                'mp9', 'mac-10', 'mp7', 'mp5-sd', 'ump-45','p90', 'pp-bizon', 'famas', 'galil ar', 'm4a4', 'm4a1-s', 'ak-47', 'aug',
+                'sg 553', 'ssg 08', 'awp', 'scar-20', 'g3sg1', 'nova', 'xm1014', 'mag-7', 'sawed-off', 'm249', 'negev']
+gun_id_list = ['usps', 'p2000', 'glock18', 'dualberettas', 'p250', 'cz75auto', 'fiveseven', 'tec9', 'deserteagle', 'r8revolver',
+                'mp9', 'mac10', 'mp7', 'mp5sd', 'ump45','p90', 'ppbizon', 'famas', 'galilar', 'm4a4', 'm4a1s', 'ak47', 'aug',
+                'sg553', 'ssg08', 'awp', 'scar20', 'g3sg1', 'nova', 'xm1014', 'mag7', 'sawedoff', 'm249', 'negev']
