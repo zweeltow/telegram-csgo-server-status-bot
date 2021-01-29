@@ -25,7 +25,7 @@ timer_drop = DropReset()
 
 
 # English
-markup_en = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 status = types.KeyboardButton('Status')
 matchmaking = types.KeyboardButton('Matchmaking')
 devcount = types.KeyboardButton('Online devs')
@@ -33,9 +33,7 @@ timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
 guns = types.KeyboardButton('Gun database')
-markup_en.add(status, matchmaking, devcount)
-markup_en.add(gv, timer, guns)
-markup_en.add(dc)
+markup_en.add(status, matchmaking, devcount, gv, timer, guns, dc)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -201,7 +199,7 @@ markup_heavy_ru.add(nova, xm1014, mag7, sawedoff, m249, negev)
 markup_heavy_ru.add(back_button_alt_2_ru)
 
 # Russian
-markup_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 status_ru = types.KeyboardButton('Статус')
 matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
@@ -209,9 +207,7 @@ timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
 guns_ru = types.KeyboardButton('База данных оружий')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru)
-markup_ru.add(gv_ru, timer_ru, guns_ru)
-markup_ru.add(dc_ru)
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, gv_ru, timer_ru, guns_ru, dc_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
