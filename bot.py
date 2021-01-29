@@ -137,14 +137,17 @@ markup_heavy.add(nova, xm1014, mag7, sawedoff, m249, negev)
 markup_heavy.add(back_button_alt_2)
 
 # Russian
-markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+markup_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
 status_ru = types.KeyboardButton('Статус')
 matchmaking_ru = types.KeyboardButton('Матчмейкинг')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
-markup_ru.add(status_ru, matchmaking_ru, dc_ru, devcount_ru, timer_ru, gv_ru)
+guns_ru = types.KeyboardButton('База данных оружий')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru)
+markup_ru.add(gv_ru, timer_ru, guns_ru)
+markup_ru.add(dc_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -1910,16 +1913,16 @@ def answer(message):
             elif message.text.lower() in strings.gun_tags:
                 guns(message)
 
-            elif message.text.lower() == 'pistols':
+            elif message.text.lower() == 'pistols' or message.text.lower() == 'пистолеты':
                 pistols(message)
 
-            elif message.text.lower() == 'smgs':
+            elif message.text.lower() == 'smgs' or message.text.lower() == 'пистолеты-пулемёты':
                 smgs(message)
 
-            elif message.text.lower() == 'rifles':
+            elif message.text.lower() == 'rifles' or message.text.lower() == 'винтовки':
                 rifles(message)
 
-            elif message.text.lower() == 'heavy':
+            elif message.text.lower() == 'heavy' or message.text.lower() == 'тяжёлое оружие':
                 heavy(message)
 
             elif message.text.lower() in strings.dc_tags:
