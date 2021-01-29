@@ -82,6 +82,16 @@ back_button = types.KeyboardButton('⏪ Back')
 back_button_alt_2 = types.KeyboardButton('⏪ Bасk')
 markup_guns.add(pistols, smgs, rifles, heavy, back_button)
 
+# Guns Russian
+markup_guns_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+pistols = types.KeyboardButton('Пистолеты')
+smgs = types.KeyboardButton('Пистолеты-пулемёты')
+rifles = types.KeyboardButton('Винтовки')
+heavy = types.KeyboardButton('Тяжёлое оружие')
+Back_button_ru = types.KeyboardButton('⏪ Назад')
+back_button_alt_2_ru = types.KeyboardButton('⏪ Haзад')
+markup_guns_ru.add(pistols, smgs, rifles, heavy, Back_button_ru)
+
 # Pistols
 markup_pistols = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
 usps = types.KeyboardButton('USP-S')
@@ -237,16 +247,6 @@ markup_DC_USA_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 usa_Northwest_ru = types.KeyboardButton('Сeвер')
 usa_Southwest_ru = types.KeyboardButton('Юг')
 markup_DC_USA_ru.add(usa_Northwest_ru, usa_Southwest_ru, Back_button_ru_alt)
-
-# Guns Russian
-markup_guns_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-pistols = types.KeyboardButton('Пистолеты')
-smgs = types.KeyboardButton('Пистолеты-пулемёты')
-rifles = types.KeyboardButton('Винтовки')
-heavy = types.KeyboardButton('Тяжёлое оружие')
-Back_button_ru = types.KeyboardButton('⏪ Назад')
-back_button_alt_2_ru = types.KeyboardButton('⏪ Haзад')
-markup_guns_ru.add(pistols, smgs, rifles, heavy, Back_button_ru)
 
 # Delete keyboard
 markup_del = types.ReplyKeyboardRemove(False)
