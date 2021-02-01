@@ -32,7 +32,8 @@ devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
-markup_en.add(status, matchmaking, dс, devcount, timer, gv)
+guns = types.KeyboardButton('Gun database')
+markup_en.add(status, matchmaking, devcount, gv, timer, guns, dc)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -69,6 +70,134 @@ usa_Northwest = types.KeyboardButton('Nоrth')
 usa_Southwest = types.KeyboardButton('South')
 markup_DC_USA.add(usa_Northwest, usa_Southwest, back_button_alt)
 
+# Guns
+markup_guns = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+pistols = types.KeyboardButton('Pistols')
+smgs = types.KeyboardButton('SMGs')
+rifles = types.KeyboardButton('Rifles')
+heavy = types.KeyboardButton('Heavy')
+back_button = types.KeyboardButton('⏪ Back')
+back_button_alt_2 = types.KeyboardButton('⏪ Bасk')
+markup_guns.add(pistols, smgs, rifles, heavy, back_button)
+
+# Guns Russian
+markup_guns_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+pistols = types.KeyboardButton('Пистолеты')
+smgs = types.KeyboardButton('Пистолеты-пулемёты')
+rifles = types.KeyboardButton('Винтовки')
+heavy = types.KeyboardButton('Тяжёлое оружие')
+Back_button_ru = types.KeyboardButton('⏪ Назад')
+back_button_alt_2_ru = types.KeyboardButton('⏪ Haзад')
+markup_guns_ru.add(pistols, smgs, rifles, heavy, Back_button_ru)
+
+# Pistols
+markup_pistols = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+usps = types.KeyboardButton('USP-S')
+p2000 = types.KeyboardButton('P2000')
+glock = types.KeyboardButton('Glock-18')
+dualies = types.KeyboardButton('Dual Berettas')
+p250 = types.KeyboardButton('P250')
+cz75 = types.KeyboardButton('CZ75-Auto')
+five_seven = types.KeyboardButton('Five-SeveN')
+tec = types.KeyboardButton('Tec-9')
+deagle = types.KeyboardButton('Desert Eagle')
+r8 = types.KeyboardButton('R8 Revolver')
+markup_pistols.add(usps, p2000, glock, dualies, p250, cz75, five_seven, tec, deagle, r8)
+markup_pistols.add(back_button_alt_2)
+
+# Pistols Russian
+markup_pistols_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+usps = types.KeyboardButton('USP-S')
+p2000 = types.KeyboardButton('P2000')
+glock = types.KeyboardButton('Glock-18')
+dualies = types.KeyboardButton('Dual Berettas')
+p250 = types.KeyboardButton('P250')
+cz75 = types.KeyboardButton('CZ75-Auto')
+five_seven = types.KeyboardButton('Five-SeveN')
+tec = types.KeyboardButton('Tec-9')
+deagle = types.KeyboardButton('Desert Eagle')
+r8 = types.KeyboardButton('R8 Revolver')
+markup_pistols_ru.add(usps, p2000, glock, dualies, p250, cz75, five_seven, tec, deagle, r8)
+markup_pistols_ru.add(back_button_alt_2_ru)
+
+# SMGs
+markup_smgs = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+mp9 = types.KeyboardButton('MP9')
+mac10 = types.KeyboardButton('MAC-10')
+mp7 = types.KeyboardButton('MP7')
+mp5 = types.KeyboardButton('MP5-SD')
+ump = types.KeyboardButton('UMP-45')
+p90 = types.KeyboardButton('P90')
+pp = types.KeyboardButton('PP-Bizon')
+markup_smgs.add(mp9, mac10, mp7, mp5, ump, p90, pp)
+markup_smgs.add(back_button_alt_2)
+
+# SMGs Russian
+markup_smgs_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+mp9 = types.KeyboardButton('MP9')
+mac10 = types.KeyboardButton('MAC-10')
+mp7 = types.KeyboardButton('MP7')
+mp5 = types.KeyboardButton('MP5-SD')
+ump = types.KeyboardButton('UMP-45')
+p90 = types.KeyboardButton('P90')
+pp = types.KeyboardButton('PP-Bizon')
+markup_smgs_ru.add(mp9, mac10, mp7, mp5, ump, p90, pp)
+markup_smgs_ru.add(back_button_alt_2_ru)
+
+# Rifles
+markup_rifles = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+famas = types.KeyboardButton('Famas')
+galil = types.KeyboardButton('Galil AR')
+m4a4 = types.KeyboardButton('M4A4')
+m4a1 = types.KeyboardButton('M4A1-S')
+ak = types.KeyboardButton('AK-47')
+aug = types.KeyboardButton('AUG')
+sg = types.KeyboardButton('SG 553')
+ssg = types.KeyboardButton('SSG 08')
+awp = types.KeyboardButton('AWP')
+scar = types.KeyboardButton('SCAR-20')
+g3sg1 = types.KeyboardButton('G3SG1')
+markup_rifles.add(famas, galil, m4a4, m4a1, ak, aug, sg, ssg, awp, scar, g3sg1)
+markup_rifles.add(back_button_alt_2)
+
+# Rifles Russian
+markup_rifles_ru = types.ReplyKeyboardMarkup(row_width=4, resize_keyboard=True)
+famas = types.KeyboardButton('Famas')
+galil = types.KeyboardButton('Galil AR')
+m4a4 = types.KeyboardButton('M4A4')
+m4a1 = types.KeyboardButton('M4A1-S')
+ak = types.KeyboardButton('AK-47')
+aug = types.KeyboardButton('AUG')
+sg = types.KeyboardButton('SG 553')
+ssg = types.KeyboardButton('SSG 08')
+awp = types.KeyboardButton('AWP')
+scar = types.KeyboardButton('SCAR-20')
+g3sg1 = types.KeyboardButton('G3SG1')
+markup_rifles_ru.add(famas, galil, m4a4, m4a1, ak, aug, sg, ssg, awp, scar, g3sg1)
+markup_rifles_ru.add(back_button_alt_2_ru)
+
+# Heavy
+markup_heavy = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+nova = types.KeyboardButton('Nova')
+xm1014 = types.KeyboardButton('XM1014')
+mag7 = types.KeyboardButton('MAG-7')
+sawedoff = types.KeyboardButton('Sawed-Off')
+m249 = types.KeyboardButton('M249')
+negev = types.KeyboardButton('Negev')
+markup_heavy.add(nova, xm1014, mag7, sawedoff, m249, negev)
+markup_heavy.add(back_button_alt_2)
+
+# Heavy Russian
+markup_heavy_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+nova = types.KeyboardButton('Nova')
+xm1014 = types.KeyboardButton('XM1014')
+mag7 = types.KeyboardButton('MAG-7')
+sawedoff = types.KeyboardButton('Sawed-Off')
+m249 = types.KeyboardButton('M249')
+negev = types.KeyboardButton('Negev')
+markup_heavy_ru.add(nova, xm1014, mag7, sawedoff, m249, negev)
+markup_heavy_ru.add(back_button_alt_2_ru)
+
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 status_ru = types.KeyboardButton('Статус')
@@ -77,7 +206,8 @@ devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
-markup_ru.add(status_ru, matchmaking_ru, dc_ru, devcount_ru, timer_ru, gv_ru)
+guns_ru = types.KeyboardButton('База данных оружий')
+markup_ru.add(status_ru, matchmaking_ru, devcount_ru, gv_ru, timer_ru, guns_ru, dc_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -136,13 +266,8 @@ def log_inline(inline_query):
 def get_status():
     '''Get the status of CS:GO servers'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    gcCache = cacheFile['game_coordinator']
-    slCache = cacheFile['sessionsLogon']
-    pcCache = cacheFile['online_player_count']
-    tsCache = cacheFile['time_server']
-    p24Cache = cacheFile['peak_24_hours']
-    paCache = cacheFile['peak_all_time']
-    uqCache = cacheFile['unique_monthly']
+    gcCache, slCache, tsCache = cacheFile['game_coordinator'], cacheFile['sessionsLogon'], cacheFile['time_server']
+    pcCache, p24Cache, paCache, uqCache = cacheFile['online_player_count'], cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly']
     if gcCache == 'Normal':
         if slCache == 'normal':
             status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
@@ -158,12 +283,9 @@ def get_status():
 def get_matchmaking():
     '''Get the status of CS:GO matchmaking scheduler'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    tsCache = cacheFile['time_server']
-    sCache = cacheFile['scheduler']
-    scCache = cacheFile['online_server_count']
-    apCache = cacheFile['active_player_count']
-    ssCache = cacheFile['search_seconds_avg']
-    spCache = cacheFile['searching_players']
+    tsCache, sCache = cacheFile['time_server'], cacheFile['scheduler']
+    scCache, apCache = cacheFile['online_server_count'], cacheFile['active_player_count']
+    ssCache, spCache = cacheFile['search_seconds_avg'], cacheFile['searching_players']
     if sCache == 'normal':
         mm_text_en = strings.mmNormal_en.format(scCache, apCache, spCache, ssCache, tsCache)
         mm_text_ru = strings.mmNormal_ru.format(scCache, apCache, spCache, ssCache, tsCache)
@@ -175,8 +297,7 @@ def get_matchmaking():
 def get_devcount():
     '''Get the count of online devs'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    tsCache = cacheFile['time_server']
-    dcCache = cacheFile['dev_player_count']
+    tsCache, dcCache = cacheFile['time_server'], cacheFile['dev_player_count']
     devcount_text_en = strings.devCount_en.format(dcCache, tsCache)
     devcount_text_ru = strings.devCount_ru.format(dcCache, tsCache)
     return devcount_text_en, devcount_text_ru
@@ -191,11 +312,8 @@ def get_timer():
 def get_gameversion():
     '''Get the version of the game'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    cvCache = cacheFile['client_version']
-    svCache = cacheFile['server_version']
-    pvCache = cacheFile['patch_version']
-    vdCache = cacheFile['version_date']
-    vtCache = cacheFile['version_time']
+    cvCache, svCache, pvCache = cacheFile['client_version'], cacheFile['server_version'], cacheFile['patch_version']
+    vdCache, vtCache = cacheFile['version_date'], cacheFile['version_time']
     gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache, vtCache)
     gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdCache, vtCache)
     return gameversion_text_en, gameversion_text_ru
@@ -363,6 +481,121 @@ def send_about_problem_bot(message):
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
 
+### Guns archive ###
+
+
+def get_gun_info(temp_id):
+    '''Get archived data about guns'''
+    cacheFile = file_manager.readJson(config.GUNS_CACHE_FILE_PATH)
+    raw_data = list(filter(lambda x:x["id"] == temp_id, cacheFile['data']))
+    data = raw_data[0]
+    key_list = []
+    value_list = []
+    for key, value in data.items():
+        key_list.append(key)
+        value_list.append(value)
+    name, price = value_list[1], value_list[2]
+    origin, origin_ru = value_list[3], ''
+    clip_size, reserve_ammo = value_list[4], value_list[5]
+    fire_rate, kill_reward, movement_speed = value_list[6], value_list[10], value_list[8]
+    armor_penetration, accurate_range_stand, accurate_range_crouch = value_list[9], value_list[11], value_list[12]
+    draw_time, reload_clip_ready, reload_fire_ready = value_list[13], value_list[14], value_list[15]
+    unarmored_damage_head, unarmored_damage_chest_and_arm, unarmored_damage_stomach, unarmored_damage_leg = value_list[16], value_list[17], value_list[18], value_list[19]
+    armored_damage_head, armored_damage_chest_and_arm, armored_damage_stomach, armored_damage_leg = value_list[20], value_list[21], value_list[22], value_list[23]
+    for en, ru in zip(strings.origin_list_en, strings.origin_list_ru):
+        if origin in en:
+            origin_ru = ru
+    gun_data_text_en = strings.gun_data_en.format(name, origin, price, clip_size, reserve_ammo, fire_rate, kill_reward, movement_speed,
+                                    armor_penetration, accurate_range_stand, accurate_range_crouch, draw_time, reload_clip_ready, reload_fire_ready,
+                                    armored_damage_head, unarmored_damage_head, armored_damage_chest_and_arm, unarmored_damage_chest_and_arm,
+                                    armored_damage_stomach, unarmored_damage_stomach, armored_damage_leg, unarmored_damage_leg)
+    gun_data_text_ru = strings.gun_data_ru.format(name, origin_ru, price, clip_size, reserve_ammo, fire_rate, kill_reward, movement_speed,
+                                    armor_penetration, accurate_range_stand, accurate_range_crouch, draw_time, reload_clip_ready, reload_fire_ready,
+                                    armored_damage_head, unarmored_damage_head, armored_damage_chest_and_arm, unarmored_damage_chest_and_arm,
+                                    armored_damage_stomach, unarmored_damage_stomach, armored_damage_leg, unarmored_damage_leg)
+    return gun_data_text_en, gun_data_text_ru
+
+def send_gun_info(message, temp_id):
+    '''Send archived data about guns'''
+    try:
+        gun_data_text_en, gun_data_text_ru = get_gun_info(temp_id)
+        if message.from_user.language_code == 'ru':
+                text = gun_data_text_ru
+                markup = markup_guns_ru
+        else:
+                text = gun_data_text_en
+                markup = markup_guns
+        bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="html") 
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def guns(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '#️⃣ Выберите категорию, которая Вас интересует:'
+            markup = markup_guns_ru
+        else:
+            text = '#️⃣ Select the category, that you are interested in:'
+            markup = markup_guns
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def pistols(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите пистолет..'
+            markup = markup_pistols_ru
+        else:
+            text = '🔫 Choose the pistol..'
+            markup = markup_pistols
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def smgs(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите пистолет-пулемёт..'
+            markup = markup_smgs_ru
+        else:
+            text = '🔫 Choose the SMG..'
+            markup = markup_smgs
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def rifles(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите винтовку..'
+            markup = markup_rifles_ru
+        else:
+            text = '🔫 Choose the rifle..'
+            markup = markup_rifles
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+def heavy(message):
+    try:
+        if message.from_user.language_code == 'ru':
+            text = '🔫 Выберите тяжёлое оружие..'
+            markup = markup_heavy_ru
+        else:
+            text = '🔫 Choose the heavy gun..'
+            markup = markup_heavy
+        bot.send_message(message.chat.id, text, reply_markup=markup)
+    except Exception as e:
+        bot.send_message(config.LOGCHANNEL, f'❗️{e}')
+        send_about_problem_bot(message)
+
+
 ### Data-centers ###
 
 
@@ -372,10 +605,10 @@ def dc(message):
     if wsCache == 'Normal':
         try:
             if message.from_user.language_code == 'ru':
-                text = '📶 Выберите интересующий регион, чтобы получить информацию о дата-центрах:'
+                text = '📶 Выберите регион, который Вам интересен, чтобы получить информацию о дата-центрах:'
                 markup = markup_DC_ru
             else:
-                text = '📶 Select the region you are interested in, to get information about the data centers:'
+                text = '📶 Select the region, that you are interested in, to get information about the data centers:'
                 markup = markup_DC
             bot.send_message(message.chat.id, text, reply_markup=markup)
         except Exception as e:
@@ -634,7 +867,6 @@ def get_dc_usa_south():
 def send_dc_usa_south(message):
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
-    tsCache = cacheFile['time_server'] 
     if wsCache == 'Normal':
         try:
             usa_south_text_en, usa_south_text_ru = get_dc_usa_south()
@@ -880,32 +1112,16 @@ def default_inline(inline_query):
             gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    status_r = status_text_ru
-                    mm_r = mm_text_ru
-                    dev_r = devcount_text_ru
-                    timer_r = timer_text_ru
-                    gv_r = gameversion_text_ru
-                    title_status = 'Статус'
-                    title_mm = 'Матчмейкинг'
-                    title_dev = 'Бета-версия'
-                    title_timer = 'Сброс ограничений'
-                    title_gv = 'Версия игры'
+                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_ru, mm_text_ru, devcount_text_ru, timer_text_ru, gameversion_text_ru
+                    title_status, title_mm, title_dev, title_timer, title_gv = 'Статус', 'Матчмейкинг', 'Бета-версия', 'Сброс ограничений', 'Версия игры'
                     description_status = 'Проверить доступность серверов'
                     description_mm = 'Показать количество активных игроков'
                     description_dev = 'Показать количество онлайн разработчиков'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                     description_gv = 'Проверить последнюю версию игры'
                 else:
-                    status_r = status_text_en
-                    mm_r = mm_text_en
-                    dev_r = devcount_text_en
-                    timer_r = timer_text_en
-                    gv_r = gameversion_text_en
-                    title_status = 'Status'
-                    title_mm = 'Matchmaking'
-                    title_dev = 'Beta version'
-                    title_timer = 'Drop cap reset'
-                    title_gv = 'Game version'
+                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_en, mm_text_en, devcount_text_en, timer_text_en, gameversion_text_en
+                    title_status, title_mm, title_dev, title_timer, title_gv = 'Status', 'Matchmaking', 'Beta version', 'Drop cap reset', 'Game version'
                     description_status = 'Check the availability of the servers'
                     description_mm = 'Show the count of active players'
                     description_dev = 'Show the count of in-game developers'
@@ -927,17 +1143,13 @@ def default_inline(inline_query):
             timer_text_en, timer_text_ru = get_timer()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    maintenance_r = strings.maintenance_ru
-                    timer_r = timer_text_ru
-                    title_maintenance = 'Нет данных'
-                    title_timer = 'Сброс ограничений'
+                    maintenance_r, timer_r = strings.maintenance_ru, timer_text_ru
+                    title_maintenance, title_timer = 'Нет данных', 'Сброс ограничений'
                     description_mntn = 'Еженедельное тех. обслуживание серверов'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                 else:
-                    maintenance_r = strings.maintenance_en
-                    timer_r = timer_text_en
-                    title_maintenance = 'No data'
-                    title_timer = 'Drop cap reset'
+                    maintenance_r, timer_r = strings.maintenance_en, timer_text_en
+                    title_maintenance, title_timer = 'No data', 'Drop cap reset'
                     description_mntn = 'Weekly server maintenance'
                     description_timer = 'Time left until experience and drop cap reset'
                 r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content = types.InputTextMessageContent(maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=description_mntn)
@@ -954,22 +1166,14 @@ def default_inline(inline_query):
             gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    wrong_r = strings.wrongAPI_ru
-                    timer_r = timer_text_ru
-                    gv_r = gameversion_text_ru
-                    title_un = 'Нет данных'
-                    title_timer = 'Сброс ограничений'
-                    title_gv = 'Версия игры'
+                    wrong_r, timer_r, gv_r = strings.wrongAPI_ru, timer_text_ru, gameversion_text_ru
+                    title_un, title_timer, title_gv = 'Нет данных', 'Сброс ограничений', 'Версия игры'
                     description_un = 'Не получилось связаться с API Valve'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                     description_gv = 'Проверить последнюю версию игры'
                 else:
-                    wrong_r = strings.wrongAPI_en
-                    timer_r = timer_text_en
-                    gv_r = gameversion_text_en
-                    title_un = 'No data'
-                    title_timer = 'Drop cap reset'
-                    title_gv = 'Game version'
+                    wrong_r, timer_r, gv_r = strings.wrongAPI_en, timer_text_en, gameversion_text_en
+                    title_un, title_timer, title_gv = 'No data', 'Drop cap reset', 'Game version'
                     description_un = 'Unable to call Valve API'
                     description_timer = 'Time left until experience and drop cap reset'
                     description_gv = 'Check the latest game version'
@@ -1002,7 +1206,7 @@ def inline_dc(inline_query):
             japan_text_en, japan_text_ru = get_dc_japan()
             singapore_text_en, singapore_text_ru = get_dc_singapore()
             australia_text_en, australia_text_ru = get_dc_australia()
-            africa_text_en, africa_text_ru = get_dc_africa()
+            africa_text_en, africa_text_ru = get_dc_africa()            
             south_america_text_en, south_america_text_ru = get_dc_south_america()
             try:
                 if inline_query.from_user.language_code == 'ru':
@@ -1729,6 +1933,10 @@ def delete_keyboard(message):
     time.sleep(10)
     bot.delete_message(message.chat.id, message.message_id+1)
 
+def chuj(message):
+    for gName, gId in zip(strings.gun_name_list, strings.gun_id_list):
+        send_gun_info(gName, gId)
+        
 @bot.message_handler(content_types=['text'])
 def answer(message):
     '''Answer of the bot'''
@@ -1751,6 +1959,21 @@ def answer(message):
 
             elif message.text.lower() in strings.gameversion_tags:
                 send_gameversion(message)
+
+            elif message.text.lower() in strings.gun_tags:
+                guns(message)
+
+            elif message.text.lower() == 'pistols' or message.text.lower() == 'пистолеты':
+                pistols(message)
+
+            elif message.text.lower() == 'smgs' or message.text.lower() == 'пистолеты-пулемёты':
+                smgs(message)
+
+            elif message.text.lower() == 'rifles' or message.text.lower() == 'винтовки':
+                rifles(message)
+
+            elif message.text.lower() == 'heavy' or message.text.lower() == 'тяжёлое оружие':
+                heavy(message)
 
             elif message.text.lower() in strings.dc_tags:
                 dc(message)
@@ -1806,11 +2029,19 @@ def answer(message):
             elif message.text.lower() in strings.hong_kongese_tags:
                 send_dc_hong_kong(message)
 
+            elif message.text.lower() in strings.gun_name_list:
+                for gName, gId in zip(strings.gun_name_list, strings.gun_id_list):
+                    if message.text.lower() == gName:
+                        send_gun_info(message, gId)
+
             elif message.text == '⏪ Back' or message.text == '⏪ Назад':
                 back(message)
 
             elif message.text == '⏪ Bаck' or message.text == '⏪ Нaзад':
                 dc(message)
+                
+            elif message.text == '⏪ Bасk' or message.text == '⏪ Haзад':
+                guns(message)
 
 
             else:
