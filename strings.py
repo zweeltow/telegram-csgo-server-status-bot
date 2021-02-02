@@ -23,9 +23,9 @@ statusWrong_ru = '❌ С серверами что-то не так.\n\nОбно
 '''Text for Dev count'''
 dev_count_tags = ['online devs', 'разработчиков в игре', '/devcount']
 # English
-devCount_en = '🧑‍💻 Current online developers in the beta-version: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
+devCount_en = '🧑‍💻 Beta-version of CS:GO (ID710):\n\n• Online devs: {}\n• All-time peak: {}\n\nUpdated on: {} (UTC-8, summer UTC-7)'
 # Russian
-devCount_ru = '🧑‍💻 Текущий онлайн разработчиков в бета-версии: {}\n\nОбновлено: {} (UTC−8, летом UTC−7)'
+devCount_ru = '🧑‍💻 Бета-версия CS:GO (ID710):\n\n• Онлайн разработчиков: {}\n• Рекордный пик: {}\n\nОбновлено: {} (UTC−8, летом UTC−7)'
 
 
 '''Text for Timer'''
@@ -82,6 +82,15 @@ wrongBOT_ru = '🧐 Извините, что-то не так. Пожалуйс�
 '''Text for new BuildID'''
 #Russian
 notiNewBuild_ru = '🆕 Обнаружено новое обновление Counter-Strike: Global Offensive. Пост со списком изменений выйдет в ближайшее время.\n\nID новой сборки: `{}`'
+
+
+'''Text for new Player Peak'''
+#Russian
+notiNewPlayerPeak_ru = '🤩 Зарегистрирован новый рекордный пик онлайн игроков в Counter-Strike: Global Offensive. \n\nКоличество игроков: {}'
+
+'''Text for new Dev Peak'''
+#Russian
+notiNewDevPeak_ru = '😲 Зарегистрирован новый рекордный пик онлайн разработчиков в бета-версии Counter-Strike: Global Offensive. \n\nКоличество разработчиков: {}'
 
 
 '''Text for DC'''

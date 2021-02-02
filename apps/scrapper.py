@@ -28,7 +28,7 @@ class PeakOnline:
             peak24 = int(peak24)
             return peak24
         except:
-            peak24 = 'N/A'
+            peak24 = 000
             return peak24
 
 
@@ -42,7 +42,7 @@ class Monthly:
             unique = int(unique)
             return unique
         except:
-            unique = 'N/A'
+            unique = 000
             return unique
         
 class CSGOGameCoordinator:
@@ -120,5 +120,6 @@ class GameVersion:
 
             return client_version, server_version, patch_version, version_date, version_time
         except:
-            client_version = server_version = patch_version = version_date = version_time = 'N/A'
+            client_version = server_version = 000
+            patch_version = version_date = version_time = 'N/A'
             return client_version, server_version, patch_version, version_date, version_time

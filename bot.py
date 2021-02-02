@@ -253,7 +253,8 @@ markup_del = types.ReplyKeyboardRemove(False)
 
 def log(message):
     '''The bot sends log to log channel'''
-    bot.send_message(config.LOGCHANNEL, message)
+    if not config.TEST_MODE:
+        bot.send_message(config.LOGCHANNEL, message)
 
 def log_inline(inline_query):
     '''The bot sends inline query to log channel'''
@@ -297,9 +298,9 @@ def get_matchmaking():
 def get_devcount():
     '''Get the count of online devs'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    tsCache, dcCache = cacheFile['time_server'], cacheFile['dev_player_count']
-    devcount_text_en = strings.devCount_en.format(dcCache, tsCache)
-    devcount_text_ru = strings.devCount_ru.format(dcCache, tsCache)
+    tsCache, dcCache, dpCache = cacheFile['time_server'], cacheFile['dev_player_count'], cacheFile['dev_all_time_peak']
+    devcount_text_en = strings.devCount_en.format(dcCache, dpCache, tsCache)
+    devcount_text_ru = strings.devCount_ru.format(dcCache, dpCache, tsCache)
     return devcount_text_en, devcount_text_ru
 
 def get_timer():

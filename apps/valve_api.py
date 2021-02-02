@@ -67,13 +67,8 @@ class ValveServersAPI:
 
             return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
         except:
-            scheduler = 'N/A'
-            sessionsLogon = 'N/A'
-            online_servers = 'N/A'
-            online_players = 'N/A'
-            time_server = 'N/A'
-            search_seconds_avg = 'N/A'
-            searching_players = 'N/A'
+            scheduler = sessionsLogon = time_server = 'N/A' 
+            online_servers = online_players = search_seconds_avg = searching_players = 0
             return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
             
     def get_players(self):
@@ -84,7 +79,7 @@ class ValveServersAPI:
 
             return player_count
         except:
-            player_count = 'N/A'
+            player_count = 000
             return player_count
             
     def get_devs(self):
@@ -95,7 +90,7 @@ class ValveServersAPI:
 
             return dev_player_count
         except:
-            dev_player_count = 'N/A'
+            dev_player_count = 000
             return dev_player_count
             
     def check_status(self):
