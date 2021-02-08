@@ -116,10 +116,10 @@ class GameVersion:
             server_version = items['ServerVersion']
             patch_version = items['PatchVersion']
             dt = str(items['VersionDate']) + ' ' + str(items['VersionTime'])
-            version_date = datetime.strptime(dt, "%b %d %Y %H:%M:%S").timestamp()
+            version_timestamp = datetime.strptime(dt, "%b %d %Y %H:%M:%S").timestamp()
 
-            return client_version, server_version, patch_version, version_date
+            return client_version, server_version, patch_version, version_timestamp
         except:
             client_version = server_version = 000
-            patch_version = version_date = 'N/A'
-            return client_version, server_version, patch_version, version_date
+            patch_version = version_timestamp = 'N/A'
+            return client_version, server_version, patch_version, version_timestamp

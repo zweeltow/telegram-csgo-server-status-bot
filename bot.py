@@ -496,11 +496,11 @@ def send_about_problem_bot(message):
 
 def time_converter():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    time_server = cacheFile['time_server']
+    time_server = cacheFile['server_timestamp']
     tsCache = datetime.fromtimestamp(time_server, tz).strftime('%a, %d %B %Y, %H:%M:%S')
     tsRCache = str(format_datetime(datetime.strptime(tsCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
 
-    version_date = cacheFile['version_date']
+    version_date = cacheFile['version_timestamp']
     vdCache = datetime.fromtimestamp(version_date, tz).strftime('%a, %d %B %Y, %H:%M:%S')
     vdRCache = str(format_datetime(datetime.strptime(tsCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
 
