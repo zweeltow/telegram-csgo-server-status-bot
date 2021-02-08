@@ -72,7 +72,7 @@ class ValveServersAPI:
             time_server = str(datetime.fromtimestamp(timestamp, tz).strftime('%a, %d %B %Y, %H:%M:%S'))
             dt = datetime.fromtimestamp(timestamp, tz).strftime('%a, %d %B %Y, %H:%M:%S')
             dt = datetime.strptime(dt, '%a, %d %B %Y, %H:%M:%S')
-            time_server_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, H:mm:ss', locale='ru')).title()
+            time_server_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
 
             return scheduler, sessionsLogon, online_servers, online_players, time_server, time_server_ru, search_seconds_avg, searching_players
         except:
