@@ -4,8 +4,7 @@
     "valve_webapi": "",
     "sessionsLogon": "",
     "online_player_count": "",
-    "time_server": "",
-    "time_server_ru": "",
+    "server_timestamp": ""
     "scheduler": "",
     "online_server_count": "",
     "active_player_count": "",
@@ -19,6 +18,5 @@
     "client_version": "",
     "server_version": "",
     "patch_version": "",
-    "version_date": "",
-    "version_time": ""
+    "version_timestamp": ""
 }
