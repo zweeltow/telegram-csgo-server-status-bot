@@ -1,14 +1,11 @@
 import requests
 import config
 
-from datetime import date, datetime 
-import pytz
-from babel.dates import format_datetime
+from datetime import datetime
 
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
 API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
-tz = pytz.timezone('America/Los_Angeles')
 
 
 def get_response():
@@ -69,15 +66,12 @@ class ValveServersAPI:
             search_seconds_avg = matchmaking['search_seconds_avg']
             
             timestamp = result['app']['timestamp']
-            time_server = datetime.fromtimestamp(timestamp, tz).strftime('%a, %d %B %Y, %H:%M:%S')
-            dt = datetime.strptime(time_server, '%a, %d %B %Y, %H:%M:%S')
-            time_server_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, H:mm:ss', locale='ru')).title()
 
-            return scheduler, sessionsLogon, online_servers, online_players, time_server, time_server_ru, search_seconds_avg, searching_players
+            return scheduler, sessionsLogon, online_servers, online_players, timestamp, search_seconds_avg, searching_players
         except:
-            scheduler = sessionsLogon = time_server = time_server_ru = 'N/A' 
-            online_servers = online_players = search_seconds_avg = searching_players = 0
-            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
+            scheduler = sessionsLogon = timestamp = 'N/A' 
+            online_servers = online_players = search_seconds_avg = searching_players = 000
+            return scheduler, sessionsLogon, online_servers, online_players, timestamp, search_seconds_avg, searching_players
             
     def get_players(self):
         try:

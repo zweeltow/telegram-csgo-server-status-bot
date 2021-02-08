@@ -2,9 +2,7 @@ import requests
 import json
 import re
 from bs4 import BeautifulSoup
-from datetime import date, datetime 
-import pytz
-from babel.dates import format_datetime
+from datetime import datetime 
 
 from apps import file_manager
 import config
@@ -14,7 +12,6 @@ url_cs = 'https://blog.counter-strike.net'
 url_ss = 'https://crowbar.steamstat.us/gravity.json'
 url_gv = 'https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/csgo/steam.inf'
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'}
-tz = pytz.timezone('America/Los_Angeles')
 
 class PeakOnline:
     def get_peak(self):
@@ -119,12 +116,10 @@ class GameVersion:
             server_version = items['ServerVersion']
             patch_version = items['PatchVersion']
             dt = str(items['VersionDate']) + ' ' + str(items['VersionTime'])
-            dt = datetime.strptime(dt, '%b %d %Y %H:%M:%S')
-            version_date_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, H:mm:ss', locale='ru')).title()
-            version_date = dt.strftime('%a, %d %B %Y, %H:%M:%S')
+            version_date = datetime.strptime(dt, "%b %d %Y %H:%M:%S").timestamp()
 
-            return client_version, server_version, patch_version, version_date, version_date_ru
+            return client_version, server_version, patch_version, version_date
         except:
             client_version = server_version = 000
-            patch_version = version_date = version_date_ru = 'N/A'
-            return client_version, server_version, patch_version, version_date, version_date_ru
+            patch_version = version_date = 'N/A'
+            return client_version, server_version, patch_version, version_date
