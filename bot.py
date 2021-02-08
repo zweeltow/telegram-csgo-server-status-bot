@@ -279,7 +279,7 @@ def get_server_status():
     if gcCache == 'Normal':
         if slCache == 'normal':
             status_text_en = strings.statusNormal_en.format(slCache, scCache, pcCache)
-            status_text_ru = strings.statusNormal_ru.format(pcCache, scCache, pcCache)
+            status_text_ru = strings.statusNormal_ru.format(scCache, pcCache)
         elif not slCache == 'normal':
             status_text_en = strings.statusNormal_en.format(slCache, scCache, pcCache)
             status_text_ru = strings.statusNormalSL_ru.format(scCache, pcCache)
