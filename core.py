@@ -28,8 +28,8 @@ def info_updater():
                 cache_key_list.append(keys)
                 cache_value_list.append(values)
 
-            value_list = [ cacheFile['build_ID'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[0],
-            api.get_status()[2], api.get_status()[3], api.get_status()[5], api.get_status()[6], api.get_devs(), cacheFile['dev_all_time_peak'], peak_count.get_peak(), cacheFile['peak_all_time'], month_unique.get_unique(),
+            value_list = [ cacheFile['build_ID'], gc.get_status(), api.check_status(), api.get_status()[1], api.get_players(), api.get_status()[4], api.get_status()[5], api.get_status()[0],
+            api.get_status()[2], api.get_status()[3], api.get_status()[6], api.get_status()[7], api.get_devs(), cacheFile['dev_all_time_peak'], peak_count.get_peak(), cacheFile['peak_all_time'], month_unique.get_unique(),
             gv.get_gameVer()[0], gv.get_gameVer()[1], gv.get_gameVer()[2], gv.get_gameVer()[3], gv.get_gameVer()[4]]
 
             for values, cache_values, cache_keys in zip(value_list, cache_value_list, cache_key_list):

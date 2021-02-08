@@ -1,10 +1,14 @@
 import requests
 import config
-import datetime
+
+from datetime import date, datetime 
+import pytz
+from babel.dates import format_datetime
 
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.KEY}'
 API_csgo_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=730' 
 API_dev_players = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid=710'
+tz = pytz.timezone('America/Los_Angeles')
 
 
 def get_response():
@@ -58,15 +62,21 @@ class ValveServersAPI:
             
             scheduler = matchmaking['scheduler']
             sessionsLogon = result['services']['SessionsLogon']
-            time_server = result['app']['time']
-
+            
             online_servers = matchmaking['online_servers']
             online_players = matchmaking['online_players']
             searching_players = matchmaking['searching_players']        
             search_seconds_avg = matchmaking['search_seconds_avg']
+            
+            timestamp = result['app']['timestamp']
+            time_server = str(datetime.fromtimestamp(timestamp, tz).strftime('%a, %d %B %Y, %H:%M:%S'))
+            dt = datetime.fromtimestamp(timestamp, tz).strftime('%a, %d %B %Y, %H:%M:%S')
+            dt = datetime.strptime(dt, '%a, %d %B %Y, %H:%M:%S')
+            time_server_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, H:mm:ss', tzinfo = tz, locale='ru')).title()
 
-            return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
-        except:
+            return scheduler, sessionsLogon, online_servers, online_players, time_server, time_server_ru, search_seconds_avg, searching_players
+        except Exception as e:
+            print('\n\n\n\n\n' + f'{e}' + '\n\n\n\n\n')
             scheduler = sessionsLogon = time_server = 'N/A' 
             online_servers = online_players = search_seconds_avg = searching_players = 0
             return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
