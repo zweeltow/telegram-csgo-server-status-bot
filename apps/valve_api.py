@@ -75,9 +75,8 @@ class ValveServersAPI:
             time_server_ru = str(format_datetime(dt, 'EEE, dd MMMM yyyy, H:mm:ss', tzinfo = tz, locale='ru')).title()
 
             return scheduler, sessionsLogon, online_servers, online_players, time_server, time_server_ru, search_seconds_avg, searching_players
-        except Exception as e:
-            print('\n\n\n\n\n' + f'{e}' + '\n\n\n\n\n')
-            scheduler = sessionsLogon = time_server = 'N/A' 
+        except:
+            scheduler = sessionsLogon = time_server = time_server_ru = 'N/A' 
             online_servers = online_players = search_seconds_avg = searching_players = 0
             return scheduler, sessionsLogon, online_servers, online_players, time_server, search_seconds_avg, searching_players
             
