@@ -32,14 +32,13 @@ timer_drop = DropReset()
 
 # English
 markup_en = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-status = types.KeyboardButton('Status')
-matchmaking = types.KeyboardButton('Matchmaking')
+server_status = types.KeyboardButton('Server status')
 devcount = types.KeyboardButton('Online devs')
 timer = types.KeyboardButton('Cap reset')
 dc = types.KeyboardButton('Data centers')
 gv = types.KeyboardButton('Game version')
 guns = types.KeyboardButton('Gun database')
-markup_en.add(status, matchmaking, devcount, gv, timer, guns, dc)
+markup_en.add(server_status, dc, devcount, timer, gv, guns)
 
 # DC
 markup_DC = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -206,14 +205,13 @@ markup_heavy_ru.add(back_button_alt_2_ru)
 
 # Russian
 markup_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-status_ru = types.KeyboardButton('Статус')
-matchmaking_ru = types.KeyboardButton('Матчмейкинг')
+server_status_ru = types.KeyboardButton('Статус серверов')
 devcount_ru = types.KeyboardButton('Разработчиков в игре')
 timer_ru = types.KeyboardButton('Сброс ограничений')
 dc_ru = types.KeyboardButton('Дата-центры')
 gv_ru = types.KeyboardButton('Версия игры')
 guns_ru = types.KeyboardButton('База данных оружий')
-markup_ru.add(status_ru, matchmaking_ru, devcount_ru, gv_ru, timer_ru, guns_ru, dc_ru)
+markup_ru.add(server_status_ru, dc_ru, devcount_ru, timer_ru, gv_ru, guns_ru)
 
 # DC RU
 markup_DC_ru = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -270,46 +268,43 @@ def log_inline(inline_query):
 ### Pull information ###
 
 
-def get_status():
+def get_server_status():
     '''Get the status of CS:GO servers'''
     tsCache, tsRCache = time_converter()[0], time_converter()[1]
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    gcCache, slCache = cacheFile['game_coordinator'], cacheFile['sessionsLogon']
-    pcCache, p24Cache, paCache, uqCache = cacheFile['online_player_count'], cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly']
+    gcCache, slCache, sCache = cacheFile['game_coordinator'], cacheFile['sessionsLogon'], cacheFile['scheduler']
+    pcCache, scCache = cacheFile['online_player_count'], cacheFile['online_server_count']
+    apCache, ssCache, spCache = cacheFile['active_player_count'], cacheFile['search_seconds_avg'], cacheFile['searching_players']
+    p24Cache, paCache, uqCache = cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly']
     if gcCache == 'Normal':
         if slCache == 'normal':
-            status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
-            status_text_ru = strings.statusNormal_ru.format(pcCache, p24Cache, paCache, uqCache, tsRCache)
+            status_text_en = strings.statusNormal_en.format(slCache, scCache, pcCache)
+            status_text_ru = strings.statusNormal_ru.format(pcCache, scCache, pcCache)
         elif not slCache == 'normal':
-            status_text_en = strings.statusNormal_en.format(slCache, pcCache, p24Cache, paCache, uqCache, tsCache)
-            status_text_ru = strings.statusNormalSL_ru.format(pcCache, p24Cache, paCache, uqCache, tsRCache)
+            status_text_en = strings.statusNormal_en.format(slCache, scCache, pcCache)
+            status_text_ru = strings.statusNormalSL_ru.format(scCache, pcCache)
     else:
-        status_text_en = strings.statusWrong_en.format(tsCache)
-        status_text_ru = strings.statusWrong_ru.format(tsRCache)
-    return status_text_en, status_text_ru
-
-def get_matchmaking():
-    '''Get the status of CS:GO matchmaking scheduler'''
-    tsCache, tsRCache = time_converter()[0], time_converter()[1]
-    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    sCache = cacheFile['scheduler']
-    scCache, apCache = cacheFile['online_server_count'], cacheFile['active_player_count']
-    ssCache, spCache = cacheFile['search_seconds_avg'], cacheFile['searching_players']
+        status_text_en = strings.statusWrong_en
+        status_text_ru = strings.statusWrong_ru
     if sCache == 'normal':
-        mm_text_en = strings.mmNormal_en.format(scCache, apCache, spCache, ssCache, tsCache)
-        mm_text_ru = strings.mmNormal_ru.format(scCache, apCache, spCache, ssCache, tsRCache)
+        mm_text_en = strings.mmNormal_en.format(apCache, spCache, ssCache)
+        mm_text_ru = strings.mmNormal_ru.format(apCache, spCache, ssCache)
     elif not sCache == 'normal':
-        mm_text_en = strings.mmWrong_en.format(tsCache)
-        mm_text_ru = strings.mmWrong_ru.format(tsRCache)
-    return mm_text_en, mm_text_ru
+        mm_text_en = strings.mmWrong_en 
+        mm_text_ru = strings.mmWrong_ru
+    addInf_text_en = strings.additionalInfo_en.format(p24Cache, paCache, uqCache, tsCache)
+    addInf_text_ru = strings.additionalInfo_ru.format(p24Cache, paCache, uqCache, tsRCache)
+    server_status_text_en = status_text_en + '\n\n' +  mm_text_en + '\n\n' + addInf_text_en
+    server_status_text_ru = status_text_ru + '\n\n' +  mm_text_ru + '\n\n' + addInf_text_ru
+    return server_status_text_en, server_status_text_ru
 
 def get_devcount():
     '''Get the count of online devs'''
     tsCache, tsRCache, tsVCache = time_converter()[0], time_converter()[1], time_converter()[4]
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     dcCache, dpCache = cacheFile['dev_player_count'], cacheFile['dev_all_time_peak']
-    devcount_text_en = strings.devCount_en.format(dcCache, dpCache, tsVCache, tsCache)
-    devcount_text_ru = strings.devCount_ru.format(dcCache, dpCache, tsVCache, tsRCache)
+    devcount_text_en = strings.devCount_en.format(dcCache, dpCache, tsCache, tsVCache)
+    devcount_text_ru = strings.devCount_ru.format(dcCache, dpCache, tsRCache, tsVCache)
     return devcount_text_en, devcount_text_ru
 
 def get_timer():
@@ -332,18 +327,18 @@ def get_gameversion():
 ### Send information ###   
 
 
-def send_status(message):
+def send_server_status(message):
     '''Send the status of CS:GO servers'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
-            status_text_en, status_text_ru = get_status()
+            server_status_text_en, server_status_text_ru = get_server_status()
             if message.from_user.language_code == 'ru':
-                text = status_text_ru
+                text = server_status_text_ru
                 markup = markup_ru
             else:
-                text = status_text_en
+                text = server_status_text_en
                 markup = markup_en
             bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='html')
         except Exception as e:
@@ -352,29 +347,7 @@ def send_status(message):
     elif wsCache == 'Maintenance':
         send_about_maintenance(message)
     else:
-        send_about_problem_valve_api(message)
-
-def send_matchmaking(message):
-    '''Send the status of CS:GO matchmaking scheduler'''
-    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    wsCache = cacheFile['valve_webapi']
-    if wsCache == 'Normal':
-        try:
-            mm_text_en, mm_text_ru = get_matchmaking()
-            if message.from_user.language_code == 'ru':
-                text = mm_text_ru
-                markup = markup_ru
-            else:
-                text = mm_text_en
-                markup = markup_en
-            bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='html')
-        except Exception as e:
-            bot.send_message(config.LOGCHANNEL, f'❗️{e}')
-            send_about_problem_bot(message)
-    elif wsCache == 'Maintenance':
-        send_about_maintenance(message)
-    else:
-        send_about_problem_valve_api(message)        
+        send_about_problem_valve_api(message)     
 
 def send_devcount(message):
     '''Send the count of online devs'''
@@ -1118,34 +1091,30 @@ def default_inline(inline_query):
     wsCache = cacheFile['valve_webapi']
     if wsCache == 'Normal':
         try:
-            status_text_en, status_text_ru = get_status()
-            mm_text_en, mm_text_ru = get_matchmaking()
+            server_status_text_en, server_status_text_ru = get_server_status()
             devcount_text_en, devcount_text_ru = get_devcount()
             timer_text_en, timer_text_ru = get_timer()
             gameversion_text_en, gameversion_text_ru = get_gameversion()
             try:
                 if inline_query.from_user.language_code == 'ru':
-                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_ru, mm_text_ru, devcount_text_ru, timer_text_ru, gameversion_text_ru
-                    title_status, title_mm, title_dev, title_timer, title_gv = 'Статус', 'Матчмейкинг', 'Бета-версия', 'Сброс ограничений', 'Версия игры'
+                    status_r, dev_r, timer_r, gv_r = server_status_text_ru, devcount_text_ru, timer_text_ru, gameversion_text_ru
+                    title_status, title_dev, title_timer, title_gv = 'Статус', 'Бета-версия', 'Сброс ограничений', 'Версия игры'
                     description_status = 'Проверить доступность серверов'
-                    description_mm = 'Показать количество активных игроков'
                     description_dev = 'Показать количество онлайн разработчиков'
                     description_timer = 'Время до сброса ограничений опыта и дропа'
                     description_gv = 'Проверить последнюю версию игры'
                 else:
-                    status_r, mm_r, dev_r, timer_r, gv_r = status_text_en, mm_text_en, devcount_text_en, timer_text_en, gameversion_text_en
-                    title_status, title_mm, title_dev, title_timer, title_gv = 'Status', 'Matchmaking', 'Beta version', 'Drop cap reset', 'Game version'
+                    status_r, dev_r, timer_r, gv_r = server_status_text_en, devcount_text_en, timer_text_en, gameversion_text_en
+                    title_status, title_dev, title_timer, title_gv = 'Status', 'Beta version', 'Drop cap reset', 'Game version'
                     description_status = 'Check the availability of the servers'
-                    description_mm = 'Show the count of active players'
                     description_dev = 'Show the count of in-game developers'
                     description_timer = 'Time left until experience and drop cap reset'
                     description_gv = 'Check the latest game version'
                 r = types.InlineQueryResultArticle('1', title_status, input_message_content = types.InputTextMessageContent(status_r), thumb_url='https://telegra.ph/file/57ba2b279c53d69d72481.jpg', description=description_status)
-                r2 = types.InlineQueryResultArticle('2', title_mm, input_message_content = types.InputTextMessageContent(mm_r), thumb_url='https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', description=description_mm)
-                r3 = types.InlineQueryResultArticle('3', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
-                r4 = types.InlineQueryResultArticle('4', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
-                r5 = types.InlineQueryResultArticle('5', title_gv, input_message_content = types.InputTextMessageContent(gv_r, parse_mode="html"), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
-                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4, r5], cache_time=5)
+                r2 = types.InlineQueryResultArticle('2', title_dev, input_message_content = types.InputTextMessageContent(dev_r), thumb_url='https://telegra.ph/file/24b05cea99de936fd12bf.jpg', description=description_dev)
+                r3 = types.InlineQueryResultArticle('3', title_timer, input_message_content = types.InputTextMessageContent(timer_r), thumb_url='https://telegra.ph/file/6948255408689d2f6a472.jpg', description=description_timer)
+                r4 = types.InlineQueryResultArticle('4', title_gv, input_message_content = types.InputTextMessageContent(gv_r, parse_mode="html"), thumb_url='https://telegra.ph/file/82d8df1e9f5140da70232.jpg', description=description_gv)
+                bot.answer_inline_query(inline_query.id, [r, r2, r3, r4], cache_time=5)
                 log_inline(inline_query)
             except Exception as e:
                 bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
@@ -1959,10 +1928,7 @@ def answer(message):
             bot.send_chat_action(message.chat.id, 'typing')
 
             if message.text.lower() in strings.status_tags:
-                send_status(message)
-
-            elif message.text.lower() in strings.matchmaking_tags:
-                send_matchmaking(message)
+                send_server_status(message)
             
             elif message.text.lower() in strings.dev_count_tags:
                 send_devcount(message)

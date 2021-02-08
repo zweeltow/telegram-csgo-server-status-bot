@@ -1,31 +1,44 @@
 '''Text for initial Commands'''
 # English
 cmdStart_en = '👋🏼 Hey, {}!\nThis bot is designed to check the number of online players and the availability of CS:GO servers.\n\nFor more information type /help.'
-cmdHelp_en = 'ℹ️ This bot is designed by @csgobeta. Source code on <a href="https://github.com/zweeltow/telegram-csgo-server-status-bot">GitHub</a>.\n\n<b>Here are the available commands:</b>\n/status – сheck the status of the servers\n/mm – show the amount of players currently playing\n/devcount - show the amount of devs in beta\n/timer - show the time left until cap reset\n/dc – see the status of a specific data center\n/feedback – leave feedback about the bot\n/help – get this message\n\nNote that this bot also works automatically, no need to add it anywhere. Simply open any of your chats and type ‘<code>@csgobetabot </code>‘ in the message field. Then tap on a result to send.'
+cmdHelp_en = 'ℹ️ This bot is designed by @csgobeta. Source code on <a href="https://github.com/zweeltow/telegram-csgo-server-status-bot">GitHub</a>.\n\n<b>Here are the available commands:</b>\n/status – сheck the status of the servers\n/devcount - show the amount of devs in beta\n/timer - show the time left until cap reset\n/dc – see the status of a specific data center\n/feedback – leave feedback about the bot\n/help – get this message\n\nNote that this bot also works automatically, no need to add it anywhere. Simply open any of your chats and type ‘<code>@csgobetabot </code>‘ in the message field. Then tap on a result to send.'
 cmdFeedback_en = "💬 Please, tell us about your <b>suggestions</b> or <b>problems</b> that you have encountered using our bot.\n\nUse /cancel to cancel this command.\n\nIf you wish to contact the developer, please PM: @zweel <i>(But I'm bad at English 🙂)</i>."
 # Russian
 cmdStart_ru = '👋🏼 Привет, {}!\nЭтот бот предназначен для проверки количества онлайн игроков и доступности CS:GO серверов.\n\nДля большей информации воспользуйтесь /help.'
-cmdHelp_ru = 'ℹ️ Этот бот разработан каналом @csgobeta. Исходный код на <a href="https://github.com/zweeltow/telegram-csgo-server-status-bot">GitHub</a>.\n\n<b>Доступные команды:</b>\n/status – проверить доступность серверов\n/mm – показать количество онлайн игроков\n/devcount - показать количество разработчиков в бета-версии\n/timer - показать время до сброса ограничений\n/dc – посмотреть состояние определённого дата-центра (на английском языке)\n/feedback – оставить фидбэк про бота\n/help – получить это сообщение\n\nОбратите внимание, что этот бот также работает автоматически, нет необходимости добавлять его куда-либо. Просто откройте любой из Ваших чатов и введите ‘<code>@csgobetabot </code>ʼ в поле сообщения. Затем нажмите на результат для отправки.'
+cmdHelp_ru = 'ℹ️ Этот бот разработан каналом @csgobeta. Исходный код на <a href="https://github.com/zweeltow/telegram-csgo-server-status-bot">GitHub</a>.\n\n<b>Доступные команды:</b>\n/status – проверить доступность серверов\n/devcount - показать количество разработчиков в бета-версии\n/timer - показать время до сброса ограничений\n/dc – посмотреть состояние определённого дата-центра (на английском языке)\n/feedback – оставить фидбэк про бота\n/help – получить это сообщение\n\nОбратите внимание, что этот бот также работает автоматически, нет необходимости добавлять его куда-либо. Просто откройте любой из Ваших чатов и введите ‘<code>@csgobetabot </code>ʼ в поле сообщения. Затем нажмите на результат для отправки.'
 cmdFeedback_ru = '💬 Пожалуйста, расскажите о Ваших <b>пожеланиях</b> или <b>проблемах</b>, с которыми Вы столкнулись, используя бота.\n\nИспользуйте /cancel, чтобы отменить команду.\n\nЕсли Вы желаете диалога с разработчиком, то возможно общение в личной переписке: @zweel.'
 
 
 '''Text for Status'''
-status_tags = ['status', 'статус', '/status']
+status_tags = ['server status', 'статус серверов', '/status']
 # English
-statusNormal_en = '✅ Server status is normal:\n\n• Connection is {}\n• Online players: {:,}\n• 24-hour peak: {:,}\n• All-time peak: {:,}\n• Monthly unique players: {:,}\n\nUpdated on: {} UTC'
-statusWrong_en = '❌ Something went wrong with the servers.\n\nUpdated on: {} UTC'
+statusNormal_en = '✅ Server status is normal:\n\n• Connection is {}\n• Online servers: {:,}\n• Online players: {:,}'
+statusWrong_en = '❌ Something went wrong with the servers.'
 # Russian
-statusNormal_ru = '✅ Сервера в нормальном состоянии:\n\n• Соединение в норме\n• Онлайн игроков: {:,}\n• 24-часовой пик: {:,}\n• Рекордный пик: {:,}\n• Ежемесячные уникальные игроки: {:,}\n\nОбновлено: {} UTC'
-statusNormalSL_ru = '✅ Сервера в нормальном состоянии:\n\n• С соединением что-то не так\n• Онлайн игроков: {:,}\n• 24-часовой пик: {:,}\n• Рекордный пик: {:,}\n• Ежемесячные уникальные игроки: {:,}\n\nОбновлено: {} UTC'
-statusWrong_ru = '❌ С серверами что-то не так.\n\nОбновлено: {} UTC'
+statusNormal_ru = '✅ Сервера в нормальном состоянии:\n\n• Соединение в норме\n• Онлайн серверов: {:,}\n• Онлайн игроков: {:,}'
+statusNormalSL_ru = '✅ Сервера в нормальном состоянии:\n\n• С соединением что-то не так\n• Онлайн серверов: {:,}\n• Онлайн игроков: {:,}'
+statusWrong_ru = '❌ С серверами что-то не так.'
 
+'''Text for Matchmaking'''
+# English
+mmNormal_en = '✅ Matchmaking scheduler status is normal:\n\n• Active players: {:,}\n• Searching players: {:,}\n• Average search seconds: {}s'
+mmWrong_en = '❌ Something went wrong with the matchmaking scheduler.'
+# Russian
+mmNormal_ru = '✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Активных игроков: {:,}\n• Игроков в поиске: {:,}\n• Среднее время поиска: {} с.'
+mmWrong_ru = '❌ С планировщиком матчмейкинга что-то не так.'
+
+'''Text for Additional info'''
+# English
+additionalInfo_en = '🔖 Additional information:\n\n• 24-hour peak: {:,}\n• All-time peak: {:,}\n• Monthly unique players: {:,}\n\nUpdated on: {} UTC'
+# Russian
+additionalInfo_ru = '🔖 Дополнительная информация:\n\n• 24-часовой пик: {:,}\n• Рекордный пик: {:,}\n• Ежемесячные уникальные игроки: {:,}\n\nОбновлено: {} UTC'
 
 '''Text for Dev count'''
 dev_count_tags = ['online devs', 'разработчиков в игре', '/devcount']
 # English
-devCount_en = '🧑‍💻 Beta-version of CS:GO (ID710):\n\n• Online devs: {}\n• All-time peak: {}\n• Valve time: {}\n\nUpdated on: {} UTC'
+devCount_en = '🧑‍💻 Beta-version of CS:GO (ID710):\n\n• Online devs: {}\n• All-time peak: {}\n\nUpdated on: {} UTC\n\n🏢 Current time at Valve headquarters: {}'
 # Russian
-devCount_ru = '🧑‍💻 Бета-версия CS:GO (ID710):\n\n• Онлайн разработчиков: {}\n• Рекордный пик: {}\n• Время Valve: {}\n\nОбновлено: {} UTC'
+devCount_ru = '🧑‍💻 Бета-версия CS:GO (ID710):\n\n• Онлайн разработчиков: {}\n• Рекордный пик: {}\n\nОбновлено: {} UTC\n\n🏢 Текущее время в штаб-квартире Valve: {}'
 
 
 '''Text for Timer'''
@@ -35,15 +48,6 @@ timer_en = '⏳ Time left until experience and drop cap reset: {}d {}h {}m {}s'
 # Russian
 timer_ru = '⏳ Время до сброса ограничений опыта и дропа: {} д. {} ч. {} м. {} с.'
 
-
-'''Text for Matchmaking'''
-matchmaking_tags = ['matchmaking', 'матчмейкинг', '/mm']
-# English
-mmNormal_en = '✅ Matchmaking scheduler status is normal:\n\n• Online servers: {:,}\n• Active players: {:,}\n• Searching players: {:,}\n• Average search seconds: {}s\n\nUpdated on: {} UTC'
-mmWrong_en = '❌ Something went wrong with the matchmaking scheduler.\n\nUpdated on: {} UTC'
-# Russian
-mmNormal_ru = '✅ Планировщик матчмейкинга в нормальном состоянии:\n\n• Онлайн серверов: {:,}\n• Активных игроков: {:,}\n• Игроков в поиске: {:,}\n• Среднее время поиска: {} с.\n\nОбновлено: {} UTC'
-mmWrong_ru = '❌ С планировщиком матчмейкинга что-то не так.\n\nUpdated on: {} UTC'
 
 '''Text for Game Version'''
 gameversion_tags = ['game version', 'версия игры', '/gamever']
