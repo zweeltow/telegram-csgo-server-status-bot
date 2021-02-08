@@ -314,9 +314,9 @@ def get_gameversion():
     '''Get the version of the game'''
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     cvCache, svCache, pvCache = cacheFile['client_version'], cacheFile['server_version'], cacheFile['patch_version']
-    vdCache, vtCache = cacheFile['version_date'], cacheFile['version_time']
-    gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache, vtCache)
-    gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdCache, vtCache)
+    vdCache, vdRCache = cacheFile['version_date'], cacheFile['version_date_ru']
+    gameversion_text_en = strings.gameversion_en.format(pvCache, cvCache, svCache, vdCache)
+    gameversion_text_ru = strings.gameversion_ru.format(pvCache, cvCache, svCache, vdRCache)
     return gameversion_text_en, gameversion_text_ru
 
 
